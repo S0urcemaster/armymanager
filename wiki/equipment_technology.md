@@ -1,0 +1,35 @@
+# Ausrüstung
+Für die unterschiedlichen Einheitentypen gibt es jeweils eigene Ausrüstung, die durch Technologie verbessert werden kann. 
+# Technologie
+- Steinschlossgewehr
+- Papierpatronen
+- Bajonett
+- Gezogener Lauf
+- Vorderlader
+- Luntenschloss (Wetterabhängig)
+- Radschloss
+- Radschlosspistole (erfordert Radschloss)
+- Kürassier (erfordert Radschlosspistole)
+- Trabharnisch
+- Kürass
+- Degen
+- Pallasch (Reitersäbel)
+- Dragoner (erfordert Pallasch)
+- Karabiniers (schwere Elitekavallerie)
+- Gewalthaufen (Angriffsformation)
+- Gevierthaufen (Verteidigung)
+- Muskete
+- Karabiner
+- Uniform (späte Technologie)
+- Rangabzeichen
+- Rossharnisch
+- Pikenier
+- Luntenschlossmusketier
+- Karree (Verteidigungstaktik gegen Kavallerieangriff)
+- Lanzierer
+- Trabharnisch
+- Lanze
+- Igel (Landsknechte)
+- Karree
+- Treffentaktik
+- Grenadiere (erst 1667)
