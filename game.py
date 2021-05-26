@@ -18,21 +18,31 @@ import events
 import merc
 from sections.enemy import EnemySection
 from sections.army import ArmySection
-from sections.commands import CommandsSection
-from sections.trainequip import TrainEquipSection
-from sections.recruits import RecruitsSection
+import sections.commands as commands
+from sections.camp import CampSection
+from sections.recruitment import RecruitmentSection
 
+enemy = 0
+frontline = 1
+# commands = 2
+camp = 2
+recruitment = 3
 
 class Game(Process):
 	env: gameenv.GameEnv
 	running: True
 	screen = None
+	sections = []
+	focusedSection = None
+	focusedSectionIndex = None
 	firstnamesFile = "res/firstnames.txt"
 	lastnamesFile = "res/familynames.txt"
 	firstnames = []
 	lastnames = []
+	mercs = []
 	
 	def __init__(self, env: gameenv.GameEnv):
+		super().__init__()
 		locale.setlocale(locale.LC_TIME, "de_DE")
 		self.env = env
 		self.running = True
@@ -48,6 +58,7 @@ class Game(Process):
 			self.lastnames[i] = self.lastnames[i].strip("\n")
 
 		pygame.init()
+		pygame.key.set_repeat(250, 60)
 		
 		size = env.width, env.height
 		self.screen = pygame.display.set_mode(size)
@@ -55,15 +66,19 @@ class Game(Process):
 		text.Text.screen = self.screen
 		section.Section.screen = self.screen
 		focus.Focus.screen = self.screen
-  
+		
 		mainLayout = layout.Layout(self.env.width, self.env.height)
 		self.header = header.Header(mainLayout.getHeader())
-		self.opponent = EnemySection(mainLayout.getColumn(0))
-		self.sectors = section.Section(mainLayout.getColumn(1))
-		self.army = ArmySection(mainLayout.getColumn(2))
-		self.commands = CommandsSection(mainLayout.getColumn(3))
-		self.trainequip = TrainEquipSection(mainLayout.getColumn(4))
-		self.recruits = RecruitsSection(mainLayout.getColumn(5))
+		self.sections.append(EnemySection(mainLayout.getColumn(0)))
+		self.border = section.Section(mainLayout.getColumn(1))
+		self.sections.append(ArmySection(mainLayout.getColumn(2)))
+		self.commands = commands.CommandsSection(mainLayout.getColumn(3))
+		self.sections.append(CampSection(mainLayout.getColumn(4)))
+		self.sections.append(RecruitmentSection(mainLayout.getColumn(5)))
+		
+		self.focusedSection = self.sections[recruitment]
+		self.focusedSectionIndex = recruitment
+		self.focusedSection.focus()
 		
 		self.gameEvents = events.Events()
 		self.gameEvents.addEvent(events.Event(events.CLOCK_SECONDS, 1, self.gameEvents.currentTime))
@@ -71,28 +86,56 @@ class Game(Process):
 	
 	def start(self):
 		clock = pygame.time.Clock()
+		self.sections[camp].initialMercs(self.makeMercs())
 		while self.running:
+			# evaluate player action
 			for event in pygame.event.get():
-				if event.type == pygame.QUIT: exit()
-			
+				if event.type == pygame.QUIT:
+					self.running = False
+					exit()
+				if event.type == pygame.KEYDOWN:
+					if event.key == pygame.K_g: # print('up')
+						self.focusedSection.keyUp()
+					elif event.key == pygame.K_r: # print('down')
+						self.focusedSection.keyDown()
+					elif event.key == pygame.K_n: # print('left')
+						if self.focusedSectionIndex >0:
+							self.focusedSectionIndex -= 1
+							self.focusedSection = self.sections[self.focusedSectionIndex]
+							for s in self.sections: s.unfocus()
+							self.focusedSection.focus()
+							self.commands.previousState()
+					elif event.key == pygame.K_t: # print('right')
+						if self.focusedSectionIndex <len(self.sections) -1:
+							self.focusedSectionIndex += 1
+							self.focusedSection = self.sections[self.focusedSectionIndex]
+							for s in self.sections: s.unfocus()
+							self.focusedSection.focus()
+							self.commands.nextState()
+					elif event.key == pygame.K_SPACE: # print('space')
+						self.focusedSection.space()
+					elif event.key == pygame.K_TAB: # print('space')
+						self.commands.tab()
+					elif event.key == pygame.K_RETURN: # print('return')
+						pass
+					
+			# evaluate game events
 			for e in self.gameEvents.getRaisedEvents():
 				if(e.name == events.CLOCK_SECONDS):
 					self.gameEvents.renew(e, 1, self.gameEvents.currentTime)
 					self.header.updateClock(self.gameEvents.currentTime.strftime("%A, %d. %B %Y - %H:%M:%S"))
 				if(e.name == events.NEW_RECRUITS_EVENT):
 					self.gameEvents.renew(e, 10)
-					self.makeMercs()
-					self.gameEvents.renew(e, 5, )
+					self.sections[recruitment].setRecruits(self.makeMercs())
+					self.gameEvents.renew(e, 5)
 			
-			self.screen.fill(color.brightGrey)
-			
+			# draw frame
+			self.screen.fill(color.middleGrey)
 			self.header.draw()
-			self.opponent.draw()
-			self.sectors.draw()
-			self.army.draw()
+			self.border.draw()
 			self.commands.draw()
-			self.trainequip.draw()
-			self.recruits.draw()
+			for s in self.sections:
+				s.draw()
 			
 			pygame.display.flip()
 			dt = clock.tick(30)
@@ -127,12 +170,12 @@ class Game(Process):
 						merci.perks.append(perk)
 						break
 			mercs.append(merci)
-		self.recruits.setRecruits(mercs)
+		return mercs
 
 	def exit(self):
 		pygame.quit()
 		sys.exit()
 
-env = gameenv.GameEnv
+env = gameenv.GameEnv()
 game = Game(env)
 game.start()

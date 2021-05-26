@@ -50,8 +50,19 @@ perkList = Perk.makeList([
 	('Injury', [str, con], [-0.25, -0.25], True),
 	('Scholar', [ntl], [0.5], False),
 	('Valor', [con], [0.5], False),
+	('Berserker', [con, int], [0.5, -0.5], None),
 ])
-	
+
+class UnitTypes:
+	captain = 'Captain'
+	infantry = 'Infantry'
+	cavalry = 'Cavalry'
+	musketeer = 'Musketeer'
+	instructor = 'Instructor'
+	doctor = 'Doctor'
+	spy = 'Spy'
+
+
 class Merc:
 	def __init__(self):
 		self.__firstname: str
@@ -68,8 +79,11 @@ class Merc:
 		
 		self.__perks = []
 
-		self.__pay: int
-		self.__asset = []
+		self.__equipment = 0 # equipment level
+		self.__pay: int # payment
+		self.__asset = [] # money in pockets
+		
+		self.__idle = False # is training or otherwise unavailable
 		
 	@property
 	def firstname(self):

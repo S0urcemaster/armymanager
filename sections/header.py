@@ -9,9 +9,9 @@ class Header(section.Section):
 	
 	def __init__(self, rect: pygame.Rect):
 		super().__init__(rect)
-		self.title = text.TextH("Warlord Prototype", self.relX(7), self.relY(6), color.black)
-		self.gold = text.TextH("333", self.relX(200), self.relY(6), color.gold)
-		self.silver = text.TextH("99", self.relX(230), self.relY(6), color.silver)
+		self.title = text.TextH("Army Manager Prototype", self.relX(7), self.relY(6), color.black)
+		self.gold = text.TextH("333", self.relX(600), self.relY(6), color.gold)
+		self.silver = text.TextH("99", self.relX(630), self.relY(6), color.silver)
 		self.time = text.TextH("Montag, 01. Januar 1618 - 00:00:00", self.relX(270), self.relY(6), color.black)
 	
 	def updateClock(self, datetime):

@@ -2,6 +2,7 @@
 black = 0, 0, 0
 white = 255, 255, 255
 brightGrey = 200, 200, 200
+middleGrey = 180, 180, 180
 darkGrey = 90, 90, 90
 red = 200, 50, 50
 redDark = 100, 25, 25

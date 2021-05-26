@@ -15,7 +15,6 @@ class RecruitFocus(focus.Focus):
 		self.pay = text.TextH(str(recruit.pay), col = color.silver)
 		self.perks = []
 		for p in recruit.perks:
-			col = None
 			if sum(p.factors) >0: col = color.greenDark
 			elif sum(p.factors) <0: col = color.redDark
 			else: col = color.black
@@ -45,10 +44,11 @@ class RecruitFocus(focus.Focus):
 			p.setPosition(self.rect.x +self.rect.w -70, self.rect.y +25 +i *20)
 
 
-class RecruitsSection(section.Section):
+class RecruitmentSection(section.Section):
 	def __init__(self, rect):
 		super().__init__(rect)
-		self.addFocus(section.HeaderFocus('Recruits'))
+		self.addFocus(section.HeaderFocus('Recruitment'))
+		self.setCurrentFocusIndex(0)
 
 	def draw(self):
 		super().draw()
