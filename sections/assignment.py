@@ -92,6 +92,18 @@ class AssignmentSection(section.Section):
 			self.addFocus(sf)
 			sf.setPositions()
 	
+	def space(self):
+		"""Overwrite base behaviour"""
+		if self.state == State.enemy:
+			super().space()
+		else:
+			if self.currentFocusIndex in self.selection:
+				self.selection.remove(self.currentFocusIndex)
+			else:
+				self.selection = set()
+				self.selection.add(self.currentFocusIndex)
+	
+	
 	def getFocusInfo(self):
 		if self.state == State.assignment:
 			if (self.currentFocusIndex == 0):

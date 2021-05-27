@@ -4,6 +4,7 @@ white = 255, 255, 255
 brightGrey = 200, 200, 200
 middleGrey = 180, 180, 180
 darkGrey = 90, 90, 90
+darkDarkGrey = 50, 50, 50
 red = 200, 50, 50
 redDark = 100, 25, 25
 blue = 50, 50, 200

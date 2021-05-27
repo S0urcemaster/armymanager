@@ -34,11 +34,11 @@ class TextH(Text):
 
 class TextP(Text):
 	
-	def __init__(self, text, x = 0, y = 0, col = color.black):
+	def __init__(self, text, x = 0, y = 0, col = color.darkDarkGrey):
 		super().__init__(x, y, col)
 		self.title = text
-		self.font = pygame.font.SysFont("Arial", 14)
-		self.text = self.font.render(text, True, self.color, color.middleGrey)
+		self.font = pygame.font.SysFont("Arial", 14, bold = True)
+		self.text = self.font.render(text, True, col)
 	
 	def draw(self):
 		self.screen.blit(self.text, dest = (self.x, self.y))
