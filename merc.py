@@ -1,24 +1,5 @@
 import datetime
 
-class Experience:
-	
-	levels = [
-		100, 200, 300, 600, 1200
-	]
-	
-	def __init__(self, xp):
-		self.__xp = xp
-	
-	@property
-	def level(self):
-		if self.__xp <self.levels[0]: return 0
-		for ix, l in enumerate(self.levels):
-			if self.__xp>l: return ix +1
-	
-	@property
-	def xp(self):
-		return self.__xp
-
 # class Trait:
 # 	def __init__(self, name, value):
 # 		self.__name
@@ -53,7 +34,7 @@ perkList = Perk.makeList([
 	('Berserker', [con, int], [0.5, -0.5], None),
 ])
 
-class UnitTypes:
+class UnitType:
 	captain = 'Captain'
 	infantry = 'Infantry'
 	cavalry = 'Cavalry'
@@ -61,6 +42,38 @@ class UnitTypes:
 	instructor = 'Instructor'
 	doctor = 'Doctor'
 	spy = 'Spy'
+	recruit = 'Recruit'
+
+
+class Experience:
+	
+	levels = [
+		100, 200, 300, 600, 1200
+	]
+	
+	def __init__(self, typ = UnitType.recruit, xp = 0):
+		self.__typ = typ
+		self.__xp = xp
+	
+	@property
+	def level(self):
+		if self.__xp <self.levels[0]: return 0
+		for ix, l in enumerate(self.levels):
+			if self.__xp>l: return ix +1
+	
+	@property
+	def xp(self):
+		return self.__xp
+	@xp.setter
+	def xp(self, x):
+		self.__xp = x
+	
+	@property
+	def typ(self):
+		return self.__typ
+	@typ.setter
+	def typ(self, t):
+		self.__typ = t
 
 
 class Merc:
@@ -75,13 +88,14 @@ class Merc:
 		self.__charisma: int
 		self.__confidence: int
 
-		self.__experience: Experience
+		# self.__typ = UnitType.recruit
+		self.__experience = Experience()
 		
 		self.__perks = []
 
 		self.__equipment = 0 # equipment level
 		self.__pay: int # payment
-		self.__asset = [] # money in pockets
+		self.__asset = 0 # money in pockets
 		
 		self.__idle = False # is training or otherwise unavailable
 		
@@ -135,15 +149,24 @@ class Merc:
 	def confidence(self, c):
 		self.__confidence = c
 	
+	# @property
+	# def typ(self):
+	# 	return self.__typ
+	# @typ.setter
+	# def typ(self, t):
+	# 	self.__typ = t
 	@property
 	def xp(self):
-		return self.__experience.xp
+		return self.__experience
 	@xp.setter
 	def xp(self, e):
-		self.__experience = Experience(e)
+		self.__experience = e
 	@property
 	def level(self):
 		return self.__experience.level
+	@property
+	def xpTyp(self):
+		return self.__experience.typ
 	
 	@property
 	def perks(self):

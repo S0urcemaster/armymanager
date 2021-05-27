@@ -6,6 +6,7 @@ import text
 class SectorFocus(focus.Focus):
 	def __init__(self, title:str):
 		super().__init__(170)
+		self.title = title
 		self.name = text.TextH(title)
 	
 	def draw(self):
@@ -29,4 +30,16 @@ class ArmySection(section.Section):
 			sf = SectorFocus(s)
 			self.addFocus(sf)
 			sf.setPositions()
-		
+	
+	def getFocusInfo(self):
+		if (self.currentFocusIndex == 0):
+			heading = "Army"
+			lines = [
+				'Army soldiers: x'
+			]
+		else:
+			heading = self.currentFocus.title
+			lines = [
+				'Sector soldiers: x'
+			]
+		return focus.FocusInfo(heading, lines)

@@ -85,9 +85,10 @@ class Section:
 			self.selection.remove(self.currentFocusIndex)
 			if self.currentFocusIndex == 0:
 				self.selection = set()
-				print(self.selection)
 		else:
 			self.selection.add(self.currentFocusIndex)
 			if self.currentFocusIndex == 0:
 				self.selection = set(range(0, len(self.focuses)))
 	
+	def getFocusInfo(self):
+		pass

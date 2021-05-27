@@ -20,6 +20,7 @@ class TextH(Text):
 
 	def __init__(self, text, x = 0, y = 0, col = color.black, centered = False):
 		super().__init__(x, y, col, centered)
+		self.title = text
 		self.font = pygame.font.SysFont("Arial", 16, bold = True)
 		self.text = self.font.render(text, True, col, color.middleGrey)
 		if centered:
@@ -35,6 +36,7 @@ class TextP(Text):
 	
 	def __init__(self, text, x = 0, y = 0, col = color.black):
 		super().__init__(x, y, col)
+		self.title = text
 		self.font = pygame.font.SysFont("Arial", 14)
 		self.text = self.font.render(text, True, self.color, color.middleGrey)
 	

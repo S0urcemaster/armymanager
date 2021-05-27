@@ -55,3 +55,28 @@ class CampSection(section.Section):
 			f = MercFocus(r)
 			self.addFocus(f)
 			f.setPositions()
+			
+	def getFocusInfo(self):
+		if (self.currentFocusIndex == 0):
+			heading = "Camp"
+			lines = [
+				'Total soldiers: x'
+			]
+		else:
+			recruit = self.focuses[self.currentFocusIndex].recruit
+			heading = recruit.firstname +' ' +recruit.lastname
+			lines = [
+				'Age: ' +str(recruit.getAge(events.Event.current)),
+				'Training: ' +recruit.xp.typ,
+				'Experience: ' +str(recruit.xp.xp),
+				'Pay: ' +str(recruit.pay),
+				'Pockets: ' +str(recruit.asset),
+				'Strength: ' +str(recruit.strength),
+				'Dexterity: ' +str(recruit.dexterity),
+				'Intelligence: ' +str(recruit.intelligence),
+				'Charisma: ' +str(recruit.charisma),
+				'Confidence: ' +str(recruit.confidence),
+				]
+			for p in recruit.perks:
+				lines.append(p.name)
+		return focus.FocusInfo(heading, lines)

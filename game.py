@@ -16,15 +16,14 @@ from sections import header
 import focus
 import events
 import merc
-from sections.enemy import EnemySection
+from sections.assignment import AssignmentSection
 from sections.army import ArmySection
-import sections.commands as commands
+import sections.command as commands
 from sections.camp import CampSection
 from sections.recruitment import RecruitmentSection
 
 enemy = 0
 frontline = 1
-# commands = 2
 camp = 2
 recruitment = 3
 
@@ -69,7 +68,7 @@ class Game(Process):
 		
 		mainLayout = layout.Layout(self.env.width, self.env.height)
 		self.header = header.Header(mainLayout.getHeader())
-		self.sections.append(EnemySection(mainLayout.getColumn(0)))
+		self.sections.append(AssignmentSection(mainLayout.getColumn(0)))
 		self.border = section.Section(mainLayout.getColumn(1))
 		self.sections.append(ArmySection(mainLayout.getColumn(2)))
 		self.commands = commands.CommandsSection(mainLayout.getColumn(3))
@@ -87,6 +86,7 @@ class Game(Process):
 	def start(self):
 		clock = pygame.time.Clock()
 		self.sections[camp].initialMercs(self.makeMercs())
+		self.commands.gameMenu()
 		while self.running:
 			# evaluate player action
 			for event in pygame.event.get():
@@ -96,28 +96,43 @@ class Game(Process):
 				if event.type == pygame.KEYDOWN:
 					if event.key == pygame.K_g: # print('up')
 						self.focusedSection.keyUp()
+						if self.commands.state == commands.State.gameMenu: # return from menu
+							self.commands.gameMenuReturn(self.focusedSectionIndex)
+						self.commands.setFocusInfo(self.focusedSection.getFocusInfo())
 					elif event.key == pygame.K_r: # print('down')
 						self.focusedSection.keyDown()
+						if self.commands.state == commands.State.gameMenu:
+							self.commands.gameMenuReturn(self.focusedSectionIndex)
+						self.commands.setFocusInfo(self.focusedSection.getFocusInfo())
 					elif event.key == pygame.K_n: # print('left')
 						if self.focusedSectionIndex >0:
 							self.focusedSectionIndex -= 1
 							self.focusedSection = self.sections[self.focusedSectionIndex]
 							for s in self.sections: s.unfocus()
 							self.focusedSection.focus()
-							self.commands.previousState()
+							if self.commands.state == commands.State.gameMenu:
+								self.commands.gameMenuReturn(self.focusedSectionIndex)
+							else: self.commands.previousState()
+						self.commands.setFocusInfo(self.focusedSection.getFocusInfo())
 					elif event.key == pygame.K_t: # print('right')
 						if self.focusedSectionIndex <len(self.sections) -1:
 							self.focusedSectionIndex += 1
 							self.focusedSection = self.sections[self.focusedSectionIndex]
 							for s in self.sections: s.unfocus()
 							self.focusedSection.focus()
-							self.commands.nextState()
+							if self.commands.state == commands.State.gameMenu:
+								self.commands.gameMenuReturn(self.focusedSectionIndex)
+							else: self.commands.nextState()
+						self.commands.setFocusInfo(self.focusedSection.getFocusInfo())
 					elif event.key == pygame.K_SPACE: # print('space')
 						self.focusedSection.space()
 					elif event.key == pygame.K_TAB: # print('space')
 						self.commands.tab()
 					elif event.key == pygame.K_RETURN: # print('return')
 						pass
+					elif event.key == pygame.K_ESCAPE: # print('return')
+						# for s in self.sections: s.unfocus()
+						self.commands.gameMenu()
 					
 			# evaluate game events
 			for e in self.gameEvents.getRaisedEvents():
