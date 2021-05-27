@@ -75,10 +75,14 @@ class Section:
 	def keyUp(self):
 		if self.currentFocusIndex >0:
 			self.setCurrentFocusIndex(self.currentFocusIndex - 1)
+			return True
+		else: return False
 		
 	def keyDown(self):
 		if self.currentFocusIndex <len(self.focuses) -1:
 			self.setCurrentFocusIndex(self.currentFocusIndex + 1)
+			return True
+		else: return False
 			
 	def space(self):
 		if self.currentFocusIndex in self.selection:

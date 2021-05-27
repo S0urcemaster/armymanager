@@ -87,6 +87,7 @@ class Game(Process):
 		clock = pygame.time.Clock()
 		self.sections[camp].initialMercs(self.makeMercs())
 		self.commands.gameMenu()
+		self.commands.headerSelected = True
 		while self.running:
 			# evaluate player action
 			for event in pygame.event.get():
@@ -96,11 +97,14 @@ class Game(Process):
 				if event.type == pygame.KEYDOWN:
 					if event.key == pygame.K_g: # print('up')
 						self.focusedSection.keyUp()
+						if self.focusedSection.currentFocusIndex == 0:
+							self.commands.setHeaderSelected(True, self.focusedSectionIndex)
 						if self.commands.state == commands.State.gameMenu: # return from menu
 							self.commands.gameMenuReturn(self.focusedSectionIndex)
 						self.commands.setFocusInfo(self.focusedSection.getFocusInfo())
 					elif event.key == pygame.K_r: # print('down')
 						self.focusedSection.keyDown()
+						self.commands.setHeaderSelected(False, self.focusedSectionIndex)
 						if self.commands.state == commands.State.gameMenu:
 							self.commands.gameMenuReturn(self.focusedSectionIndex)
 						self.commands.setFocusInfo(self.focusedSection.getFocusInfo())
@@ -110,6 +114,9 @@ class Game(Process):
 							self.focusedSection = self.sections[self.focusedSectionIndex]
 							for s in self.sections: s.unfocus()
 							self.focusedSection.focus()
+							if self.focusedSection.currentFocusIndex == 0:
+								self.commands.setHeaderSelected(True, self.focusedSectionIndex)
+							else: self.commands.setHeaderSelected(False, self.focusedSectionIndex)
 							if self.commands.state == commands.State.gameMenu:
 								self.commands.gameMenuReturn(self.focusedSectionIndex)
 							else: self.commands.previousState()
@@ -120,6 +127,9 @@ class Game(Process):
 							self.focusedSection = self.sections[self.focusedSectionIndex]
 							for s in self.sections: s.unfocus()
 							self.focusedSection.focus()
+							if self.focusedSection.currentFocusIndex == 0:
+								self.commands.setHeaderSelected(True, self.focusedSectionIndex)
+							else: self.commands.setHeaderSelected(False, self.focusedSectionIndex)
 							if self.commands.state == commands.State.gameMenu:
 								self.commands.gameMenuReturn(self.focusedSectionIndex)
 							else: self.commands.nextState()

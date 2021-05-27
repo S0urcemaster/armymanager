@@ -104,7 +104,7 @@ class AssignmentSection(section.Section):
 				heading = self.currentFocus.title.title
 				lines = [
 					self.currentFocus.assignment.principal +' asks you',
-					'to settle his issue.',
+					'to settle this issue.',
 					'',
 					'Battlefield size: ' +str(self.currentFocus.assignment.sectors),
 					'Estimated enemy numbers: ' +str(self.currentFocus.assignment.enemyForce),

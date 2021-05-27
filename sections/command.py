@@ -10,17 +10,23 @@ class GameMenuCommands:
 	about = 'About'
 	quit = 'Quit game'
 
-
 class EnemyCommands:
 	spy = 'Spy'
+	
+class EnemyHeaderCommands:
+	spy = 'spy'
 
 class AssignmentCommands:
 	choose = 'Choose assignment'
 
+class AssignmentHeaderCommands:
+	roll = 'Roll'
+
 class FrontlineCommands:
-	distribute = 'Distribute equally'
 	retreat = 'Retreat'
 
+class FrontlineHeaderCommands:
+	distribute = 'Distribute equally'
 
 class CampCommands:
 	train = 'Train next level'
@@ -30,12 +36,18 @@ class CampCommands:
 	archer = 'Train as archer'
 	discharge = 'Discharge'
 
+class CampHeaderCommands:
+	equip = 'Equip all visible next level'
 
 class RecruitCommands:
 	recruit = 'Recruit'
 	recruitAll = 'Recruit All'
 	nextRecruits = 'Next Recruits'
 
+class RecruitHeaderCommands:
+	recruitAll = 'Recruit All'
+	nextRecruits = 'Next Recruits'
+	
 
 class State:
 	enemy = 0
@@ -76,12 +88,13 @@ class CommandsSection(section.Section):
 	selectedCommand = None
 	selectedCommandIndex = None
 	focusInfo = None
+	enemyOrAssignment = AssignmentCommands
 	
 	def __init__(self, rect):
 		super().__init__(rect)
 		self.state = State.gameMenu
 		self.addFocus(section.HeaderFocus('Commands'))
-		self.__sectionSelected(State.gameMenu)
+		self.__changeMenu(State.gameMenu)
 		self.setFocusInfo(self.getFocusInfo())
 	
 	def draw(self):
@@ -99,17 +112,32 @@ class CommandsSection(section.Section):
 		if self.state == State.gameMenu:
 			self.setFocusInfo(self.getFocusInfo())
 		
-	def __sectionSelected(self, sec):
+	def __changeMenu(self, sec):
 		if sec == State.enemy:
-			self.commands = self.__getCommands(EnemyCommands)
+			if self.headerSelected:
+				if self.enemyOrAssignment == EnemyCommands:
+					self.commands = self.__getCommands(EnemyHeaderCommands)
+				else:
+					self.commands = self.__getCommands(AssignmentHeaderCommands)
+			else:
+				self.commands = self.__getCommands(self.enemyOrAssignment) # classes are objects
 		elif sec == State.frontline:
-			self.commands = self.__getCommands(FrontlineCommands)
+			if self.headerSelected:
+				self.commands = self.__getCommands(FrontlineHeaderCommands)
+			else:
+				self.commands = self.__getCommands(FrontlineCommands)
 		# elif(sec == State.details):
 		# 	pass
 		elif sec == State.camp:
-			self.commands = self.__getCommands(CampCommands)
+			if self.headerSelected:
+				self.commands = self.__getCommands(CampHeaderCommands)
+			else:
+				self.commands = self.__getCommands(CampCommands)
 		elif sec == State.recruitment:
-			self.commands = self.__getCommands(RecruitCommands)
+			if self.headerSelected:
+				self.commands = self.__getCommands(RecruitHeaderCommands)
+			else:
+				self.commands = self.__getCommands(RecruitCommands)
 		elif sec == State.gameMenu:
 			self.commands = self.__getCommands(GameMenuCommands)
 		
@@ -131,15 +159,15 @@ class CommandsSection(section.Section):
 		
 	def nextState(self):
 		self.state = State.getNext(self.state)
-		self.__sectionSelected(self.state)
+		self.__changeMenu(self.state)
 		
 	def previousState(self):
 		self.state = State.getPrevious(self.state)
-		self.__sectionSelected(self.state)
+		self.__changeMenu(self.state)
 	
 	def setState(self, state):
 		self.state = state
-		self.__sectionSelected(state)
+		self.__changeMenu(state)
 	
 	def gameMenu(self):
 		self.setState(State.gameMenu)
@@ -147,6 +175,16 @@ class CommandsSection(section.Section):
 		
 	def gameMenuReturn(self, sec):
 		self.setState(sec)
+	
+	def setAssignment(self):
+		self.enemyOrAssignment = AssignmentCommands
+		
+	def setEnemy(self):
+		self.enemyOrAssignment = EnemyCommands
+		
+	def setHeaderSelected(self, s, sec):
+		self.headerSelected = s
+		self.__changeMenu(sec)
 
 	def setFocusInfo(self, info: focus.FocusInfo):
 		rect = self.rect
