@@ -31,6 +31,10 @@ class AssignmentFocus(focus.Focus):
 		self.enemyEquipment = text.TextP('Enemy equipment: ' +str(assi.enemyEquipment))
 		self.payment = text.TextP('Payment: ' +str(assi.payment))
 		self.fame = text.TextP('Fame: ' +str(assi.fame))
+		self.actions = [
+			'Select this assignment',
+		]
+		
 	
 	def draw(self):
 		super().draw()
@@ -54,7 +58,30 @@ class AssignmentFocus(focus.Focus):
 		self.enemyEquipment.setPosition(x, y +100)
 		self.payment.setPosition(x, y +120)
 		self.fame.setPosition(x, y +140)
-
+	
+	def getInfo(self, activeActionId):
+		heading = self.assignment.title
+		lines = [
+			self.assignment.principal + ' asks you',
+			'to settle this issue.',
+			'',
+			'Battlefield size: ' + str(self.assignment.sectors),
+			'Estimated enemy numbers: ' + str(self.assignment.enemyForce),
+			'Estimated enemy level: ' + str(self.assignment.enemyLevel),
+			'Estimated enemy equipment: ' + str(self.assignment.enemyEquipment),
+			'',
+			'Payment: ' + str(self.assignment.payment),
+			'Fame   : ' + str(self.assignment.fame),
+			]
+		fi = focus.FocusInfo(
+			heading,
+			lines,
+			self.actions[activeActionId] + ':',
+			)
+		fi.setPositions()
+		return fi
+	
+	
 sectors = [
 	'Sector 1', 'Sector 2', 'Sector 3', 'Sector 4', 'Sector 5'
 ]
@@ -63,77 +90,95 @@ class State:
 	assignment = 0
 	enemy = 1
 
+class AssignmentHeaderFocus(focus.HeaderFocus):
+	def __init__(self):
+		super().__init__('Assignments')
+		self.actions = [
+			'Select assignment',
+		]
+	
+	def getInfo(self, activeActionId):
+		heading = 'Assignment'
+		lines = [
+			'Select Assignment and',
+			'hit [Return] to start battle'
+			]
+		fi = focus.FocusInfo(
+			heading,
+			lines,
+			self.actions[activeActionId] + ':',
+			)
+		fi.setPositions()
+		return fi
+
 
 class AssignmentSection(section.Section):
 	state = State.assignment
-	def __init__(self, rect):
-		super().__init__(rect)
+	def __init__(self, rect, game):
+		super().__init__(rect, game)
 		self.setAssignmentState()
 	
 	def setAssignmentState(self):
 		self.state = State.assignment
 		del self.focuses[:]
-		self.addFocus(section.HeaderFocus('Assignments'))
-		self.setCurrentFocusIndex(0)
+		self.addFocus(AssignmentHeaderFocus())
+		self._setCursorFocusIndex(0)
 		sf = AssignmentFocus(assignments.assignments[0])
 		self.addFocus(sf)
-		sf.setPositions()
 		sf = AssignmentFocus(assignments.assignments[1])
 		self.addFocus(sf)
-		sf.setPositions()
 	
 	def setEnemyState(self):
 		self.state = State.enemy
 		del self.focuses[:]
-		self.addFocus(section.HeaderFocus('Enemy'))
-		self.setCurrentFocusIndex(0)
+		self.addFocus(focus.HeaderFocus('Enemy'))
+		self._setCursorFocusIndex(0)
 		for s in sectors:
 			sf = SectorFocus(s)
 			self.addFocus(sf)
-			sf.setPositions()
 	
 	def space(self):
 		"""Overwrite base behaviour"""
 		if self.state == State.enemy:
 			super().space()
 		else:
-			if self.currentFocusIndex in self.selection:
-				self.selection.remove(self.currentFocusIndex)
+			if self.cursorFocusIndex in self.selection:
+				self.selection.remove(self.cursorFocusIndex)
 			else:
 				self.selection = set()
-				self.selection.add(self.currentFocusIndex)
+				self.selection.add(self.cursorFocusIndex)
 	
 	
 	def getFocusInfo(self):
 		if self.state == State.assignment:
-			if (self.currentFocusIndex == 0):
+			if (self.cursorFocusIndex == 0):
 				heading = "Assignments"
 				lines = [
 					'Choose an assignment to begin',
 					'battle!',
 				]
 			else:
-				heading = self.currentFocus.title.title
+				heading = self.cursorFocus.title.title
 				lines = [
-					self.currentFocus.assignment.principal +' asks you',
+					self.cursorFocus.assignment.principal + ' asks you',
 					'to settle this issue.',
 					'',
-					'Battlefield size: ' +str(self.currentFocus.assignment.sectors),
-					'Estimated enemy numbers: ' +str(self.currentFocus.assignment.enemyForce),
-					'Estimated enemy level: ' +str(self.currentFocus.assignment.enemyLevel),
-					'Estimated enemy equipment: ' +str(self.currentFocus.assignment.enemyEquipment),
+					'Battlefield size: ' + str(self.cursorFocus.assignment.sectors),
+					'Estimated enemy numbers: ' + str(self.cursorFocus.assignment.enemyForce),
+					'Estimated enemy level: ' + str(self.cursorFocus.assignment.enemyLevel),
+					'Estimated enemy equipment: ' + str(self.cursorFocus.assignment.enemyEquipment),
 					'',
-					'Payment: ' +str(self.currentFocus.assignment.payment),
-					'Fame   : ' +str(self.currentFocus.assignment.fame),
+					'Payment: ' + str(self.cursorFocus.assignment.payment),
+					'Fame   : ' + str(self.cursorFocus.assignment.fame),
 				]
 		elif self.state == State.enemy:
-			if (self.currentFocusIndex == 0):
+			if (self.cursorFocusIndex == 0):
 				heading = "Enemy"
 				lines = [
 					'Enemy soldiers: x'
 				]
 			else:
-				heading = self.currentFocus.title
+				heading = self.cursorFocus.title
 				lines = [
 					'Enemy sector soldiers: x'
 				]

@@ -98,7 +98,7 @@ class CommandsSection(section.Section):
 		self.setFocusInfo(self.getFocusInfo())
 	
 	def draw(self):
-		pygame.draw.rect(self.screen, color.brightGrey, self.focuses[self.selectedCommandIndex +1].rect)
+		pygame.draw.rect(self.screen, color.brightGrey, self.focuses[self.selectedCommandIndex + 1].rect)
 		self.focusInfo.draw()
 		super().draw()
 	
@@ -146,7 +146,6 @@ class CommandsSection(section.Section):
 		for c in self.commands:
 			cf = CommandFocus(c[1])
 			self.addFocus(cf)
-			cf.setPositions()
 		
 		self.selectedCommandIndex = 0
 		self.selectedCommand = self.commands[self.selectedCommandIndex]

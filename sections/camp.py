@@ -6,14 +6,34 @@ import merc
 import color
 import events
 
+trainPikeman1 = 'Train Pikeman (1)'
+trainCavalry1 = 'Train Cavalry (1)'
+trainMusketeer1 = 'Train Musketeer (1)'
+trainPikeman2 = 'Train Pikeman (2)'
+trainCavalry2 = 'Train Cavalry (2)'
+trainMusketeer2 = 'Train Musketeer (2)'
+
 class MercFocus(focus.Focus):
-	def __init__(self, recruit: merc.Merc):
+	def __init__(self, soldier: merc.Merc):
 		super().__init__(85)
-		self.recruit:merc.Merc = recruit
-		self.name = text.TextH(f"{recruit.firstname} {recruit.lastname} - {recruit.getAge(events.Event.current)}")
-		self.pay = text.TextH(str(recruit.pay), col = color.silver)
+		self.soldier = soldier
+		self.actions = []
+		if soldier.xp.typ == merc.UnitType.recruit:
+			self.actions.append(trainPikeman1)
+			self.actions.append(trainCavalry1)
+			self.actions.append(trainMusketeer1)
+		elif soldier.xp.getLevel() == 1:
+			if soldier.xp.typ == merc.UnitType.pikeman:
+				self.actions.append(trainPikeman2)
+			elif soldier.xp.typ == merc.UnitType.cavalry:
+				self.actions.append(trainCavalry2)
+			elif soldier.xp.typ == merc.UnitType.musketeer:
+				self.actions.append(trainMusketeer2)
+		# elif soldier.xp
+		self.name = text.TextH(f"{soldier.firstname} {soldier.lastname} - {soldier.getAge(events.Event.current)}")
+		self.pay = text.TextH(str(soldier.pay), col = color.silver)
 		self.perks = []
-		for p in recruit.perks:
+		for p in soldier.perks:
 			if sum(p.factors) >0: col = color.greenDark
 			elif sum(p.factors) <0: col = color.redDark
 			else: col = color.black
@@ -26,57 +46,110 @@ class MercFocus(focus.Focus):
 		for p in self.perks:
 			p.draw()
 		pygame.draw.line(self.screen, color.red, (self.rect.x +7, self.rect.y +35),
-		                 (self.rect.x +self.recruit.strength /2 +7, self.rect.y +35), 8)
+		                 (self.rect.x + self.soldier.strength / 2 + 7, self.rect.y + 35), 8)
 		pygame.draw.line(self.screen, color.green, (self.rect.x +7, self.rect.y +45),
-		                 (self.rect.x +self.recruit.dexterity /2 +7, self.rect.y +45), 8)
+		                 (self.rect.x + self.soldier.dexterity / 2 + 7, self.rect.y + 45), 8)
 		pygame.draw.line(self.screen, color.blue, (self.rect.x +7, self.rect.y +55),
-		                 (self.rect.x +self.recruit.intelligence /2 +7, self.rect.y +55), 8)
+		                 (self.rect.x + self.soldier.intelligence / 2 + 7, self.rect.y + 55), 8)
 		pygame.draw.line(self.screen, color.yellow, (self.rect.x +7, self.rect.y +65),
-		                 (self.rect.x +self.recruit.charisma /2 +7, self.rect.y +65), 8)
+		                 (self.rect.x + self.soldier.charisma / 2 + 7, self.rect.y + 65), 8)
 		pygame.draw.line(self.screen, color.purple, (self.rect.x +7, self.rect.y +75),
-		                 (self.rect.x +self.recruit.confidence /2 +7, self.rect.y +75), 8)
+		                 (self.rect.x + self.soldier.confidence / 2 + 7, self.rect.y + 75), 8)
 	
 	def setPositions(self):
 		self.name.setPosition(self.rect.x +7, self.rect.y +6)
 		self.pay.setPosition(self.rect.x +self.rect.w -30, self.rect.y +6)
 		for i, p in enumerate(self.perks):
 			p.setPosition(self.rect.x +self.rect.w -70, self.rect.y +25 +i *20)
+	
+	def getInfo(self, activeActionId):
+		heading = self.soldier.firstname + ' ' + self.soldier.lastname
+		lines = [
+			'Age: ' +str(self.soldier.getAge(events.Event.current)),
+			'Training: ' +self.soldier.xp.typ,
+			'Experience: ' +str(self.soldier.xp.xp),
+			'Pay: ' +str(self.soldier.pay),
+			'Pockets: ' +str(self.soldier.asset),
+			'Strength: ' +str(self.soldier.strength),
+			'Dexterity: ' +str(self.soldier.dexterity),
+			'Intelligence: ' +str(self.soldier.intelligence),
+			'Charisma: ' +str(self.soldier.charisma),
+			'Confidence: ' +str(self.soldier.confidence),
+			]
+		for p in self.soldier.perks:
+			lines.append(p.name)
+		fi = focus.FocusInfo(
+			heading,
+			lines,
+			self.actions[activeActionId] +':',
+			)
+		fi.setPositions()
+		return fi
+
+
+class CampHeaderFocus(focus.HeaderFocus):
+	def __init__(self):
+		super().__init__('Camp')
+		self.actions = [
+			'Equip all visible next level'
+		]
+	
+	def getInfo(self, activeActionId):
+		heading = 'Camp'
+		lines = [
+			'Total mercenaries: ' +str(10),
+			]
+		fi = focus.FocusInfo(
+			heading,
+			lines,
+			self.actions[activeActionId] +':',
+			)
+		fi.setPositions()
+		return fi
 
 
 class CampSection(section.Section):
-	def __init__(self, rect):
-		super().__init__(rect)
-		self.addFocus(section.HeaderFocus('Camp'))
-		self.setCurrentFocusIndex(0)
+	
+	soldiers = []
+	
+	def __init__(self, rect, game):
+		super().__init__(rect, game)
+		self.addFocus(CampHeaderFocus())
+		self._setCursorFocusIndex(0)
 	
 	def initialMercs(self, recruits):
+		self.soldiers.extend(recruits)
 		del self.focuses[1:]
 		for r in recruits:
 			f = MercFocus(r)
 			self.addFocus(f)
-			f.setPositions()
 			
-	def getFocusInfo(self):
-		if (self.currentFocusIndex == 0):
-			heading = "Camp"
-			lines = [
-				'Total soldiers: x'
-			]
-		else:
-			recruit = self.focuses[self.currentFocusIndex].recruit
-			heading = recruit.firstname +' ' +recruit.lastname
-			lines = [
-				'Age: ' +str(recruit.getAge(events.Event.current)),
-				'Training: ' +recruit.xp.typ,
-				'Experience: ' +str(recruit.xp.xp),
-				'Pay: ' +str(recruit.pay),
-				'Pockets: ' +str(recruit.asset),
-				'Strength: ' +str(recruit.strength),
-				'Dexterity: ' +str(recruit.dexterity),
-				'Intelligence: ' +str(recruit.intelligence),
-				'Charisma: ' +str(recruit.charisma),
-				'Confidence: ' +str(recruit.confidence),
-				]
-			for p in recruit.perks:
-				lines.append(p.name)
-		return focus.FocusInfo(heading, lines)
+	def update(self):
+		del self.focuses[1:]
+		for s in self.soldiers:
+			f = MercFocus(s)
+			self.addFocus(f)
+		
+			
+	def action(self, command):
+		if command == trainPikeman1:
+			for s in self.selectedFocusesIndices:
+				s.soldier.xp.train(merc.UnitType.pikeman)
+		if command == trainCavalry1:
+			for s in self.selectedFocusesIndices:
+				s.soldier.xp.train(merc.UnitType.cavalry)
+		if command == trainMusketeer1:
+			for s in self.selectedFocusesIndices:
+				s.soldier.xp.train(merc.UnitType.musketeer)
+		if command == trainPikeman2:
+			for s in self.selectedFocusesIndices:
+				s.soldier.xp.levelUp()
+		if command == trainCavalry2:
+			for s in self.selectedFocusesIndices:
+				s.soldier.xp.levelUp()
+		if command == trainMusketeer2:
+			for s in self.selectedFocusesIndices:
+				s.soldier.xp.levelUp()
+		self.update()
+			
+			

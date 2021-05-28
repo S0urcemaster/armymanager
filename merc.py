@@ -36,7 +36,7 @@ perkList = Perk.makeList([
 
 class UnitType:
 	captain = 'Captain'
-	infantry = 'Infantry'
+	pikeman = 'Infantry'
 	cavalry = 'Cavalry'
 	musketeer = 'Musketeer'
 	instructor = 'Instructor'
@@ -74,6 +74,22 @@ class Experience:
 	@typ.setter
 	def typ(self, t):
 		self.__typ = t
+	
+	def getLevel(self):
+		if self.__xp <100: return 0
+		elif self.__xp <200: return 1
+		elif self.__xp <300: return 2
+		elif self.__xp <600: return 3
+		
+	def levelUp(self):
+		if self.__xp <100: self.__xp = 100
+		elif self.__xp <200: self.__xp = 200
+		elif self.__xp <300: self.__xp = 300
+		elif self.__xp <600: self.__xp = 600
+		
+	def train(self, typ):
+		self.__typ = typ
+		self.__xp = 10
 
 
 class Merc:

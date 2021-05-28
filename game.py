@@ -1,10 +1,6 @@
-import math
 from multiprocessing import Process
 import sys, pygame
-import random
-import io
 import locale
-from datetime import datetime, timedelta
 
 import lib
 import gameenv
@@ -17,63 +13,57 @@ import focus
 import events
 import merc
 from sections.assignment import AssignmentSection
-from sections.army import ArmySection
-import sections.command as commands
+from sections.troups import TroupSection
+import sections.actions as actions
 from sections.camp import CampSection
 from sections.recruitment import RecruitmentSection
+from army import Army
 
-enemy = 0
+assignment = 0
 frontline = 1
 camp = 2
 recruitment = 3
 
+
 class Game(Process):
+	# static fields
 	env: gameenv.GameEnv
 	running: True
-	screen = None
-	sections = []
-	focusedSection = None
+	screen = None # pygame screen
+	sections = [] # columns on the playfield
+	focusedSection = None # cursor is in this column
 	focusedSectionIndex = None
-	firstnamesFile = "res/firstnames.txt"
-	lastnamesFile = "res/familynames.txt"
-	firstnames = []
-	lastnames = []
-	mercs = []
+	
+	recruits = [] # all available recruits
+	mercs = [] # all recruited mercenaries
+	army = Army()
 	
 	def __init__(self, env: gameenv.GameEnv):
 		super().__init__()
 		locale.setlocale(locale.LC_TIME, "de_DE")
 		self.env = env
 		self.running = True
-
-		with io.open(self.firstnamesFile, mode = "r", encoding = "utf-8") as file:
-			self.firstnames = file.readlines()
-		for i in range(len(self.firstnames)):
-			self.firstnames[i] = self.firstnames[i].strip("\n")
-
-		with io.open(self.lastnamesFile, mode = "r", encoding = "utf-8") as file:
-			self.lastnames = file.readlines()
-		for i in range(len(self.lastnames)):
-			self.lastnames[i] = self.lastnames[i].strip("\n")
+		
+		lib.readNames()
 
 		pygame.init()
+		
 		pygame.key.set_repeat(250, 60)
-		
 		size = env.width, env.height
-		self.screen = pygame.display.set_mode(size)
 		
+		self.screen = pygame.display.set_mode(size)
 		text.Text.screen = self.screen
 		section.Section.screen = self.screen
 		focus.Focus.screen = self.screen
 		
 		mainLayout = layout.Layout(self.env.width, self.env.height)
-		self.header = header.Header(mainLayout.getHeader())
-		self.sections.append(AssignmentSection(mainLayout.getColumn(0)))
-		self.border = section.Section(mainLayout.getColumn(1))
-		self.sections.append(ArmySection(mainLayout.getColumn(2)))
-		self.commands = commands.CommandsSection(mainLayout.getColumn(3))
-		self.sections.append(CampSection(mainLayout.getColumn(4)))
-		self.sections.append(RecruitmentSection(mainLayout.getColumn(5)))
+		self.header = header.Header(mainLayout.getHeader(), self)
+		self.sections.append(AssignmentSection(mainLayout.getColumn(0), self))
+		self.border = section.Section(mainLayout.getColumn(1), self)
+		self.sections.append(TroupSection(mainLayout.getColumn(2), self))
+		self.actions = actions.ActionsSection(mainLayout.getColumn(3), self)
+		self.sections.append(CampSection(mainLayout.getColumn(4), self))
+		self.sections.append(RecruitmentSection(mainLayout.getColumn(5), self))
 		
 		self.focusedSection = self.sections[recruitment]
 		self.focusedSectionIndex = recruitment
@@ -85,9 +75,7 @@ class Game(Process):
 	
 	def start(self):
 		clock = pygame.time.Clock()
-		self.sections[camp].initialMercs(self.makeMercs())
-		self.commands.gameMenu()
-		self.commands.headerSelected = True
+		self.sections[camp].initialMercs(self.make10Recruits())
 		while self.running:
 			# evaluate player action
 			for event in pygame.event.get():
@@ -95,111 +83,90 @@ class Game(Process):
 					self.running = False
 					exit()
 				if event.type == pygame.KEYDOWN:
-					if event.key == pygame.K_g: # print('up')
-						self.focusedSection.keyUp()
-						if self.focusedSection.currentFocusIndex == 0:
-							self.commands.setHeaderSelected(True, self.focusedSectionIndex)
-						if self.commands.state == commands.State.gameMenu: # return from menu
-							self.commands.gameMenuReturn(self.focusedSectionIndex)
-						self.commands.setFocusInfo(self.focusedSection.getFocusInfo())
-					elif event.key == pygame.K_r: # print('down')
-						self.focusedSection.keyDown()
-						self.commands.setHeaderSelected(False, self.focusedSectionIndex)
-						if self.commands.state == commands.State.gameMenu:
-							self.commands.gameMenuReturn(self.focusedSectionIndex)
-						self.commands.setFocusInfo(self.focusedSection.getFocusInfo())
-					elif event.key == pygame.K_n: # print('left')
+					if event.key == pygame.K_g: # UP
+						focus = self.focusedSection.keyUp()
+						self.actions.activeFocusChanged(focus)
+						
+					elif event.key == pygame.K_r: # DOWN
+						focus = self.focusedSection.keyDown()
+						self.actions.activeFocusChanged(focus)
+						
+					elif event.key == pygame.K_n: # LEFT
 						if self.focusedSectionIndex >0:
 							self.focusedSectionIndex -= 1
 							self.focusedSection = self.sections[self.focusedSectionIndex]
 							for s in self.sections: s.unfocus()
-							self.focusedSection.focus()
-							if self.focusedSection.currentFocusIndex == 0:
-								self.commands.setHeaderSelected(True, self.focusedSectionIndex)
-							else: self.commands.setHeaderSelected(False, self.focusedSectionIndex)
-							if self.commands.state == commands.State.gameMenu:
-								self.commands.gameMenuReturn(self.focusedSectionIndex)
-							else: self.commands.previousState()
-						self.commands.setFocusInfo(self.focusedSection.getFocusInfo())
-					elif event.key == pygame.K_t: # print('right')
+							focus = self.focusedSection.focus()
+							self.actions.activeFocusChanged(focus)
+							
+					elif event.key == pygame.K_t: # RIGHT
 						if self.focusedSectionIndex <len(self.sections) -1:
 							self.focusedSectionIndex += 1
 							self.focusedSection = self.sections[self.focusedSectionIndex]
 							for s in self.sections: s.unfocus()
 							self.focusedSection.focus()
-							if self.focusedSection.currentFocusIndex == 0:
-								self.commands.setHeaderSelected(True, self.focusedSectionIndex)
-							else: self.commands.setHeaderSelected(False, self.focusedSectionIndex)
-							if self.commands.state == commands.State.gameMenu:
-								self.commands.gameMenuReturn(self.focusedSectionIndex)
-							else: self.commands.nextState()
-						self.commands.setFocusInfo(self.focusedSection.getFocusInfo())
-					elif event.key == pygame.K_SPACE: # print('space')
-						self.focusedSection.space()
-					elif event.key == pygame.K_TAB: # print('space')
-						self.commands.tab()
-					elif event.key == pygame.K_RETURN: # print('return')
-						pass
-					elif event.key == pygame.K_ESCAPE: # print('return')
-						# for s in self.sections: s.unfocus()
-						self.commands.gameMenu()
+							
+					elif event.key == pygame.K_SPACE: # SPACE
+						selection = self.focusedSection.space()
+						if len(selection) >0:
+							self.actions.selectionActive(selection)
+							
+					elif event.key == pygame.K_TAB: # TAB
+						self.actions.tab()
+						
+					elif event.key == pygame.K_RETURN: # RETURN
+						if self.actions.activeFocus == None:
+							self.actions.action(self.actions.selectedAction)
+						else:
+							self.focusedSection.action(self.actions.selectedAction)
+						
+					elif event.key == pygame.K_ESCAPE: # ESCAPE
+						self.actions.activeFocusChanged(None)
 					
 			# evaluate game events
 			for e in self.gameEvents.getRaisedEvents():
 				if(e.name == events.CLOCK_SECONDS):
 					self.gameEvents.renew(e, 1, self.gameEvents.currentTime)
 					self.header.updateClock(self.gameEvents.currentTime.strftime("%A, %d. %B %Y - %H:%M:%S"))
+					
 				if(e.name == events.NEW_RECRUITS_EVENT):
-					self.gameEvents.renew(e, 10)
-					self.sections[recruitment].setRecruits(self.makeMercs())
-					self.gameEvents.renew(e, 5)
+					# self.gameEvents.renew(e, 10)
+					self.recruits.append(lib.makeRecruit())
+					self.sections[recruitment].setRecruits(self.recruits)
+					self.gameEvents.renew(e, 1)
 			
 			# draw frame
 			self.screen.fill(color.middleGrey)
 			self.header.draw()
 			self.border.draw()
-			self.commands.draw()
+			self.actions.draw()
 			for s in self.sections:
 				s.draw()
 			
 			pygame.display.flip()
 			dt = clock.tick(30)
-			self.gameEvents.update(dt)
+			
+			self.gameEvents.update(dt) # update game's current time
 
-	def makeMercs(self):
+	def make10Recruits(self):
 		mercs = []
 		for i in range(10):
-			merci = merc.Merc()
-			random.seed()
-			merci.firstname = random.choice(self.firstnames)
-			merci.lastname = random.choice(self.lastnames)
-			merci.pay = random.randint(2, 16)
-			merci.strength = random.randint(1, 255)
-			merci.dexterity = random.randint(1, 255)
-			merci.intelligence = random.randint(1, 255)
-			merci.charisma = random.randint(1, 255)
-			merci.confidence = random.randint(1, 255)
-			merci.birthday = events.Event.current - timedelta(days = 365 *lib.bellAge() +random.randint(1, 365))
-			# Perks:
-			for i in range(3): # max 3 perks
-				prob = random.randint(0, 11) # probability
-				if i >= prob:
-					while True: # no duplicates
-						rand = random.randint(0, len(merc.perkList) -1)
-						perk = merc.perkList[rand]
-						found = False
-						for p in merci.perks:
-							if p.name == perk.name:
-								found = True
-						if found: continue
-						merci.perks.append(perk)
-						break
-			mercs.append(merci)
+			mercs.append(lib.makeRecruit())
 		return mercs
 
+	def recruited(self, recruits):
+		"""Called from recruitment when selection is accepted"""
+		print(recruits)
+		
 	def exit(self):
+		self.running = False
 		pygame.quit()
 		sys.exit()
+		
+	# callbacks
+
+	def quit(self):
+		exit()
 
 env = gameenv.GameEnv()
 game = Game(env)

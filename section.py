@@ -4,51 +4,43 @@ import color
 import focus
 import text
 
-class HeaderFocus(focus.Focus):
-	def __init__(self, title):
-		super().__init__(30)
-		self.title = title
-		self.selected = False
-	
-	def draw(self):
-		super().draw()
-		# text.TextH(self.title, self.rect.x +7, self.rect.y +6, color.black, True).draw()
-		text.TextH(self.title, self.rect.x +self.rect.w //2, self.rect.y +self.rect.h //2 , color.black, True).draw()
-
 
 class Section:
 	
 	screen = None # static, set once in game
 	Point = namedtuple('Point', 'x y')
 	
-	def __init__(self, rect: pygame.rect):
+	def __init__(self, rect: pygame.rect, game):
 		self.rect = rect
+		self.game = game
 		self.offset = self.Point(rect[0], rect[1])
 		self.active = False
+		"""Draw white border if active else black"""
 		self.focuses = []
-	
-		self.focused = False
-		self.currentFocus = None
-		self.currentFocusIndex = None
-		self.selection = set()
+		"""List of all Focuses in this Section"""
+		self.selectedFocusesIndices = set()
+		"""Indices set() of selected Focuses"""
+		self.selectedFocuses = set()
+		"""Indices set() of selected Focuses"""
+		self.selfFocused = False
+		"""If this section has focus"""
+		self.cursorFocus = None
+		"""The Focus under cursor"""
+		self.cursorFocusIndex = None
+		"""The Focus index under cursor"""
 	
 	def draw(self):
-		for s in self.selection:
-			x = self.focuses[s].rect.x +2
-			y = self.focuses[s].rect.y +2
-			w = self.focuses[s].rect.w -4
-			h = self.focuses[s].rect.h -4
-			pygame.draw.rect(self.screen, color.brightGrey, pygame.Rect(x, y, w, h))
+		for s in self.selectedFocuses:
+			pygame.draw.rect(self.screen, color.brightGrey, s.rect.inflate(-2, -2))
 		if self.active:
 			pygame.draw.rect(self.screen, color.white, self.rect, width = 1)
 		else:
 			pygame.draw.rect(self.screen, color.black, self.rect, width = 1)
 		for f in self.focuses:
 			f.draw()
-		if self.focused:
-			pygame.draw.rect(self.screen, color.white, self.currentFocus.rect.inflate(-2, -2), width = 2)
+		if self.selfFocused:
+			pygame.draw.rect(self.screen, color.white, self.cursorFocus.rect.inflate(-2, -2), width = 2)
 			
-
 	def relX(self, x):
 		return self.offset.x +x
 	
@@ -60,39 +52,42 @@ class Section:
 		for f in self.focuses:
 			height += f.height +1
 		focus.rect = pygame.Rect(self.relX(0), self.relY(height) +0, self.rect.w, focus.height +2)
+		focus.setPositions()
 		self.focuses.append(focus)
 
-	def focus(self):
-		self.focused = True
+	def focus(self) -> focus.Focus:
+		self.selfFocused = True
+		return self.focuses[self.cursorFocusIndex]
 		
 	def unfocus(self):
-		self.focused = False
-	
-	def setCurrentFocusIndex(self, x):
-		self.currentFocusIndex = x
-		self.currentFocus = self.focuses[x]
+		self.selfFocused = False
+		self.selectedFocusesIndices = set()
 	
 	def keyUp(self):
-		if self.currentFocusIndex >0:
-			self.setCurrentFocusIndex(self.currentFocusIndex - 1)
-			return True
-		else: return False
+		if self.cursorFocusIndex >0:
+			self._setCursorFocusIndex(self.cursorFocusIndex - 1)
+		return self.focuses[self.cursorFocusIndex]
 		
 	def keyDown(self):
-		if self.currentFocusIndex <len(self.focuses) -1:
-			self.setCurrentFocusIndex(self.currentFocusIndex + 1)
-			return True
-		else: return False
+		if self.cursorFocusIndex <len(self.focuses) -1:
+			self._setCursorFocusIndex(self.cursorFocusIndex + 1)
+		return self.focuses[self.cursorFocusIndex]
 			
-	def space(self):
-		if self.currentFocusIndex in self.selection:
-			self.selection.remove(self.currentFocusIndex)
-			if self.currentFocusIndex == 0:
-				self.selection = set()
+	def space(self) -> set:
+		print('space')
+		if self.cursorFocusIndex in self.selectedFocusesIndices:
+			self.selectedFocusesIndices.remove(self.cursorFocusIndex)
+			if self.cursorFocusIndex == 0: # space in head selects nothing
+				self.selectedFocusesIndices = set()
 		else:
-			self.selection.add(self.currentFocusIndex)
-			if self.currentFocusIndex == 0:
-				self.selection = set(range(0, len(self.focuses)))
+			self.selectedFocusesIndices.add(self.cursorFocusIndex)
+			if self.cursorFocusIndex == 0: # space in head selects all
+				self.selectedFocusesIndices = set(range(0, len(self.focuses)))
+		res = list(map(lambda i: self.focuses[i], self.selectedFocusesIndices))
+		return res
 	
-	def getFocusInfo(self):
-		pass
+	def _setCursorFocusIndex(self, x):
+		self.cursorFocusIndex = x
+		self.cursorFocus = self.focuses[x]
+		
+	# def __setCursorFocus(self, f):

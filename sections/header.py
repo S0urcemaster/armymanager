@@ -7,8 +7,8 @@ class Header(section.Section):
 	
 	staticText = {}
 	
-	def __init__(self, rect: pygame.Rect):
-		super().__init__(rect)
+	def __init__(self, rect: pygame.Rect, game):
+		super().__init__(rect, game)
 		self.title = text.TextH("Army Manager Prototype", self.relX(7), self.relY(6), color.black)
 		self.gold = text.TextH("333", self.relX(600), self.relY(6), color.gold)
 		self.silver = text.TextH("99", self.relX(630), self.relY(6), color.silver)
