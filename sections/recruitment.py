@@ -108,13 +108,13 @@ class RecruitmentSection(section.Section):
 	def __init__(self, rect, game):
 		super().__init__(rect, game)
 		self.addFocus(RecruitmentHeaderItem())
-		self._setCursorFocusIndex(0)
+		self._setItemFocusIndex(0)
 
 	def draw(self):
 		super().draw()
 
 	def setRecruits(self, recruits):
-		del self.focuses[1:]
+		del self.items[1:]
 		for r in recruits[self.listIndex *10:self.listIndex *10 +10]:
 			f = RecruitItem(r)
 			self.addFocus(f)
@@ -124,7 +124,7 @@ class RecruitmentSection(section.Section):
 		# for s in self.selection:
 		
 		if self.commands[command] == recruitSelected:
-			self.game.recruited(list(map(lambda r: r.merc, self.selectedFocusesIndices)))
+			self.game.recruited(list(map(lambda r: r.merc, self.selectedItemsIndices)))
 		elif dismissSelected:
 			pass
 		elif nextRecruits:

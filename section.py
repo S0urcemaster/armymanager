@@ -14,32 +14,27 @@ class Section:
 		self.rect = rect
 		self.game = game
 		self.offset = self.Point(rect[0], rect[1])
-		self.active = False
-		"""Draw white border if active else black"""
-		self.focuses = []
-		"""List of all Focuses in this Section"""
-		self.selectedFocusesIndices = set()
-		"""Indices set() of selected Focuses"""
-		self.selectedFocuses = set()
-		"""Indices set() of selected Focuses"""
-		self.selfFocused = False
+		self.focused = False
 		"""If this section has focus"""
-		self.cursorFocus = None
-		"""The Focus under cursor"""
-		self.cursorFocusIndex = None
+		self.items = []
+		"""List of all Focuses in this Section"""
+		self.selectedItems = set()
+		"""Indices set() of selected Focuses"""
+		self.selectedItemsIndices = set()
+		"""Indices set() of selected Focuses"""
+		self.itemFocus = None
+		"""The Item under cursor"""
+		self.itemFocusIndex = None
 		"""The Focus index under cursor"""
 	
 	def draw(self):
-		for s in self.selectedFocuses:
+		pygame.draw.rect(self.screen, color.black, self.rect, width = 1) # section border
+		for s in self.selectedItems: # background bright if selected
 			pygame.draw.rect(self.screen, color.brightGrey, s.rect.inflate(-2, -2))
-		if self.active:
-			pygame.draw.rect(self.screen, color.white, self.rect, width = 1)
-		else:
-			pygame.draw.rect(self.screen, color.black, self.rect, width = 1)
-		for f in self.focuses:
+		for f in self.items:
 			f.draw()
-		if self.selfFocused:
-			pygame.draw.rect(self.screen, color.white, self.cursorFocus.rect.inflate(-2, -2), width = 2)
+		if self.focused: # draw cursor on item if this section has focus
+			pygame.draw.rect(self.screen, color.white, self.itemFocus.rect.inflate(-2, -2), width = 2)
 			
 	def relX(self, x):
 		return self.offset.x +x
@@ -49,44 +44,47 @@ class Section:
 	
 	def addFocus(self, focus):
 		height = 0
-		for f in self.focuses:
+		for f in self.items:
 			height += f.height +1
 		focus.rect = pygame.Rect(self.relX(0), self.relY(height) +0, self.rect.w, focus.height +2)
 		focus.setPositions()
-		self.focuses.append(focus)
+		self.items.append(focus)
 
 	def focus(self) -> item.Item:
-		self.selfFocused = True
-		return self.focuses[self.cursorFocusIndex]
+		self.focused = True
+		return self.items[self.itemFocusIndex]
 		
 	def unfocus(self):
-		self.selfFocused = False
-		self.selectedFocusesIndices = set()
+		self.focused = False
+		self.selectedItemsIndices = set()
 	
 	def keyUp(self):
-		if self.cursorFocusIndex >0:
-			self._setCursorFocusIndex(self.cursorFocusIndex - 1)
-		return self.focuses[self.cursorFocusIndex]
+		if self.itemFocusIndex >0:
+			self._setItemFocusIndex(self.itemFocusIndex - 1)
+		return self.items[self.itemFocusIndex]
 		
 	def keyDown(self):
-		if self.cursorFocusIndex <len(self.focuses) -1:
-			self._setCursorFocusIndex(self.cursorFocusIndex + 1)
-		return self.focuses[self.cursorFocusIndex]
+		if self.itemFocusIndex <len(self.items) -1:
+			self._setItemFocusIndex(self.itemFocusIndex + 1)
+		return self.items[self.itemFocusIndex]
 			
-	def space(self) -> set:
-		if self.cursorFocusIndex in self.selectedFocusesIndices:
-			self.selectedFocusesIndices.remove(self.cursorFocusIndex)
-			if self.cursorFocusIndex == 0: # space in head selects nothing
-				self.selectedFocusesIndices = set()
+	def space(self) -> list:
+		if self.itemFocusIndex in self.selectedItemsIndices:
+			# selected -> unselect
+			self.selectedItemsIndices.remove(self.itemFocusIndex)
+			if self.itemFocusIndex == 0:
+				# space in head unselects all
+				self.selectedItemsIndices = set()
 		else:
-			self.selectedFocusesIndices.add(self.cursorFocusIndex)
-			if self.cursorFocusIndex == 0: # space in head selects all
-				self.selectedFocusesIndices = set(range(0, len(self.focuses)))
-		res = list(map(lambda i: self.focuses[i], self.selectedFocusesIndices))
-		return res
+			# not selected -> add
+			self.selectedItemsIndices.add(self.itemFocusIndex)
+			if self.itemFocusIndex == 0:
+				# space in head selects all
+				self.selectedItemsIndices = set(range(0, len(self.items)))
+		self.selectedItems = list(map(lambda i: self.items[i], self.selectedItemsIndices))
+		return self.selectedItems
 	
-	def _setCursorFocusIndex(self, x):
-		self.cursorFocusIndex = x
-		self.cursorFocus = self.focuses[x]
+	def _setItemFocusIndex(self, x):
+		self.itemFocusIndex = x
+		self.itemFocus = self.items[x]
 		
-	# def __setCursorFocus(self, f):

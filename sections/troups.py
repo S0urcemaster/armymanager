@@ -84,7 +84,7 @@ class TroupsSection(section.Section):
 	def __init__(self, rect, game):
 		super().__init__(rect, game)
 		self.addFocus(TroupHeaderItem())
-		self._setCursorFocusIndex(0)
+		self._setItemFocusIndex(0)
 		for s in sectors:
 			sf = SectorItem(army.Sector(s))
 			self.addFocus(sf)

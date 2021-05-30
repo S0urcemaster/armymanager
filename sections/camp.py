@@ -115,17 +115,17 @@ class CampSection(section.Section):
 	def __init__(self, rect, game):
 		super().__init__(rect, game)
 		self.addFocus(CampHeaderItem())
-		self._setCursorFocusIndex(0)
+		self._setItemFocusIndex(0)
 	
 	def initialMercs(self, recruits):
 		self.soldiers.extend(recruits)
-		del self.focuses[1:]
+		del self.items[1:]
 		for r in recruits:
 			f = MercItem(r)
 			self.addFocus(f)
 			
 	def update(self):
-		del self.focuses[1:]
+		del self.items[1:]
 		for s in self.soldiers:
 			f = MercItem(s)
 			self.addFocus(f)
@@ -133,22 +133,22 @@ class CampSection(section.Section):
 			
 	def action(self, command):
 		if command == trainPikeman1:
-			for s in self.selectedFocusesIndices:
+			for s in self.selectedItemsIndices:
 				s.soldier.xp.train(merc.UnitType.pikeman)
 		if command == trainCavalry1:
-			for s in self.selectedFocusesIndices:
+			for s in self.selectedItemsIndices:
 				s.soldier.xp.train(merc.UnitType.cavalry)
 		if command == trainMusketeer1:
-			for s in self.selectedFocusesIndices:
+			for s in self.selectedItemsIndices:
 				s.soldier.xp.train(merc.UnitType.musketeer)
 		if command == trainPikeman2:
-			for s in self.selectedFocusesIndices:
+			for s in self.selectedItemsIndices:
 				s.soldier.xp.levelUp()
 		if command == trainCavalry2:
-			for s in self.selectedFocusesIndices:
+			for s in self.selectedItemsIndices:
 				s.soldier.xp.levelUp()
 		if command == trainMusketeer2:
-			for s in self.selectedFocusesIndices:
+			for s in self.selectedItemsIndices:
 				s.soldier.xp.levelUp()
 		self.update()
 			

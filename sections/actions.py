@@ -22,7 +22,6 @@ class ActionItem(item.Item):
 class ActionsSection(section.Section):
 	
 	selectedAction = 0
-	selectedItems = [] # menu needs to know about selection. Fed in selectionActive()
 	
 	def __init__(self, rect, game):
 		super().__init__(rect, game)
@@ -34,15 +33,15 @@ class ActionsSection(section.Section):
 		item.ItemInfo.rect = rect
 	
 	def draw(self):
-		pygame.draw.rect(self.screen, color.brightGrey, self.focuses[self.selectedAction +1].rect)
+		pygame.draw.rect(self.screen, color.brightGrey, self.items[self.selectedAction + 1].rect)
 		if self.activeFocus == None: # own infos
-			self.focuses[self.selectedAction +1].getInfo([]).draw()
+			self.items[self.selectedAction + 1].getInfo([]).draw()
 		else: # show active focus info
 			self.activeFocus.getInfo(self.selectedAction).draw()
 		super().draw()
 	
 	def activeFocusChanged(self, focus: item.Item):
-		del self.focuses[1:]
+		del self.items[1:]
 		if focus == None:
 			self.addFocus(WelcomeActionItem())
 			self.addFocus(GameplayActionItem())
@@ -58,9 +57,8 @@ class ActionsSection(section.Section):
 		self.selectedAction = 0
 		
 	def selectionActive(self, selection):
-		self.selectedItems = selection
-		if len(self.selectedItems) >1: # adjust actions list towards selected focuses' actions intersection
-			lst = list(self.selectedItems)
+		if len(selection) >1: # adjust actions list towards selected focuses' actions intersection
+			lst = list(selection)
 			self.activeFocus = lst[0]
 			# intersection = set()
 			intersection = set(lst[0].actions)
@@ -69,7 +67,7 @@ class ActionsSection(section.Section):
 			self.activeFocus.actions = list(intersection)
 		
 	def tab(self):
-		if self.selectedAction <len(self.focuses) -2:
+		if self.selectedAction <len(self.items) -2:
 			self.selectedAction += 1
 		else:
 			self.selectedAction = 0
