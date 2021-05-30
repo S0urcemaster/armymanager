@@ -1,7 +1,7 @@
 import pygame
 import color
 import section
-import focus
+import item
 import text
 
 class GameMenuCommands:
@@ -67,7 +67,7 @@ class State:
 		return s
 
 
-class CommandFocus(focus.Focus):
+class CommandItem(item.Item):
 	def __init__(self, title:str):
 		super().__init__(40)
 		self.name = text.TextH(title)
@@ -144,7 +144,7 @@ class CommandsSection(section.Section):
 		# self.commands = list(filter(lambda v: not v.startswith('__') , commands))
 		del self.focuses[1:]
 		for c in self.commands:
-			cf = CommandFocus(c[1])
+			cf = CommandItem(c[1])
 			self.addFocus(cf)
 		
 		self.selectedCommandIndex = 0
@@ -185,7 +185,7 @@ class CommandsSection(section.Section):
 		self.headerSelected = s
 		self.__changeMenu(sec)
 
-	def setFocusInfo(self, info: focus.FocusInfo):
+	def setFocusInfo(self, info: item.ItemInfo):
 		rect = self.rect
 		rect.y = 500
 		info.setPositions(rect)
@@ -232,5 +232,5 @@ class CommandsSection(section.Section):
 			lines = [
 				'Hit [RETURN] to quit'
 			]
-		return focus.FocusInfo(heading, lines)
+		return item.ItemInfo(heading, lines)
 		

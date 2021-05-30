@@ -1,6 +1,6 @@
 import pygame
 import section
-import focus
+import item
 import text
 import merc
 import color
@@ -13,7 +13,7 @@ trainPikeman2 = 'Train Pikeman (2)'
 trainCavalry2 = 'Train Cavalry (2)'
 trainMusketeer2 = 'Train Musketeer (2)'
 
-class MercFocus(focus.Focus):
+class MercItem(item.Item):
 	def __init__(self, soldier: merc.Merc):
 		super().__init__(85)
 		self.soldier = soldier
@@ -78,7 +78,7 @@ class MercFocus(focus.Focus):
 			]
 		for p in self.soldier.perks:
 			lines.append(p.name)
-		fi = focus.FocusInfo(
+		fi = item.ItemInfo(
 			heading,
 			lines,
 			self.actions[activeActionId] +':',
@@ -87,7 +87,7 @@ class MercFocus(focus.Focus):
 		return fi
 
 
-class CampHeaderFocus(focus.HeaderFocus):
+class CampHeaderItem(item.HeaderItem):
 	def __init__(self):
 		super().__init__('Camp')
 		self.actions = [
@@ -99,7 +99,7 @@ class CampHeaderFocus(focus.HeaderFocus):
 		lines = [
 			'Total mercenaries: ' +str(10),
 			]
-		fi = focus.FocusInfo(
+		fi = item.ItemInfo(
 			heading,
 			lines,
 			self.actions[activeActionId] +':',
@@ -114,20 +114,20 @@ class CampSection(section.Section):
 	
 	def __init__(self, rect, game):
 		super().__init__(rect, game)
-		self.addFocus(CampHeaderFocus())
+		self.addFocus(CampHeaderItem())
 		self._setCursorFocusIndex(0)
 	
 	def initialMercs(self, recruits):
 		self.soldiers.extend(recruits)
 		del self.focuses[1:]
 		for r in recruits:
-			f = MercFocus(r)
+			f = MercItem(r)
 			self.addFocus(f)
 			
 	def update(self):
 		del self.focuses[1:]
 		for s in self.soldiers:
-			f = MercFocus(s)
+			f = MercItem(s)
 			self.addFocus(f)
 		
 			

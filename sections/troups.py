@@ -1,11 +1,11 @@
 
 import section
-import focus
+import item
 import text
 import army
 
 
-class SectorFocus(focus.Focus):
+class SectorItem(item.Item):
 	def __init__(self, sector: army.Sector):
 		super().__init__(170)
 		self.sector = sector
@@ -25,7 +25,7 @@ class SectorFocus(focus.Focus):
 		self.title.setPosition(self.rect.x +rect.x, self.rect.y +rect.y -2)
 	
 	def getInfo(self, activeActionId):
-		fi = focus.FocusInfo(
+		fi = item.ItemInfo(
 			self.sector.title,
 			[],
 			self.actions[activeActionId]
@@ -37,14 +37,14 @@ sectors = [
 	'Sector 1', 'Sector 2', 'Sector 3', 'Sector 4', 'Sector 5'
 ]
 
-class TroupHeaderFocus(focus.HeaderFocus):
+class TroupHeaderItem(item.HeaderItem):
 	def __init__(self):
 		super().__init__('Troups')
 		self.actions = [
 			'Distribute equally'
 		]
 	def getInfo(self, activeActionId):
-		fi = focus.FocusInfo(
+		fi = item.ItemInfo(
 			'Army',
 			[
 				'Number of Sectors: xxx',
@@ -80,11 +80,11 @@ class TroupHeaderFocus(focus.HeaderFocus):
 		return fi
 
 
-class TroupSection(section.Section):
+class TroupsSection(section.Section):
 	def __init__(self, rect, game):
 		super().__init__(rect, game)
-		self.addFocus(TroupHeaderFocus())
+		self.addFocus(TroupHeaderItem())
 		self._setCursorFocusIndex(0)
 		for s in sectors:
-			sf = SectorFocus(army.Sector(s))
+			sf = SectorItem(army.Sector(s))
 			self.addFocus(sf)

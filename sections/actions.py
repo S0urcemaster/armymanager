@@ -1,10 +1,10 @@
 import pygame
 import color
 import text
-import focus
+import item
 import section
 
-class ActionFocus(focus.Focus):
+class ActionItem(item.Item):
 	def __init__(self, title:str):
 		super().__init__(40)
 		self.name = text.TextH(title)
@@ -26,12 +26,12 @@ class ActionsSection(section.Section):
 	
 	def __init__(self, rect, game):
 		super().__init__(rect, game)
-		self.addFocus(focus.HeaderFocus('Actions'))
+		self.addFocus(item.HeaderItem('Actions'))
 		self.activeFocusChanged(None)
 		rect = self.rect
 		rect.y = 500
 		rect.h = self.rect.h -rect.y +30
-		focus.FocusInfo.rect = rect
+		item.ItemInfo.rect = rect
 	
 	def draw(self):
 		pygame.draw.rect(self.screen, color.brightGrey, self.focuses[self.selectedAction +1].rect)
@@ -41,33 +41,32 @@ class ActionsSection(section.Section):
 			self.activeFocus.getInfo(self.selectedAction).draw()
 		super().draw()
 	
-	def activeFocusChanged(self, focus: focus.Focus):
+	def activeFocusChanged(self, focus: item.Item):
 		del self.focuses[1:]
-		if len(self.selectedItems) >0:
-			lst = list(self.selectedItems)
-			self.activeFocus = lst[0]
-			# intersection = set()
-			intersection = set(lst[0].actions)
-			for s in lst:
-				intersection = intersection & set(s.actions)
-			self.activeFocus.actions = intersection
-			print(intersection)
-		elif focus == None:
-			self.addFocus(WelcomeActionFocus())
-			self.addFocus(GameplayActionFocus())
-			self.addFocus(AboutActionFocus())
-			self.addFocus(QuitActionFocus())
+		if focus == None:
+			self.addFocus(WelcomeActionItem())
+			self.addFocus(GameplayActionItem())
+			self.addFocus(AboutActionItem())
+			self.addFocus(QuitActionItem())
 			self.activeFocus = None
 		else:
 			self.activeFocus = focus
 			for c in self.activeFocus.actions:
-				cf = ActionFocus(c)
+				cf = ActionItem(c)
 				self.addFocus(cf)
 			
 		self.selectedAction = 0
 		
 	def selectionActive(self, selection):
 		self.selectedItems = selection
+		if len(self.selectedItems) >1: # adjust actions list towards selected focuses' actions intersection
+			lst = list(self.selectedItems)
+			self.activeFocus = lst[0]
+			# intersection = set()
+			intersection = set(lst[0].actions)
+			for s in lst:
+				intersection = intersection & set(s.actions)
+			self.activeFocus.actions = list(intersection)
 		
 	def tab(self):
 		if self.selectedAction <len(self.focuses) -2:
@@ -78,17 +77,14 @@ class ActionsSection(section.Section):
 	def action(self, action):
 		if action == 3:
 			self.game.quit()
-		
-		
-	
 
 
-class WelcomeActionFocus(ActionFocus):
+class WelcomeActionItem(ActionItem):
 	def __init__(self):
 		super().__init__('Welcome')
 		self.commands = ['Welcome', 'Basic gameplay', 'About Army Manager', 'Quit game']
 	def getInfo(self, activeCommand):
-		fi = focus.FocusInfo(
+		fi = item.ItemInfo(
 			'Army Manager Prototype',
 			[
 				'Welcome to Army Manager',
@@ -117,12 +113,12 @@ class WelcomeActionFocus(ActionFocus):
 		return fi
 
 
-class GameplayActionFocus(ActionFocus):
+class GameplayActionItem(ActionItem):
 	def __init__(self):
 		super().__init__('Basic gameplay')
 		self.commands = ['Welcome', 'Basic gameplay', 'About Army Manager', 'Quit game']
 	def getInfo(self, activeCommand):
-		fi = focus.FocusInfo(
+		fi = item.ItemInfo(
 			'Basic gameplay',
 			[
 				'Press [ESC] to show game menu',
@@ -136,12 +132,12 @@ class GameplayActionFocus(ActionFocus):
 		return fi
 	
 
-class AboutActionFocus(ActionFocus):
+class AboutActionItem(ActionItem):
 	def __init__(self):
 		super().__init__('About Army Manager')
 		self.commands = ['Welcome', 'Basic gameplay', 'About Army Manager', 'Quit game']
 	def getInfo(self, activeCommand):
-		fi = focus.FocusInfo(
+		fi = item.ItemInfo(
 			'Army Manager Prototype',
 			[
 				'Developed by Sebastian Teister',
@@ -152,12 +148,12 @@ class AboutActionFocus(ActionFocus):
 		return fi
 	
 	
-class QuitActionFocus(ActionFocus):
+class QuitActionItem(ActionItem):
 	def __init__(self):
 		super().__init__('Quit Game')
 		self.commands = ['Welcome', 'Basic gameplay', 'About Army Manager', 'Quit game']
 	def getInfo(self, activeCommand):
-		fi = focus.FocusInfo(
+		fi = item.ItemInfo(
 			'Quit Game',
 			[
 				'Hit [RETURN] to quit'

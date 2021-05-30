@@ -1,7 +1,7 @@
 import pygame.draw
 
 import section
-import focus
+import item
 import text
 import color
 import merc
@@ -12,7 +12,7 @@ dismissSelected = 'Dismiss selected'
 nextRecruits = 'Next Recruits'
 previousRecruits = 'Previous Recruits'
 
-class RecruitFocus(focus.Focus):
+class RecruitItem(item.Item):
 	def __init__(self, recruit: merc.Merc):
 		super().__init__(85)
 		self.recruit:merc.Merc = recruit
@@ -69,7 +69,7 @@ class RecruitFocus(focus.Focus):
 			]
 		for p in self.recruit.perks:
 			lines.append(p.name)
-		fi = focus.FocusInfo(
+		fi = item.ItemInfo(
 			heading,
 			lines,
 			self.actions[activeActionId] + ':',
@@ -78,7 +78,7 @@ class RecruitFocus(focus.Focus):
 		return fi
 
 
-class RecruitmentHeaderFocus(focus.HeaderFocus):
+class RecruitmentHeaderItem(item.HeaderItem):
 	def __init__(self):
 		super().__init__('Recruitment')
 		self.actions = [
@@ -92,7 +92,7 @@ class RecruitmentHeaderFocus(focus.HeaderFocus):
 		lines = [
 			'Recruits available: ' +str(10),
 			]
-		fi = focus.FocusInfo(
+		fi = item.ItemInfo(
 			heading,
 			lines,
 			self.actions[activeActionId] + ':',
@@ -107,7 +107,7 @@ class RecruitmentSection(section.Section):
 	
 	def __init__(self, rect, game):
 		super().__init__(rect, game)
-		self.addFocus(RecruitmentHeaderFocus())
+		self.addFocus(RecruitmentHeaderItem())
 		self._setCursorFocusIndex(0)
 
 	def draw(self):
@@ -116,7 +116,7 @@ class RecruitmentSection(section.Section):
 	def setRecruits(self, recruits):
 		del self.focuses[1:]
 		for r in recruits[self.listIndex *10:self.listIndex *10 +10]:
-			f = RecruitFocus(r)
+			f = RecruitItem(r)
 			self.addFocus(f)
 			f.setPositions()
 	

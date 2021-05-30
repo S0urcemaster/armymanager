@@ -3,7 +3,7 @@ import color
 import text
 
 
-class FocusInfo:
+class ItemInfo:
 	screen = None
 	rect = None
 	
@@ -31,7 +31,7 @@ class FocusInfo:
 			l.draw()
 
 
-class Focus:
+class Item:
 	screen = None # static, set once in game
 	
 	def __init__(self, height):
@@ -41,11 +41,11 @@ class Focus:
 	def draw(self):
 		pygame.draw.rect(self.screen, color.black, self.rect, width = 1)
 	
-	def getInfo(self, activeActionId) -> FocusInfo:
+	def getInfo(self, activeActionId) -> ItemInfo:
 		pass
 
 
-class HeaderFocus(Focus):
+class HeaderItem(Item):
 	def __init__(self, title):
 		super().__init__(30)
 		self.title = title

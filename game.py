@@ -9,11 +9,11 @@ import text
 import layout
 import section
 from sections import header
-import focus
+import item
 import events
 import merc
 from sections.assignment import AssignmentSection
-from sections.troups import TroupSection
+from sections.troups import TroupsSection
 import sections.actions as actions
 from sections.camp import CampSection
 from sections.recruitment import RecruitmentSection
@@ -54,13 +54,13 @@ class Game(Process):
 		self.screen = pygame.display.set_mode(size)
 		text.Text.screen = self.screen
 		section.Section.screen = self.screen
-		focus.Focus.screen = self.screen
+		item.Item.screen = self.screen
 		
 		mainLayout = layout.Layout(self.env.width, self.env.height)
 		self.header = header.Header(mainLayout.getHeader(), self)
 		self.sections.append(AssignmentSection(mainLayout.getColumn(0), self))
 		self.border = section.Section(mainLayout.getColumn(1), self)
-		self.sections.append(TroupSection(mainLayout.getColumn(2), self))
+		self.sections.append(TroupsSection(mainLayout.getColumn(2), self))
 		self.actions = actions.ActionsSection(mainLayout.getColumn(3), self)
 		self.sections.append(CampSection(mainLayout.getColumn(4), self))
 		self.sections.append(RecruitmentSection(mainLayout.getColumn(5), self))

@@ -1,7 +1,7 @@
 from collections import namedtuple
 import pygame
 import color
-import focus
+import item
 import text
 
 
@@ -55,7 +55,7 @@ class Section:
 		focus.setPositions()
 		self.focuses.append(focus)
 
-	def focus(self) -> focus.Focus:
+	def focus(self) -> item.Item:
 		self.selfFocused = True
 		return self.focuses[self.cursorFocusIndex]
 		
@@ -74,7 +74,6 @@ class Section:
 		return self.focuses[self.cursorFocusIndex]
 			
 	def space(self) -> set:
-		print('space')
 		if self.cursorFocusIndex in self.selectedFocusesIndices:
 			self.selectedFocusesIndices.remove(self.cursorFocusIndex)
 			if self.cursorFocusIndex == 0: # space in head selects nothing

@@ -1,10 +1,10 @@
 import section
-import focus
+import item
 import text
 import assignments
 
 
-class SectorFocus(focus.Focus):
+class SectorItem(item.Item):
 	def __init__(self, title:str):
 		super().__init__(170)
 		self.title = title
@@ -19,7 +19,7 @@ class SectorFocus(focus.Focus):
 		self.name.setPosition(self.rect.x +rect.x, self.rect.y +rect.y -2)
 
 
-class AssignmentFocus(focus.Focus):
+class AssignmentItem(item.Item):
 	def __init__(self, assi:assignments.Assignment):
 		super().__init__(170)
 		self.assignment = assi
@@ -73,7 +73,7 @@ class AssignmentFocus(focus.Focus):
 			'Payment: ' + str(self.assignment.payment),
 			'Fame   : ' + str(self.assignment.fame),
 			]
-		fi = focus.FocusInfo(
+		fi = item.ItemInfo(
 			heading,
 			lines,
 			self.actions[activeActionId] + ':',
@@ -90,7 +90,7 @@ class State:
 	assignment = 0
 	enemy = 1
 
-class AssignmentHeaderFocus(focus.HeaderFocus):
+class AssignmentHeaderItem(item.HeaderItem):
 	def __init__(self):
 		super().__init__('Assignments')
 		self.actions = [
@@ -103,7 +103,7 @@ class AssignmentHeaderFocus(focus.HeaderFocus):
 			'Select Assignment and',
 			'hit [Return] to start battle'
 			]
-		fi = focus.FocusInfo(
+		fi = item.ItemInfo(
 			heading,
 			lines,
 			self.actions[activeActionId] + ':',
@@ -121,20 +121,20 @@ class AssignmentSection(section.Section):
 	def setAssignmentState(self):
 		self.state = State.assignment
 		del self.focuses[:]
-		self.addFocus(AssignmentHeaderFocus())
+		self.addFocus(AssignmentHeaderItem())
 		self._setCursorFocusIndex(0)
-		sf = AssignmentFocus(assignments.assignments[0])
+		sf = AssignmentItem(assignments.assignments[0])
 		self.addFocus(sf)
-		sf = AssignmentFocus(assignments.assignments[1])
+		sf = AssignmentItem(assignments.assignments[1])
 		self.addFocus(sf)
 	
 	def setEnemyState(self):
 		self.state = State.enemy
 		del self.focuses[:]
-		self.addFocus(focus.HeaderFocus('Enemy'))
+		self.addFocus(item.HeaderItem('Enemy'))
 		self._setCursorFocusIndex(0)
 		for s in sectors:
-			sf = SectorFocus(s)
+			sf = SectorItem(s)
 			self.addFocus(sf)
 	
 	def space(self):
@@ -182,5 +182,5 @@ class AssignmentSection(section.Section):
 				lines = [
 					'Enemy sector soldiers: x'
 				]
-		return focus.FocusInfo(heading, lines)
+		return item.ItemInfo(heading, lines)
 		
