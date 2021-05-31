@@ -62,14 +62,13 @@ class RecruitmentSection(section.Section):
 		super().__init__(rect, game)
 		self.addItem(RecruitmentHeaderItem())
 		self._setItemFocusIndex(0)
-		r = self.rect
-		r.y = 921
-		rect.h = 39
-		self.stats = section.SectionStats(0, r)
+		self.stats = section.SectionStats(0, self.rect)
+		self.listMarker = section.ScrollBar(self.rect)
 		
 
 	def draw(self):
 		super().draw()
+		self.listMarker.draw()
 		self.stats.draw()
 
 	def setRecruits(self, recruits):
@@ -79,14 +78,14 @@ class RecruitmentSection(section.Section):
 			self.addItem(f)
 			f.setPositions()
 		self.stats.update(len(recruits))
+		self.listMarker.update(self.listIndex, len(recruits))
 	
 	def act(self, action):
-		print(action)
 		info = self.items[self.itemFocusIndex].info
 		if info.actions[action] == RECRUIT:
-			self.game.recruit(self.items[self.itemFocusIndex].soldier)
+			self.game.doRecruit(self.items[self.itemFocusIndex].soldier)
 		elif info.actions[action] == RECRUIT_SELECTED:
-			self.game.recruitSelected(list(map(lambda r: r.merc, self.selectedItemsIndices)))
+			self.game.doNecruitSelected(list(map(lambda r: r.merc, self.selectedItemsIndices)))
 		elif DISMISS_SELECTED:
 			pass
 		elif NEXT_RECRUITS:

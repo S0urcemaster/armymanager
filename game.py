@@ -1,6 +1,7 @@
 from multiprocessing import Process
 import sys, pygame
 import locale
+from threading import Lock
 
 import lib
 import gameenv
@@ -38,6 +39,8 @@ class Game(Process):
 	mercs = [] # all recruited mercenaries
 	army = Army()
 	
+	lock = Lock()
+	
 	def __init__(self, env: gameenv.GameEnv):
 		super().__init__()
 		locale.setlocale(locale.LC_TIME, "de_DE")
@@ -56,6 +59,7 @@ class Game(Process):
 		section.Section.screen = self.screen
 		item.Item.screen = self.screen
 		section.SectionStats.screen = self.screen
+		section.ScrollBar.screen = self.screen
 		
 		mainLayout = layout.Layout(self.env.width, self.env.height)
 		self.header = header.Header(mainLayout.getHeader(), self)
@@ -77,7 +81,7 @@ class Game(Process):
 	def start(self):
 		clock = pygame.time.Clock()
 		self.mercs = self.make10Recruits()
-		self.sections[camp].initialMercs(self.mercs)
+		self.sections[camp].setMercs(self.mercs)
 		while self.running:
 			# evaluate player action
 			for event in pygame.event.get():
@@ -162,12 +166,17 @@ class Game(Process):
 			mercs.append(lib.makeRecruit())
 		return mercs
 
-	def recruit(self, recruit: merc.Merc):
-		self.recruits.remove(recruit)
-		self.mercs.append(recruit)
-		self.gameEvents.addEvent(events.Event(events.RECRUITED_EVENT, 0.01))
+	def doRecruit(self, recruit: merc.Merc):
+		self.lock.acquire()
+		try:
+			self.recruits.remove(recruit) # throws 'not in list'
+			self.mercs.append(recruit)
+			self.gameEvents.addEvent(events.Event(events.RECRUITED_EVENT, 0.001))
+		except:
+			pass
+		self.lock.release()
 
-	def recruitSelected(self, recruits):
+	def doNecruitSelected(self, recruits):
 		"""Called from recruitment when selection is accepted"""
 		print(recruits)
 		

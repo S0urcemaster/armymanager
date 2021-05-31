@@ -4,13 +4,34 @@ import color
 import item
 import text
 
+class ScrollBar:
+	screen = None
+	
+	def __init__(self, rect: pygame.Rect):
+		self.rect = rect
+		self.rect.y = 921
+		self.rect.h = 39
+		self.max = 1
+		self.n = 1
+		self.marker = self.rect.inflate(-2, -2)
+		self.update(1, 10)
+		
+	def draw(self):
+		pygame.draw.rect(self.screen, color.black, self.rect, width = 1)
+		pygame.draw.rect(self.screen, color.blue, self.marker)
+		
+	def update(self, n, max):
+		self.marker.width = self.rect.width //(max /10) # fixed list size
+		self.marker.x = self.rect.x +self.marker.width  *n
+
 
 class SectionStats:
 	screen = None
-	rect = None
 	
 	def __init__(self, value, rect):
 		self.rect = rect
+		self.rect.y = 921
+		self.rect.h = 39
 		self.update(value)
 	
 	def draw(self):
@@ -112,11 +133,11 @@ class Section:
 		self.itemFocusIndex = x
 		self.itemFocus = self.items[x]
 	
-	def update(self):
-		"""Update items"""
-		pass
+	# def update(self):
+	# 	"""Update items"""
+	# 	pass
 	
-	def action(self, id):
-		"""Pass action to selected items"""
-		for i in self.selectedItems:
-			i.action(id)
+	# def action(self, id):
+	# 	"""Pass action to selected items"""
+	# 	for i in self.selectedItems:
+	# 		i.action(id)

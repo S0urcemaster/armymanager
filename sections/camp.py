@@ -110,28 +110,21 @@ class CampSection(section.Section):
 		super().__init__(rect, game)
 		self.addItem(CampHeaderItem())
 		self._setItemFocusIndex(0)
+		self.stats = section.SectionStats(0, self.rect)
+		self.listMarker = section.ScrollBar(self.rect)
 	
-	def initialMercs(self, recruits):
-		del self.items[1:]
-		for r in recruits:
-			f = MercItem(r)
-			self.addItem(f)
+	def draw(self):
+		super().draw()
+		self.listMarker.draw()
+		self.stats.draw()
 			
 	def setMercs(self, mercs):
-		self.soldiers = mercs
+		# self.soldiers = mercs
 		del self.items[1:]
-		for r in self.soldiers[self.listIndex *10:self.listIndex *10 +10]:
+		for r in mercs[self.listIndex *10:self.listIndex *10 +10]:
 			f = MercItem(r)
 			self.addItem(f)
-			
-	def update(self):
-		del self.items[1:]
-		for s in self.soldiers:
-			f = MercItem(s)
-			self.addItem(f)
-		
-	def action(self, action):
-		super().action(action)
-		self.update()
+		self.stats.update(len(mercs))
+		self.listMarker.update(self.listIndex, len(mercs))
 			
 			
