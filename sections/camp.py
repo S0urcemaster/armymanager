@@ -80,17 +80,17 @@ class MercItem(item.Item):
 			p.setPosition(self.rect.x +self.rect.w -70, self.rect.y +25 +i *20)
 	
 	def action(self, id):
-		if self.actions[id] == trainPikeman1:
+		if self.info.actions[id] == trainPikeman1:
 			self.soldier.xp.train(merc.UnitType.pikeman)
-		if self.actions[id] == trainCavalry1:
+		if self.info.actions[id] == trainCavalry1:
 			self.soldier.xp.train(merc.UnitType.cavalry)
-		if self.actions[id] == trainMusketeer1:
+		if self.info.actions[id] == trainMusketeer1:
 			self.soldier.xp.train(merc.UnitType.musketeer)
-		if self.actions[id] == trainPikeman2:
+		if self.info.actions[id] == trainPikeman2:
 			self.soldier.xp.levelUp()
-		if self.actions[id] == trainCavalry2:
+		if self.info.actions[id] == trainCavalry2:
 			self.soldier.xp.levelUp()
-		if self.actions[id] == trainMusketeer2:
+		if self.info.actions[id] == trainMusketeer2:
 			self.soldier.xp.levelUp()
 
 class CampHeaderItem(item.HeaderItem):
@@ -104,7 +104,7 @@ class CampHeaderItem(item.HeaderItem):
 
 class CampSection(section.Section):
 	
-	soldiers = []
+	listIndex = 0
 	
 	def __init__(self, rect, game):
 		super().__init__(rect, game)
@@ -112,9 +112,15 @@ class CampSection(section.Section):
 		self._setItemFocusIndex(0)
 	
 	def initialMercs(self, recruits):
-		self.soldiers.extend(recruits)
 		del self.items[1:]
 		for r in recruits:
+			f = MercItem(r)
+			self.addItem(f)
+			
+	def setMercs(self, mercs):
+		self.soldiers = mercs
+		del self.items[1:]
+		for r in self.soldiers[self.listIndex *10:self.listIndex *10 +10]:
 			f = MercItem(r)
 			self.addItem(f)
 			

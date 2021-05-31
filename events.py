@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 
 CLOCK_SECONDS = "clock seconds"
 NEW_RECRUITS_EVENT = "new recruits"
+RECRUITED_EVENT = "recruited"
 
 class Event:
 	current = None
@@ -25,8 +26,8 @@ class Events:
 	def renew(self, event, delta, payload = 0):
 		event.renew(delta, payload)
 		
-	def pop(self, event):
-		self.events.pop(event)
+	def remove(self, event):
+		self.events.remove(event)
 	
 	def addEvent(self, event):
 		self.events.append(event)

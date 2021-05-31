@@ -8,18 +8,20 @@ import merc
 import events
 import sections.camp as camp
 
-recruitSelected = 'Recruit selected'
-dismissSelected = 'Dismiss selected'
-nextRecruits = 'Next Recruits'
-previousRecruits = 'Previous Recruits'
+RECRUIT = 'Recruit'
+RECRUIT_SELECTED = 'Recruit selected'
+DISMISS_SELECTED = 'Dismiss selected'
+NEXT_RECRUITS = 'Next Recruits'
+PREVIOUS_RECRUITS = 'Previous Recruits'
+RECRUIT_VISIBLE = 'Recruit visible'
 
 class RecruitmentHeaderItem(item.HeaderItem):
 	def __init__(self):
 		super().__init__('Recruitment')
 		actions = [
-			'Recruit all',
-			'Recruit selected',
-			'Next Recruits'
+			RECRUIT_VISIBLE,
+			RECRUIT_SELECTED,
+			NEXT_RECRUITS
 		]
 		self.info = item.ItemInfo(
 			'Recruitment',
@@ -32,8 +34,8 @@ class RecruitItem(camp.MercItem):
 	def __init__(self, recruit: merc.Merc):
 		super().__init__(recruit)
 		actions = [
-			'Recruit',
-			'Next Recruits'
+			RECRUIT,
+			NEXT_RECRUITS
 		]
 		self.info = item.ItemInfo(
 			self.soldier.firstname + ' ' + self.soldier.lastname,
@@ -71,14 +73,16 @@ class RecruitmentSection(section.Section):
 			self.addItem(f)
 			f.setPositions()
 	
-	def action(self, action):
-		# for s in self.selection:
-		
-		if self.actions[action] == recruitSelected:
-			self.game.recruited(list(map(lambda r: r.merc, self.selectedItemsIndices)))
-		elif dismissSelected:
+	def act(self, action):
+		print(action)
+		info = self.items[self.itemFocusIndex].info
+		if info.actions[action] == RECRUIT:
+			self.game.recruit(self.items[self.itemFocusIndex].soldier)
+		elif info.actions[action] == RECRUIT_SELECTED:
+			self.game.recruitSelected(list(map(lambda r: r.merc, self.selectedItemsIndices)))
+		elif DISMISS_SELECTED:
 			pass
-		elif nextRecruits:
+		elif NEXT_RECRUITS:
 			pass
-		elif previousRecruits:
+		elif PREVIOUS_RECRUITS:
 			pass

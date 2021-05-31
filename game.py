@@ -75,7 +75,8 @@ class Game(Process):
 	
 	def start(self):
 		clock = pygame.time.Clock()
-		self.sections[camp].initialMercs(self.make10Recruits())
+		self.mercs = self.make10Recruits()
+		self.sections[camp].initialMercs(self.mercs)
 		while self.running:
 			# evaluate player action
 			for event in pygame.event.get():
@@ -112,14 +113,14 @@ class Game(Process):
 						if len(selection) >0:
 							self.actions.selectionActive(selection)
 							
-					elif event.key == pygame.K_TAB: # TAB
+					elif event.key == pygame.K_TAB or event.key == pygame.K_s: # TAB
 						self.actions.tab()
 						
-					elif event.key == pygame.K_RETURN: # RETURN
+					elif event.key == pygame.K_RETURN or event.key == pygame.K_h: # RETURN
 						if self.actions.activeItem == None:
-							self.actions.action(self.actions.selectedAction)
+							self.focusedSection.act(self.actions.selectedAction)
 						else:
-							self.focusedSection.actionText(self.actions.selectedAction)
+							self.focusedSection.act(self.actions.selectedAction)
 						
 					elif event.key == pygame.K_ESCAPE: # ESCAPE
 						self.actions.activeItemChanged(None)
@@ -135,6 +136,11 @@ class Game(Process):
 					self.recruits.append(lib.makeRecruit())
 					self.sections[recruitment].setRecruits(self.recruits)
 					self.gameEvents.renew(e, 1)
+					
+				if(e.name == events.RECRUITED_EVENT):
+					self.sections[recruitment].setRecruits(self.recruits)
+					self.sections[camp].setMercs(self.mercs)
+					self.gameEvents.remove(e)
 			
 			# draw frame
 			self.screen.fill(color.middleGrey)
@@ -155,7 +161,13 @@ class Game(Process):
 			mercs.append(lib.makeRecruit())
 		return mercs
 
-	def recruited(self, recruits):
+	def recruit(self, recruit: merc.Merc):
+		print(recruit.firstname)
+		self.recruits.remove(recruit)
+		self.mercs.append(recruit)
+		self.gameEvents.addEvent(events.Event(events.RECRUITED_EVENT, 0.01))
+
+	def recruitSelected(self, recruits):
 		"""Called from recruitment when selection is accepted"""
 		print(recruits)
 		
