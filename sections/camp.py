@@ -139,5 +139,15 @@ class CampSection(section.Section):
 			self.addItem(f)
 		self.stats.update(len(mercs))
 		self.listMarker.update(self.listIndex, len(mercs))
+	
+	
+	def act(self, action):
+		info = self.items[self.itemFocusIndex].info
+		if info.actions[action] == trainPikeman1:
+			self.game.doTrain(self.items[self.itemFocusIndex].soldier, merc.UnitType.pikeman)
+		if info.actions[action] == trainCavalry1:
+			self.game.doTrain(self.items[self.itemFocusIndex].soldier, merc.UnitType.cavalry)
+		if info.actions[action] == trainMusketeer1:
+			self.game.doTrain(self.items[self.itemFocusIndex].soldier, merc.UnitType.musketeer)
 			
-			
+	

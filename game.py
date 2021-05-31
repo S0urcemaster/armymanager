@@ -191,6 +191,9 @@ class Game(Process):
 		print(recruits)
 	
 	
+	def doTrain(self, merc:merc.Merc, typ:merc.UnitType):
+		merc.xp.typ = typ
+	
 	# game menu
 	
 	def quit(self):
