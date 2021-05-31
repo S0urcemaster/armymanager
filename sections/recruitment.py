@@ -62,9 +62,15 @@ class RecruitmentSection(section.Section):
 		super().__init__(rect, game)
 		self.addItem(RecruitmentHeaderItem())
 		self._setItemFocusIndex(0)
+		r = self.rect
+		r.y = 921
+		rect.h = 39
+		self.stats = section.SectionStats(0, r)
+		
 
 	def draw(self):
 		super().draw()
+		self.stats.draw()
 
 	def setRecruits(self, recruits):
 		del self.items[1:]
@@ -72,6 +78,7 @@ class RecruitmentSection(section.Section):
 			f = RecruitItem(r)
 			self.addItem(f)
 			f.setPositions()
+		self.stats.update(len(recruits))
 	
 	def act(self, action):
 		print(action)

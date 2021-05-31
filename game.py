@@ -55,6 +55,7 @@ class Game(Process):
 		text.Text.screen = self.screen
 		section.Section.screen = self.screen
 		item.Item.screen = self.screen
+		section.SectionStats.screen = self.screen
 		
 		mainLayout = layout.Layout(self.env.width, self.env.height)
 		self.header = header.Header(mainLayout.getHeader(), self)
@@ -162,7 +163,6 @@ class Game(Process):
 		return mercs
 
 	def recruit(self, recruit: merc.Merc):
-		print(recruit.firstname)
 		self.recruits.remove(recruit)
 		self.mercs.append(recruit)
 		self.gameEvents.addEvent(events.Event(events.RECRUITED_EVENT, 0.01))

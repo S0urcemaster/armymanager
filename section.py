@@ -2,6 +2,25 @@ from collections import namedtuple
 import pygame
 import color
 import item
+import text
+
+
+class SectionStats:
+	screen = None
+	rect = None
+	
+	def __init__(self, value, rect):
+		self.rect = rect
+		self.update(value)
+	
+	def draw(self):
+		self.titleText.draw()
+		pygame.draw.rect(self.screen, color.black, self.rect, width = 1)
+	
+	def update(self, value):
+		self.titleText = text.TextH(str(value))
+		rect = self.titleText.text.get_rect(center = (self.rect.w //2, self.rect.h //2))
+		self.titleText.setPosition(self.rect.x +rect.x, self.rect.y +rect.y -2)
 
 
 class Section:

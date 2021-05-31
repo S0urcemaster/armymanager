@@ -33,9 +33,6 @@ class ItemInfo:
 		self.headingText.draw()
 		for l in self.lineTexts:
 			l.draw()
-	
-	def action(self, id):
-		pass
 
 class Item:
 	screen = None # static, set once in game
