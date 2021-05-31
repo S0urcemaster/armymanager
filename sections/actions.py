@@ -71,10 +71,10 @@ class ActionsSection(section.Section):
 			lst = list(selection)
 			self.activeItem = lst[0]
 			# intersection = set()
-			intersection = set(lst[0].actions)
+			intersection = set(lst[0].info.actions)
 			for s in lst:
-				intersection = intersection & set(s.actions)
-			self.activeItem.actions = list(intersection)
+				intersection = intersection & set(s.info.actions)
+			self.activeItem.info.actions = list(intersection)
 	
 	def action(self, action):
 		if action == 3:

@@ -31,9 +31,25 @@ class AssignmentItem(item.Item):
 		self.enemyEquipment = text.TextP('Enemy equipment: ' +str(assi.enemyEquipment))
 		self.payment = text.TextP('Payment: ' +str(assi.payment))
 		self.fame = text.TextP('Fame: ' +str(assi.fame))
-		self.actions = [
+		actions = [
 			'Select this assignment',
 		]
+		self.info = item.ItemInfo(
+			self.assignment.title,
+			[
+				self.assignment.principal + ' asks you',
+				'to settle this issue.',
+				'',
+				'Battlefield size: ' + str(self.assignment.sectors),
+				'Estimated enemy numbers: ' + str(self.assignment.enemyForce),
+				'Estimated enemy level: ' + str(self.assignment.enemyLevel),
+				'Estimated enemy equipment: ' + str(self.assignment.enemyEquipment),
+				'',
+				'Payment: ' + str(self.assignment.payment),
+				'Fame   : ' + str(self.assignment.fame),
+				],
+			actions,
+		)
 		
 	
 	def draw(self):
@@ -59,28 +75,6 @@ class AssignmentItem(item.Item):
 		self.payment.setPosition(x, y +120)
 		self.fame.setPosition(x, y +140)
 	
-	def getInfo(self, activeActionId):
-		heading = self.assignment.title
-		lines = [
-			self.assignment.principal + ' asks you',
-			'to settle this issue.',
-			'',
-			'Battlefield size: ' + str(self.assignment.sectors),
-			'Estimated enemy numbers: ' + str(self.assignment.enemyForce),
-			'Estimated enemy level: ' + str(self.assignment.enemyLevel),
-			'Estimated enemy equipment: ' + str(self.assignment.enemyEquipment),
-			'',
-			'Payment: ' + str(self.assignment.payment),
-			'Fame   : ' + str(self.assignment.fame),
-			]
-		fi = item.ItemInfo(
-			heading,
-			lines,
-			self.actions[activeActionId] + ':',
-			)
-		fi.setPositions()
-		return fi
-	
 	
 sectors = [
 	'Sector 1', 'Sector 2', 'Sector 3', 'Sector 4', 'Sector 5'
@@ -93,23 +87,15 @@ class State:
 class AssignmentHeaderItem(item.HeaderItem):
 	def __init__(self):
 		super().__init__('Assignments')
-		self.actions = [
+		actions = [
 			'Select assignment',
 		]
-	
-	def getInfo(self, activeActionId):
-		heading = 'Assignment'
-		lines = [
-			'Select Assignment and',
-			'hit [Return] to start battle'
-			]
-		fi = item.ItemInfo(
-			heading,
-			lines,
-			self.actions[activeActionId] + ':',
-			)
-		fi.setPositions()
-		return fi
+		self.info = item.ItemInfo('Assignment',
+			[
+				'Select Assignment and',
+				'hit [Return] to start battle'
+			], actions,
+		)
 
 
 class AssignmentSection(section.Section):
