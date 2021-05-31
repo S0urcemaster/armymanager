@@ -35,7 +35,8 @@ class RecruitItem(camp.MercItem):
 		super().__init__(recruit)
 		actions = [
 			RECRUIT,
-			NEXT_RECRUITS
+			NEXT_RECRUITS,
+			PREVIOUS_RECRUITS,
 		]
 		self.info = item.ItemInfo(
 			self.soldier.firstname + ' ' + self.soldier.lastname,
@@ -56,39 +57,37 @@ class RecruitItem(camp.MercItem):
 
 class RecruitmentSection(section.Section):
 	
-	listIndex = 0
-	
 	def __init__(self, rect, game):
 		super().__init__(rect, game)
 		self.addItem(RecruitmentHeaderItem())
 		self._setItemFocusIndex(0)
 		self.stats = section.SectionStats(0, self.rect)
-		self.listMarker = section.ScrollBar(self.rect)
+		self.scrollBar = section.ScrollBar(self.rect)
 		
 
 	def draw(self):
 		super().draw()
-		self.listMarker.draw()
+		self.scrollBar.draw()
 		self.stats.draw()
 
 	def setRecruits(self, recruits):
 		del self.items[1:]
-		for r in recruits[self.listIndex *10:self.listIndex *10 +10]:
+		for r in recruits[self.scrollBar.listIndex *10:self.scrollBar.listIndex *10 +10]:
 			f = RecruitItem(r)
 			self.addItem(f)
 			f.setPositions()
 		self.stats.update(len(recruits))
-		self.listMarker.update(self.listIndex, len(recruits))
+		self.scrollBar.update(self.scrollBar.listIndex, len(recruits))
 	
 	def act(self, action):
 		info = self.items[self.itemFocusIndex].info
 		if info.actions[action] == RECRUIT:
 			self.game.doRecruit(self.items[self.itemFocusIndex].soldier)
+		elif info.actions[action] == NEXT_RECRUITS:
+			self.scrollBar.next()
+		elif info.actions[action] == PREVIOUS_RECRUITS:
+			self.scrollBar.previous()
 		elif info.actions[action] == RECRUIT_SELECTED:
-			self.game.doNecruitSelected(list(map(lambda r: r.merc, self.selectedItemsIndices)))
+			self.game.doRecruitSelected(list(map(lambda r: r.merc, self.selectedItemsIndices)))
 		elif DISMISS_SELECTED:
-			pass
-		elif NEXT_RECRUITS:
-			pass
-		elif PREVIOUS_RECRUITS:
 			pass

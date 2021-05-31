@@ -27,6 +27,7 @@ class ActionsSection(section.Section):
 		super().__init__(rect, game)
 		self.addItem(item.HeaderItem('Actions'))
 		self.activeItemChanged(None)
+		# self.activeItem = None
 		rect = self.rect
 		rect.y = 500
 		rect.h = self.rect.h -rect.y +30
@@ -47,6 +48,7 @@ class ActionsSection(section.Section):
 			self.addItem(GameplayActionItem())
 			self.addItem(AboutActionItem())
 			self.addItem(QuitActionItem())
+			self.addItem(Recruits100ActionItem())
 			self.activeItem = None
 		else:
 			for c in item.info.actions:
@@ -76,9 +78,11 @@ class ActionsSection(section.Section):
 				intersection = intersection & set(s.info.actions)
 			self.activeItem.info.actions = list(intersection)
 	
-	def action(self, action):
+	def act(self, action):
 		if action == 3:
 			self.game.quit()
+		if action == 4:
+			self.game.doMake100Recruits()
 
 
 class WelcomeActionItem(ActionItem):
@@ -145,5 +149,16 @@ class QuitActionItem(ActionItem):
 			'Quit Game',
 			[
 				'Hit [RETURN] to quit'
+			]
+		)
+	
+	
+class Recruits100ActionItem(ActionItem):
+	def __init__(self):
+		super().__init__('Make 100 Recruits')
+		self.info = item.ItemInfo(
+			'Test it!',
+			[
+				'Hit [RETURN] to make'
 			]
 		)

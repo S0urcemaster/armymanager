@@ -48,7 +48,7 @@ class Game(Process):
 		self.running = True
 		
 		lib.readNames()
-
+		
 		pygame.init()
 		
 		pygame.key.set_repeat(250, 60)
@@ -80,7 +80,7 @@ class Game(Process):
 	
 	def start(self):
 		clock = pygame.time.Clock()
-		self.mercs = self.make10Recruits()
+		self.mercs = self.make10Mercs()
 		self.sections[camp].setMercs(self.mercs)
 		while self.running:
 			# evaluate player action
@@ -123,7 +123,7 @@ class Game(Process):
 						
 					elif event.key == pygame.K_RETURN or event.key == pygame.K_h: # RETURN
 						if self.actions.activeItem == None:
-							self.focusedSection.act(self.actions.selectedAction)
+							self.actions.act(self.actions.selectedAction)
 						else:
 							self.focusedSection.act(self.actions.selectedAction)
 						
@@ -160,12 +160,22 @@ class Game(Process):
 			
 			self.gameEvents.update(dt) # update game's current time
 
-	def make10Recruits(self):
+	def make10Mercs(self):
 		mercs = []
 		for i in range(10):
 			mercs.append(lib.makeRecruit())
 		return mercs
+	
+	def make100Recruits(self):
+		return list(map(lambda x:lib.makeRecruit(), range(100)))
 
+	def exit(self):
+		self.running = False
+		pygame.quit()
+		sys.exit()
+		
+	# callbacks
+	
 	def doRecruit(self, recruit: merc.Merc):
 		self.lock.acquire()
 		try:
@@ -175,20 +185,22 @@ class Game(Process):
 		except:
 			pass
 		self.lock.release()
-
-	def doNecruitSelected(self, recruits):
+	
+	def doRecruitSelected(self, recruits):
 		"""Called from recruitment when selection is accepted"""
 		print(recruits)
-		
-	def exit(self):
-		self.running = False
-		pygame.quit()
-		sys.exit()
-		
-	# callbacks
-
+	
+	
+	# game menu
+	
 	def quit(self):
 		exit()
+		
+	
+	# test
+
+	def doMake100Recruits(self):
+		self.recruits.extend(self.make100Recruits())
 
 env = gameenv.GameEnv()
 game = Game(env)

@@ -14,10 +14,15 @@ trainCavalry2 = 'Train Cavalry (2)'
 trainMusketeer2 = 'Train Musketeer (2)'
 
 class MercItem(item.Item):
+	
+	pikemanImg = pygame.image.load('res/pikeman.png')
+	cavalryImg = pygame.image.load('res/cavalry.png')
+	musketeerImg = pygame.image.load('res/musketeer.png')
+	
 	def __init__(self, soldier: merc.Merc):
 		super().__init__(85)
 		self.soldier = soldier
-				
+		self.rect = None
 		self.name = text.TextH(f"{soldier.firstname} {soldier.lastname} - {soldier.getAge(events.Event.current)}")
 		self.pay = text.TextH(str(soldier.pay), col = color.silver)
 		self.perks = []
@@ -72,6 +77,14 @@ class MercItem(item.Item):
 		                 (self.rect.x + self.soldier.charisma / 2 + 7, self.rect.y + 65), 8)
 		pygame.draw.line(self.screen, color.purple, (self.rect.x +7, self.rect.y +75),
 		                 (self.rect.x + self.soldier.confidence / 2 + 7, self.rect.y + 75), 8)
+		
+		r = pygame.Rect(self.rect.x +200, self.rect.y +30, 50, 50)
+		if self.soldier.xp.typ == merc.UnitType.pikeman:
+			self.screen.blit(self.pikemanImg, r)
+		if self.soldier.xp.typ == merc.UnitType.cavalry:
+			self.screen.blit(self.cavalryImg, r)
+		if self.soldier.xp.typ == merc.UnitType.musketeer:
+			self.screen.blit(self.musketeerImg, r)
 	
 	def setPositions(self):
 		self.name.setPosition(self.rect.x +7, self.rect.y +6)

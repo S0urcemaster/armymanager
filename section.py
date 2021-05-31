@@ -12,17 +12,29 @@ class ScrollBar:
 		self.rect.y = 921
 		self.rect.h = 39
 		self.max = 1
-		self.n = 1
-		self.marker = self.rect.inflate(-2, -2)
-		self.update(1, 10)
+		self.listIndex = 0
+		self.sb = self.rect.inflate(-2, -2)
+		self.update(self.listIndex, 10)
 		
 	def draw(self):
 		pygame.draw.rect(self.screen, color.black, self.rect, width = 1)
-		pygame.draw.rect(self.screen, color.blue, self.marker)
+		pygame.draw.rect(self.screen, color.blue, self.sb)
 		
-	def update(self, n, max):
-		self.marker.width = self.rect.width //(max /10) # fixed list size
-		self.marker.x = self.rect.x +self.marker.width  *n
+	def update(self, ix, max = None):
+		self.listIndex = ix
+		if max != None: self.max = max
+		self.sb.width = self.rect.width // (self.max / 10) # fixed list size
+		self.sb.x = self.rect.x + self.sb.width * ix
+	
+	def next(self):
+		if (self.listIndex +1) *10 < self.max:
+			self.listIndex += 1
+			self.update(self.listIndex)
+		
+	def previous(self):
+		if self.listIndex >0:
+			self.listIndex -= 1
+			self.update(self.listIndex)
 
 
 class SectionStats:
