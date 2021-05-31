@@ -71,7 +71,6 @@ class CommandItem(item.Item):
 	def __init__(self, title:str):
 		super().__init__(40)
 		self.name = text.TextH(title)
-		self.commands = []
 	
 	def draw(self):
 		super().draw()
@@ -93,7 +92,7 @@ class CommandsSection(section.Section):
 	def __init__(self, rect):
 		super().__init__(rect)
 		self.state = State.gameMenu
-		self.addFocus(section.HeaderFocus('Commands'))
+		self.addItem(section.HeaderFocus('Commands'))
 		self.__changeMenu(State.gameMenu)
 		self.setFocusInfo(self.getFocusInfo())
 	
@@ -145,7 +144,7 @@ class CommandsSection(section.Section):
 		del self.items[1:]
 		for c in self.commands:
 			cf = CommandItem(c[1])
-			self.addFocus(cf)
+			self.addItem(cf)
 		
 		self.selectedCommandIndex = 0
 		self.selectedCommand = self.commands[self.selectedCommandIndex]
@@ -191,46 +190,4 @@ class CommandsSection(section.Section):
 		info.setPositions(rect)
 		self.focusInfo = info
 	
-	def getFocusInfo(self):
-		if self.selectedCommand[1] == GameMenuCommands.welcome:
-			heading = "Army Manager Prototype"
-			lines = [
-				'Welcome to Army Manager',
-				'Prototype! Aim of the game is getting ',
-				'a high score. You need to recruit ',
-				'mercenaries, train and equip them and ',
-				'send them to battle. If you win the battle ',
-				'you earn money from your client and can ',
-				'loot the battlefield. Your fame rises, ',
-				'too which gives you more recruits.',
-				'',
-				'Sooner or later, as the game progresses,',
-				'it will become harder to win conflicts',
-				'which makes you run out of money or ',
-				'recruits. Your high score will be the ',
-				'maximum money gained.',
-				'',
-				'Use [TAB] to switch menu',
-			]
-		elif self.selectedCommand[1] == GameMenuCommands.basicGameplay:
-			heading = "Basic gameplay"
-			lines = [
-				'Press [ESC] to show game menu',
-				'Use arrow keys to navigate',
-				'Use [TAB] to toggle commands',
-				'Use [SPACE] to select',
-				'Use [RETURN] to execute command',
-			]
-		elif self.selectedCommand[1] == GameMenuCommands.about:
-			heading = "About Army Manager"
-			lines = [
-				'Developed by Sebastian Teister',
-				'Mai 2021',
-			]
-		elif self.selectedCommand[1] == GameMenuCommands.quit:
-			heading = "Quit Game"
-			lines = [
-				'Hit [RETURN] to quit'
-			]
-		return item.ItemInfo(heading, lines)
 		

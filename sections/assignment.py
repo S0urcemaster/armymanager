@@ -121,21 +121,21 @@ class AssignmentSection(section.Section):
 	def setAssignmentState(self):
 		self.state = State.assignment
 		del self.items[:]
-		self.addFocus(AssignmentHeaderItem())
+		self.addItem(AssignmentHeaderItem())
 		self._setItemFocusIndex(0)
 		sf = AssignmentItem(assignments.assignments[0])
-		self.addFocus(sf)
+		self.addItem(sf)
 		sf = AssignmentItem(assignments.assignments[1])
-		self.addFocus(sf)
+		self.addItem(sf)
 	
 	def setEnemyState(self):
 		self.state = State.enemy
 		del self.items[:]
-		self.addFocus(item.HeaderItem('Enemy'))
+		self.addItem(item.HeaderItem('Enemy'))
 		self._setItemFocusIndex(0)
 		for s in sectors:
 			sf = SectorItem(s)
-			self.addFocus(sf)
+			self.addItem(sf)
 	
 	def space(self):
 		"""Overwrite base behaviour"""

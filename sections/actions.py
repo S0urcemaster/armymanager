@@ -8,7 +8,6 @@ class ActionItem(item.Item):
 	def __init__(self, title:str):
 		super().__init__(40)
 		self.name = text.TextH(title)
-		self.commands = []
 	
 	def draw(self):
 		super().draw()
@@ -22,11 +21,12 @@ class ActionItem(item.Item):
 class ActionsSection(section.Section):
 	
 	selectedAction = 0
+	"""which is selected with tab"""
 	
 	def __init__(self, rect, game):
 		super().__init__(rect, game)
-		self.addFocus(item.HeaderItem('Actions'))
-		self.activeFocusChanged(None)
+		self.addItem(item.HeaderItem('Actions'))
+		self.activeItemChanged(None)
 		rect = self.rect
 		rect.y = 500
 		rect.h = self.rect.h -rect.y +30
@@ -34,43 +34,47 @@ class ActionsSection(section.Section):
 	
 	def draw(self):
 		pygame.draw.rect(self.screen, color.brightGrey, self.items[self.selectedAction + 1].rect)
-		if self.activeFocus == None: # own infos
+		if self.activeItem == None: # own infos
 			self.items[self.selectedAction + 1].getInfo([]).draw()
 		else: # show active focus info
-			self.activeFocus.getInfo(self.selectedAction).draw()
+			self.activeItem.getInfo(self.selectedAction).draw()
 		super().draw()
 	
-	def activeFocusChanged(self, focus: item.Item):
+	def activeItemChanged(self, item: item.Item):
 		del self.items[1:]
-		if focus == None:
-			self.addFocus(WelcomeActionItem())
-			self.addFocus(GameplayActionItem())
-			self.addFocus(AboutActionItem())
-			self.addFocus(QuitActionItem())
-			self.activeFocus = None
+		if item == None: # item is none when in menu mode
+			self.addItem(WelcomeActionItem())
+			self.addItem(GameplayActionItem())
+			self.addItem(AboutActionItem())
+			self.addItem(QuitActionItem())
+			self.activeItem = None
 		else:
-			self.activeFocus = focus
-			for c in self.activeFocus.actions:
+			for c in item.info.actions:
+				# the active items actions become this sections' items
 				cf = ActionItem(c)
-				self.addFocus(cf)
-			
+				self.addItem(cf)
+			self.activeItem = item
+			# self.activeItem.info.activeActionId = 0
 		self.selectedAction = 0
-		
-	def selectionActive(self, selection):
-		if len(selection) >1: # adjust actions list towards selected focuses' actions intersection
-			lst = list(selection)
-			self.activeFocus = lst[0]
-			# intersection = set()
-			intersection = set(lst[0].actions)
-			for s in lst:
-				intersection = intersection & set(s.actions)
-			self.activeFocus.actions = list(intersection)
 		
 	def tab(self):
 		if self.selectedAction <len(self.items) -2:
 			self.selectedAction += 1
 		else:
 			self.selectedAction = 0
+		# if self.activeItem: # when not in menu mode
+		# 	pass
+			# self.activeItem.info.activeActionId = self.selectedAction
+	
+	def selectionActive(self, selection):
+		if len(selection) >1: # adjust actions list towards selected focuses' actions intersection
+			lst = list(selection)
+			self.activeItem = lst[0]
+			# intersection = set()
+			intersection = set(lst[0].actions)
+			for s in lst:
+				intersection = intersection & set(s.actions)
+			self.activeItem.actions = list(intersection)
 	
 	def action(self, action):
 		if action == 3:
@@ -80,9 +84,7 @@ class ActionsSection(section.Section):
 class WelcomeActionItem(ActionItem):
 	def __init__(self):
 		super().__init__('Welcome')
-		self.commands = ['Welcome', 'Basic gameplay', 'About Army Manager', 'Quit game']
-	def getInfo(self, activeCommand):
-		fi = item.ItemInfo(
+		self.info = item.ItemInfo(
 			'Army Manager Prototype',
 			[
 				'Welcome to Army Manager',
@@ -107,16 +109,12 @@ class WelcomeActionItem(ActionItem):
 				'Use [TAB] to switch actions',
 			]
 		)
-		fi.setPositions()
-		return fi
 
 
 class GameplayActionItem(ActionItem):
 	def __init__(self):
 		super().__init__('Basic gameplay')
-		self.commands = ['Welcome', 'Basic gameplay', 'About Army Manager', 'Quit game']
-	def getInfo(self, activeCommand):
-		fi = item.ItemInfo(
+		self.info = item.ItemInfo(
 			'Basic gameplay',
 			[
 				'Press [ESC] to show game menu',
@@ -126,36 +124,26 @@ class GameplayActionItem(ActionItem):
 				'Use [RETURN] to execute command',
 			]
 		)
-		fi.setPositions()
-		return fi
 	
 
 class AboutActionItem(ActionItem):
 	def __init__(self):
 		super().__init__('About Army Manager')
-		self.commands = ['Welcome', 'Basic gameplay', 'About Army Manager', 'Quit game']
-	def getInfo(self, activeCommand):
-		fi = item.ItemInfo(
+		self.info = item.ItemInfo(
 			'Army Manager Prototype',
 			[
 				'Developed by Sebastian Teister',
 				'Mai 2021',
 			]
 		)
-		fi.setPositions()
-		return fi
 	
 	
 class QuitActionItem(ActionItem):
 	def __init__(self):
 		super().__init__('Quit Game')
-		self.commands = ['Welcome', 'Basic gameplay', 'About Army Manager', 'Quit game']
-	def getInfo(self, activeCommand):
-		fi = item.ItemInfo(
+		self.info = item.ItemInfo(
 			'Quit Game',
 			[
 				'Hit [RETURN] to quit'
 			]
 		)
-		fi.setPositions()
-		return fi

@@ -85,11 +85,11 @@ class Game(Process):
 				if event.type == pygame.KEYDOWN:
 					if event.key == pygame.K_g: # UP
 						focus = self.focusedSection.keyUp()
-						self.actions.activeFocusChanged(focus)
+						self.actions.activeItemChanged(focus)
 						
 					elif event.key == pygame.K_r: # DOWN
 						focus = self.focusedSection.keyDown()
-						self.actions.activeFocusChanged(focus)
+						self.actions.activeItemChanged(focus)
 						
 					elif event.key == pygame.K_n: # LEFT
 						if self.focusedSectionIndex >0:
@@ -97,14 +97,15 @@ class Game(Process):
 							self.focusedSection = self.sections[self.focusedSectionIndex]
 							for s in self.sections: s.unfocus()
 							focus = self.focusedSection.focus()
-							self.actions.activeFocusChanged(focus)
+							self.actions.activeItemChanged(focus)
 							
 					elif event.key == pygame.K_t: # RIGHT
 						if self.focusedSectionIndex <len(self.sections) -1:
 							self.focusedSectionIndex += 1
 							self.focusedSection = self.sections[self.focusedSectionIndex]
 							for s in self.sections: s.unfocus()
-							self.focusedSection.focus()
+							focus = self.focusedSection.focus()
+							self.actions.activeItemChanged(focus)
 							
 					elif event.key == pygame.K_SPACE: # SPACE
 						selection = self.focusedSection.space()
@@ -115,13 +116,13 @@ class Game(Process):
 						self.actions.tab()
 						
 					elif event.key == pygame.K_RETURN: # RETURN
-						if self.actions.activeFocus == None:
+						if self.actions.activeItem == None:
 							self.actions.action(self.actions.selectedAction)
 						else:
-							self.focusedSection.action(self.actions.selectedAction)
+							self.focusedSection.actionText(self.actions.selectedAction)
 						
 					elif event.key == pygame.K_ESCAPE: # ESCAPE
-						self.actions.activeFocusChanged(None)
+						self.actions.activeItemChanged(None)
 					
 			# evaluate game events
 			for e in self.gameEvents.getRaisedEvents():

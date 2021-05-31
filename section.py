@@ -2,7 +2,6 @@ from collections import namedtuple
 import pygame
 import color
 import item
-import text
 
 
 class Section:
@@ -36,39 +35,45 @@ class Section:
 		if self.focused: # draw cursor on item if this section has focus
 			pygame.draw.rect(self.screen, color.white, self.itemFocus.rect.inflate(-2, -2), width = 2)
 			
-	def relX(self, x):
+	def _relX(self, x):
 		return self.offset.x +x
 	
-	def relY(self, y):
+	def _relY(self, y):
 		return self.offset.y +y
 	
-	def addFocus(self, focus):
+	def addItem(self, item):
+		"""Add item to list"""
 		height = 0
 		for f in self.items:
 			height += f.height +1
-		focus.rect = pygame.Rect(self.relX(0), self.relY(height) +0, self.rect.w, focus.height +2)
-		focus.setPositions()
-		self.items.append(focus)
+		item.rect = pygame.Rect(self._relX(0), self._relY(height) + 0, self.rect.w, item.height + 2)
+		item.setPositions()
+		self.items.append(item)
 
 	def focus(self) -> item.Item:
+		"""Sector gains focused flag"""
 		self.focused = True
 		return self.items[self.itemFocusIndex]
 		
 	def unfocus(self):
+		"""Sector loses focused flag. All selections removed"""
 		self.focused = False
 		self.selectedItemsIndices = set()
 	
 	def keyUp(self):
+		"""Go list up"""
 		if self.itemFocusIndex >0:
 			self._setItemFocusIndex(self.itemFocusIndex - 1)
 		return self.items[self.itemFocusIndex]
 		
 	def keyDown(self):
+		"""Go down list"""
 		if self.itemFocusIndex <len(self.items) -1:
 			self._setItemFocusIndex(self.itemFocusIndex + 1)
 		return self.items[self.itemFocusIndex]
 			
 	def space(self) -> list:
+		"""Select focused item"""
 		if self.itemFocusIndex in self.selectedItemsIndices:
 			# selected -> unselect
 			self.selectedItemsIndices.remove(self.itemFocusIndex)
@@ -87,4 +92,12 @@ class Section:
 	def _setItemFocusIndex(self, x):
 		self.itemFocusIndex = x
 		self.itemFocus = self.items[x]
-		
+	
+	def update(self):
+		"""Update items"""
+		pass
+	
+	def action(self, id):
+		"""Pass action to selected items"""
+		for i in self.selectedItems:
+			i.action(id)

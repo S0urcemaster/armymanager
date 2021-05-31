@@ -5,44 +5,55 @@ import text
 
 class ItemInfo:
 	screen = None
-	rect = None
+	rect = None # fixed position
 	
-	def __init__(self, heading, lines, command = None):
-		self.command = text.TextH(command) if command else None
-		self.heading = text.TextH(heading)
-		self.lines = []
+	def __init__(self, heading, lines, actions = None):
+		self.headingText = text.TextH(heading)
+		self.lineTexts = []
+		self.actions = actions
+		self.activeActionId = None
+		self.actionText = None
 		for i, l in enumerate(lines):
 			txt = text.TextP(l)
-			self.lines.append(txt)
+			self.lineTexts.append(txt)
 	
 	def setPositions(self):
+		if self.activeActionId != None and self.actions:
+			self.actionText = text.TextH(self.actions[self.activeActionId] + ':')
 		yoff = -12
-		if self.command:
+		if self.actionText:
 			yoff = 8
-			self.command.setPosition(self.rect.x +5, self.rect.y +yoff)
-		self.heading.setPosition(self.rect.x +5, self.rect.y +20 +yoff)
-		for i, l in enumerate(self.lines):
+			self.actionText.setPosition(self.rect.x + 5, self.rect.y + yoff)
+		self.headingText.setPosition(self.rect.x + 5, self.rect.y + 20 + yoff)
+		for i, l in enumerate(self.lineTexts):
 			l.setPosition(self.rect.x +5, self.rect.y +47 +yoff +i *20)
 	
 	def draw(self):
-		if self.command: self.command.draw()
-		self.heading.draw()
-		for l in self.lines:
+		if self.actionText: self.actionText.draw()
+		self.headingText.draw()
+		for l in self.lineTexts:
 			l.draw()
-
+	
+	def action(self, id):
+		pass
 
 class Item:
 	screen = None # static, set once in game
 	
 	def __init__(self, height):
 		self.height = height
-		self.actions = []
+		self.info = None
 	
 	def draw(self):
 		pygame.draw.rect(self.screen, color.black, self.rect, width = 1)
 	
-	def getInfo(self, activeActionId) -> ItemInfo:
+	def action(self, id):
 		pass
+	
+	def getInfo(self, activeActionId):
+		self.info.activeActionId = activeActionId
+		self.info.setPositions()
+		return self.info
 
 
 class HeaderItem(Item):

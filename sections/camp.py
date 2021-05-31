@@ -17,19 +17,7 @@ class MercItem(item.Item):
 	def __init__(self, soldier: merc.Merc):
 		super().__init__(85)
 		self.soldier = soldier
-		self.actions = []
-		if soldier.xp.typ == merc.UnitType.recruit:
-			self.actions.append(trainPikeman1)
-			self.actions.append(trainCavalry1)
-			self.actions.append(trainMusketeer1)
-		elif soldier.xp.getLevel() == 1:
-			if soldier.xp.typ == merc.UnitType.pikeman:
-				self.actions.append(trainPikeman2)
-			elif soldier.xp.typ == merc.UnitType.cavalry:
-				self.actions.append(trainCavalry2)
-			elif soldier.xp.typ == merc.UnitType.musketeer:
-				self.actions.append(trainMusketeer2)
-		# elif soldier.xp
+				
 		self.name = text.TextH(f"{soldier.firstname} {soldier.lastname} - {soldier.getAge(events.Event.current)}")
 		self.pay = text.TextH(str(soldier.pay), col = color.silver)
 		self.perks = []
@@ -38,6 +26,35 @@ class MercItem(item.Item):
 			elif sum(p.factors) <0: col = color.redDark
 			else: col = color.black
 			self.perks.append(text.TextP(p.name, col = col))
+		
+		actions = []
+		if soldier.xp.typ == merc.UnitType.recruit:
+			actions.append(trainPikeman1)
+			actions.append(trainCavalry1)
+			actions.append(trainMusketeer1)
+		elif soldier.xp.getLevel() == 1:
+			if soldier.xp.typ == merc.UnitType.pikeman:
+				actions.append(trainPikeman2)
+			elif soldier.xp.typ == merc.UnitType.cavalry:
+				actions.append(trainCavalry2)
+			elif soldier.xp.typ == merc.UnitType.musketeer:
+				actions.append(trainMusketeer2)
+		
+		self.info = item.ItemInfo(
+			self.soldier.firstname + ' ' + self.soldier.lastname,
+			[
+				'Age: ' +str(self.soldier.getAge(events.Event.current)),
+				'Training: ' +self.soldier.xp.typ,
+				'Experience: ' +str(self.soldier.xp.xp),
+				'Pay: ' +str(self.soldier.pay),
+				'Pockets: ' +str(self.soldier.asset),
+				'Strength: ' +str(self.soldier.strength),
+				'Dexterity: ' +str(self.soldier.dexterity),
+				'Intelligence: ' +str(self.soldier.intelligence),
+				'Charisma: ' +str(self.soldier.charisma),
+				'Confidence: ' +str(self.soldier.confidence),
+				], actions
+		)
 	
 	def draw(self):
 		super().draw()
@@ -62,50 +79,27 @@ class MercItem(item.Item):
 		for i, p in enumerate(self.perks):
 			p.setPosition(self.rect.x +self.rect.w -70, self.rect.y +25 +i *20)
 	
-	def getInfo(self, activeActionId):
-		heading = self.soldier.firstname + ' ' + self.soldier.lastname
-		lines = [
-			'Age: ' +str(self.soldier.getAge(events.Event.current)),
-			'Training: ' +self.soldier.xp.typ,
-			'Experience: ' +str(self.soldier.xp.xp),
-			'Pay: ' +str(self.soldier.pay),
-			'Pockets: ' +str(self.soldier.asset),
-			'Strength: ' +str(self.soldier.strength),
-			'Dexterity: ' +str(self.soldier.dexterity),
-			'Intelligence: ' +str(self.soldier.intelligence),
-			'Charisma: ' +str(self.soldier.charisma),
-			'Confidence: ' +str(self.soldier.confidence),
-			]
-		for p in self.soldier.perks:
-			lines.append(p.name)
-		fi = item.ItemInfo(
-			heading,
-			lines,
-			self.actions[activeActionId] +':',
-			)
-		fi.setPositions()
-		return fi
-
+	def action(self, id):
+		if self.actions[id] == trainPikeman1:
+			self.soldier.xp.train(merc.UnitType.pikeman)
+		if self.actions[id] == trainCavalry1:
+			self.soldier.xp.train(merc.UnitType.cavalry)
+		if self.actions[id] == trainMusketeer1:
+			self.soldier.xp.train(merc.UnitType.musketeer)
+		if self.actions[id] == trainPikeman2:
+			self.soldier.xp.levelUp()
+		if self.actions[id] == trainCavalry2:
+			self.soldier.xp.levelUp()
+		if self.actions[id] == trainMusketeer2:
+			self.soldier.xp.levelUp()
 
 class CampHeaderItem(item.HeaderItem):
 	def __init__(self):
 		super().__init__('Camp')
-		self.actions = [
+		actions = [
 			'Equip all visible next level'
 		]
-	
-	def getInfo(self, activeActionId):
-		heading = 'Camp'
-		lines = [
-			'Total mercenaries: ' +str(10),
-			]
-		fi = item.ItemInfo(
-			heading,
-			lines,
-			self.actions[activeActionId] +':',
-			)
-		fi.setPositions()
-		return fi
+		self.info = item.ItemInfo('Camp',['Total mercenaries: ' +str(10)], actions)
 
 
 class CampSection(section.Section):
@@ -114,7 +108,7 @@ class CampSection(section.Section):
 	
 	def __init__(self, rect, game):
 		super().__init__(rect, game)
-		self.addFocus(CampHeaderItem())
+		self.addItem(CampHeaderItem())
 		self._setItemFocusIndex(0)
 	
 	def initialMercs(self, recruits):
@@ -122,34 +116,16 @@ class CampSection(section.Section):
 		del self.items[1:]
 		for r in recruits:
 			f = MercItem(r)
-			self.addFocus(f)
+			self.addItem(f)
 			
 	def update(self):
 		del self.items[1:]
 		for s in self.soldiers:
 			f = MercItem(s)
-			self.addFocus(f)
+			self.addItem(f)
 		
-			
-	def action(self, command):
-		if command == trainPikeman1:
-			for s in self.selectedItemsIndices:
-				s.soldier.xp.train(merc.UnitType.pikeman)
-		if command == trainCavalry1:
-			for s in self.selectedItemsIndices:
-				s.soldier.xp.train(merc.UnitType.cavalry)
-		if command == trainMusketeer1:
-			for s in self.selectedItemsIndices:
-				s.soldier.xp.train(merc.UnitType.musketeer)
-		if command == trainPikeman2:
-			for s in self.selectedItemsIndices:
-				s.soldier.xp.levelUp()
-		if command == trainCavalry2:
-			for s in self.selectedItemsIndices:
-				s.soldier.xp.levelUp()
-		if command == trainMusketeer2:
-			for s in self.selectedItemsIndices:
-				s.soldier.xp.levelUp()
+	def action(self, action):
+		super().action(action)
 		self.update()
 			
 			

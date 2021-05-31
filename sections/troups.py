@@ -10,11 +10,15 @@ class SectorItem(item.Item):
 		super().__init__(170)
 		self.sector = sector
 		self.title = text.TextH(sector.title)
-		self.actions = [
+		actions = [
 			'Tactics 1',
 			'Tactics 2',
 			'Tactics 3'
 		]
+		self.info = item.ItemInfo(
+			self.sector.title,
+			[], actions
+		)
 	
 	def draw(self):
 		super().draw()
@@ -23,15 +27,7 @@ class SectorItem(item.Item):
 	def setPositions(self):
 		rect = self.title.text.get_rect(center = (self.rect.w //2, self.rect.h //2))
 		self.title.setPosition(self.rect.x +rect.x, self.rect.y +rect.y -2)
-	
-	def getInfo(self, activeActionId):
-		fi = item.ItemInfo(
-			self.sector.title,
-			[],
-			self.actions[activeActionId]
-		)
-		fi.setPositions()
-		return fi
+
 		
 sectors = [
 	'Sector 1', 'Sector 2', 'Sector 3', 'Sector 4', 'Sector 5'
@@ -40,11 +36,10 @@ sectors = [
 class TroupHeaderItem(item.HeaderItem):
 	def __init__(self):
 		super().__init__('Troups')
-		self.actions = [
+		actions = [
 			'Distribute equally'
 		]
-	def getInfo(self, activeActionId):
-		fi = item.ItemInfo(
+		self.info = item.ItemInfo(
 			'Army',
 			[
 				'Number of Sectors: xxx',
@@ -73,18 +68,15 @@ class TroupHeaderItem(item.HeaderItem):
 				'Pikeman: xxx',
 				'Cavalry: xxx',
 				'Musketeers: xxx',
-			],
-			self.actions[activeActionId]
+			], actions
 		)
-		fi.setPositions()
-		return fi
 
 
 class TroupsSection(section.Section):
 	def __init__(self, rect, game):
 		super().__init__(rect, game)
-		self.addFocus(TroupHeaderItem())
+		self.addItem(TroupHeaderItem())
 		self._setItemFocusIndex(0)
 		for s in sectors:
 			sf = SectorItem(army.Sector(s))
-			self.addFocus(sf)
+			self.addItem(sf)
