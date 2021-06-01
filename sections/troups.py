@@ -4,6 +4,11 @@ import text
 import army
 
 attack = 'Attack!'
+distributeEvenly = 'Distribute evenly'
+put10Pikemen = 'Put 10 Pikeman'
+put10CavalryMen = 'Put 10 Cavalry'
+put10Musketeers = 'Put 10 Musketeer'
+removeAll = 'Remove All'
 
 class SectorItem(item.Item):
 	def __init__(self, sector: army.Sector):
@@ -11,15 +16,16 @@ class SectorItem(item.Item):
 		self.sector = sector
 		self.title = text.TextH(sector.title)
 		actions = [
-			'Tactics 1',
-			'Tactics 2',
-			'Tactics 3'
+			put10Pikemen,
+			put10CavalryMen,
+			put10Musketeers,
+			removeAll,
 		]
 		self.info = item.ItemInfo(
 			self.sector.title,
 			[
 				self.sector.title,
-				'Pikeman: ' +str(self.sector.getNoofPikeman()),
+				'Pikeman: ' +str(len(self.sector.pikemen)),
 				'Cavalry: xxx',
 				'Musketeers: xxx',
 			], actions
@@ -79,3 +85,11 @@ class TroupsSection(section.Section):
 		info = self.items[self.itemFocusIndex].info
 		if info.actions[action] == attack:
 			self.game.battle()
+		if info.actions[action] == put10Pikemen:
+			self.game.put10Pikemen(self.itemFocusIndex -1)
+		if info.actions[action] == put10CavalryMen:
+			self.game.put10CavalryMen(self.itemFocusIndex -1)
+		if info.actions[action] == put10Musketeers:
+			self.game.put10Musketeers(self.itemFocusIndex -1)
+		if info.actions[action] == removeAll:
+			self.game.removeAll(self.itemFocusIndex -1)

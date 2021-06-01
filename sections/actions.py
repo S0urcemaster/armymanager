@@ -34,6 +34,7 @@ class ActionsSection(section.Section):
 		item.ItemInfo.rect = rect
 	
 	def draw(self):
+		# if len(self.items) >1:
 		pygame.draw.rect(self.screen, color.brightGrey, self.items[self.selectedAction + 1].rect)
 		if self.activeItem == None: # own infos
 			self.items[self.selectedAction + 1].getInfo([]).draw()

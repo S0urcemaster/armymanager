@@ -82,7 +82,7 @@ class Game(Process):
 	def start(self):
 		clock = pygame.time.Clock()
 		self.mercs = self.make10Mercs()
-		self.sections[camp].setMercs(self.mercs)
+		self.sections[camp].update(self.mercs)
 		while self.running:
 			# evaluate player action
 			for event in pygame.event.get():
@@ -140,13 +140,13 @@ class Game(Process):
 				if(e.name == events.NEW_RECRUITS_EVENT):
 					# self.gameEvents.renew(e, 10)
 					self.recruits.append(lib.makeRecruit())
-					self.sections[recruitment].setRecruits(self.recruits)
+					self.sections[recruitment].update(self.recruits)
 					self.gameEvents.renew(e, 1)
 					
-				if(e.name == events.RECRUITED_EVENT):
-					self.sections[recruitment].setRecruits(self.recruits)
-					self.sections[camp].setMercs(self.mercs)
-					self.gameEvents.remove(e)
+				# if(e.name == events.RECRUITED_EVENT):
+				# 	self.sections[recruitment].setRecruits(self.recruits)
+				# 	self.sections[camp].update(self.mercs)
+					# self.gameEvents.remove(e)
 			
 			# draw frame
 			self.screen.fill(color.middleGrey)
@@ -178,14 +178,16 @@ class Game(Process):
 	# callbacks
 	
 	def doRecruit(self, recruit: merc.Merc):
-		self.lock.acquire()
-		try:
-			self.recruits.remove(recruit) # throws 'not in list'
-			self.mercs.append(recruit)
-			self.gameEvents.addEvent(events.Event(events.RECRUITED_EVENT, 0.001))
-		except:
-			pass
-		self.lock.release()
+		# self.lock.acquire()
+		# try:
+		self.recruits.remove(recruit) # throws 'not in list'
+		self.mercs.append(recruit)
+		self.gameEvents.addEvent(events.Event(events.RECRUITED_EVENT, 0.001))
+		self.sections[recruitment].update(self.recruits)
+		self.sections[camp].update(self.mercs)
+		# except:
+		# 	pass
+		# self.lock.release()
 	
 	def doRecruitSelected(self, recruits):
 		"""Called from recruitment when selection is accepted"""
@@ -194,12 +196,34 @@ class Game(Process):
 	
 	def doTrain(self, merc:merc.Merc, typ:merc.UnitType):
 		merc.xp.typ = typ
+		self.sections[camp].update(self.mercs)
 	
 	def selectThisAssignment(self, assignment:Assignment):
 		self.army = Army(assignment.sectors)
 		self.sections[troups].update(self.army)
 		
 	def battle(self):
+		pass
+		
+	def put10Pikemen(self, sectorIndex):
+		move = []
+		for m in self.mercs:
+			if m.xp.typ == merc.UnitType.pikeman:
+				move.append(m)
+			if len(move) == 10: break
+		for m in move:
+			self.army.sectors[sectorIndex].pikemen.append(m)
+			self.mercs.remove(m)
+		self.sections[troups].update(self.army)
+		self.sections[camp].update(self.mercs)
+		
+	def put10CavalryMen(self, sectorIndex):
+		pass
+		
+	def put10Musketeers(self, sectorIndex):
+		pass
+		
+	def removeAll(self, sectorIndex):
 		pass
 		
 	# game menu

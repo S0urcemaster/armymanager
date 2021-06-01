@@ -12,6 +12,8 @@ trainMusketeer1 = 'Train Musketeer (1)'
 trainPikeman2 = 'Train Pikeman (2)'
 trainCavalry2 = 'Train Cavalry (2)'
 trainMusketeer2 = 'Train Musketeer (2)'
+nextMercenaries = 'Next Mercenaries'
+previousMercenaries = 'Previous Mercenaries'
 
 class MercItem(item.Item):
 	
@@ -31,19 +33,24 @@ class MercItem(item.Item):
 			elif sum(p.factors) <0: col = color.redDark
 			else: col = color.black
 			self.perks.append(text.TextP(p.name, col = col))
-		
+		self.makeInfo()
+	
+	
+	def makeInfo(self, typ = merc.UnitType.recruit):
 		actions = []
-		if soldier.xp.typ == merc.UnitType.recruit:
+		if self.soldier.xp.typ == merc.UnitType.recruit:
 			actions.append(trainPikeman1)
 			actions.append(trainCavalry1)
 			actions.append(trainMusketeer1)
-		elif soldier.xp.getLevel() == 1:
-			if soldier.xp.typ == merc.UnitType.pikeman:
+		elif self.soldier.xp.getLevel() <1:
+			if self.soldier.xp.typ == merc.UnitType.pikeman:
 				actions.append(trainPikeman2)
-			elif soldier.xp.typ == merc.UnitType.cavalry:
+			elif self.soldier.xp.typ == merc.UnitType.cavalry:
 				actions.append(trainCavalry2)
-			elif soldier.xp.typ == merc.UnitType.musketeer:
+			elif self.soldier.xp.typ == merc.UnitType.musketeer:
 				actions.append(trainMusketeer2)
+		actions.append(nextMercenaries)
+		actions.append(previousMercenaries)
 		
 		self.info = item.ItemInfo(
 			self.soldier.firstname + ' ' + self.soldier.lastname,
@@ -60,6 +67,7 @@ class MercItem(item.Item):
 				'Confidence: ' +str(self.soldier.confidence),
 				], actions
 		)
+		
 	
 	def draw(self):
 		super().draw()
@@ -124,22 +132,21 @@ class CampSection(section.Section):
 		self.addItem(CampHeaderItem())
 		self._setItemFocusIndex(0)
 		self.stats = section.SectionStats(0, self.rect)
-		self.listMarker = section.ScrollBar(self.rect)
+		self.scrollBar = section.ScrollBar(self.rect)
 	
 	def draw(self):
 		super().draw()
-		self.listMarker.draw()
+		self.scrollBar.draw()
 		self.stats.draw()
-			
-	def setMercs(self, mercs):
-		# self.soldiers = mercs
-		del self.items[1:]
-		for r in mercs[self.listIndex *10:self.listIndex *10 +10]:
-			f = MercItem(r)
-			self.addItem(f)
-		self.stats.update(len(mercs))
-		self.listMarker.update(self.listIndex, len(mercs))
 	
+	def update(self, mercs):
+		self.mercs = mercs
+		del self.items[1:]
+		for m in mercs[self.scrollBar.listIndex *10:self.scrollBar.listIndex *10 +10]:
+			self.addItem(MercItem(m))
+		self.stats.update(len(mercs))
+		self.scrollBar.update(self.scrollBar.listIndex, len(mercs))
+		
 	
 	def act(self, action):
 		info = self.items[self.itemFocusIndex].info
@@ -149,5 +156,11 @@ class CampSection(section.Section):
 			self.game.doTrain(self.items[self.itemFocusIndex].soldier, merc.UnitType.cavalry)
 		if info.actions[action] == trainMusketeer1:
 			self.game.doTrain(self.items[self.itemFocusIndex].soldier, merc.UnitType.musketeer)
+		elif info.actions[action] == nextMercenaries:
+			self.scrollBar.next()
+			self.update(self.mercs)
+		elif info.actions[action] == previousMercenaries:
+			self.scrollBar.previous()
+			self.update(self.mercs)
 			
 	

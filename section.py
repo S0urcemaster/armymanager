@@ -23,7 +23,10 @@ class ScrollBar:
 	def update(self, ix, max = None):
 		self.listIndex = ix
 		if max != None: self.max = max
-		self.sb.width = self.rect.width // (self.max / 10) # fixed list size
+		if max == 0:
+			self.sb.width = self.rect.width
+		else:
+			self.sb.width = self.rect.width // (self.max / 10) # fixed list size
 		self.sb.x = self.rect.x + self.sb.width * ix
 	
 	def next(self):

@@ -4,11 +4,10 @@ class Sector:
 	
 	def __init__(self, title):
 		self.title = title
-		self.mercs = []
+		self.pikemen = []
+		self.cavalryMen = []
+		self.musketeers = []
 	
-	def getNoofPikeman(self):
-		return len(list(filter(lambda m: m.xp.typ == merc.UnitType, self.mercs)))
-
 
 class Army:
 	
@@ -21,5 +20,5 @@ class Army:
 	def getNoofPikeman(self):
 		sum = 0
 		for s in self.sectors:
-			sum += len(list(filter(lambda m: m.xp.typ == merc.UnitType, s.mercs)))
+			sum += len(s.pikemen)
 		return sum

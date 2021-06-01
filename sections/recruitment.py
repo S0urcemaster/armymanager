@@ -70,12 +70,11 @@ class RecruitmentSection(section.Section):
 		self.scrollBar.draw()
 		self.stats.draw()
 
-	def setRecruits(self, recruits):
+	def update(self, recruits):
 		del self.items[1:]
 		for r in recruits[self.scrollBar.listIndex *10:self.scrollBar.listIndex *10 +10]:
 			f = RecruitItem(r)
 			self.addItem(f)
-			f.setPositions()
 		self.stats.update(len(recruits))
 		self.scrollBar.update(self.scrollBar.listIndex, len(recruits))
 	
