@@ -49,6 +49,8 @@ class Game(Process):
 		self.running = True
 		
 		lib.readNames()
+	
+		self.background = pygame.image.load('res/alu.jpg')
 		
 		pygame.init()
 		
@@ -122,6 +124,11 @@ class Game(Process):
 					elif event.key == pygame.K_TAB or event.key == pygame.K_s: # TAB
 						self.actions.tab()
 						
+					elif event.key == pygame.K_l:
+						self.actions.up()
+					elif event.key == pygame.K_a:
+						self.actions.down()
+						
 					elif event.key == pygame.K_RETURN or event.key == pygame.K_h: # RETURN
 						if self.actions.activeItem == None:
 							self.actions.act(self.actions.selectedAction)
@@ -149,7 +156,8 @@ class Game(Process):
 					# self.gameEvents.remove(e)
 			
 			# draw frame
-			self.screen.fill(color.middleGrey)
+			# self.screen.fill(color.middleGrey)
+			self.screen.blit(self.background, pygame.Rect(0, 0, 0, 0))
 			self.header.draw()
 			self.border.draw()
 			self.actions.draw()
@@ -216,6 +224,8 @@ class Game(Process):
 			self.mercs.remove(m)
 		self.sections[troups].update(self.army)
 		self.sections[camp].update(self.mercs)
+		# update info changes:
+		self.actions.activeItemChanged(self.sections[troups].items[self.sections[troups].itemFocusIndex])
 		
 	def put10CavalryMen(self, sectorIndex):
 		pass

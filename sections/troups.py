@@ -39,10 +39,6 @@ class SectorItem(item.Item):
 		rect = self.title.text.get_rect(center = (self.rect.w //2, self.rect.h //2))
 		self.title.setPosition(self.rect.x +rect.x, self.rect.y +rect.y -2)
 
-		
-sectors = [
-	'Sector 1', 'Sector 2', 'Sector 3', 'Sector 4', 'Sector 5'
-]
 
 class TroupHeaderItem(item.HeaderItem):
 	def __init__(self, army):
@@ -71,9 +67,6 @@ class TroupsSection(section.Section):
 		super().__init__(rect, game)
 		self.addItem(TroupHeaderItem(game.army))
 		self._setItemFocusIndex(0)
-		for s in sectors:
-			sf = SectorItem(army.Sector(s))
-			self.addItem(sf)
 			
 	def update(self, arm:army.Army):
 		del self.items[1:]

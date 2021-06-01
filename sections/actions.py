@@ -57,17 +57,22 @@ class ActionsSection(section.Section):
 				cf = ActionItem(c)
 				self.addItem(cf)
 			self.activeItem = item
-			# self.activeItem.info.activeActionId = 0
-		self.selectedAction = 0
+		if self.selectedAction >len(self.items):
+			self.selectedAction = 0
 		
 	def tab(self):
 		if self.selectedAction <len(self.items) -2:
 			self.selectedAction += 1
 		else:
 			self.selectedAction = 0
-		# if self.activeItem: # when not in menu mode
-		# 	pass
-			# self.activeItem.info.activeActionId = self.selectedAction
+	
+	def up(self):
+		if self.selectedAction >0:
+			self.selectedAction -= 1
+	
+	def down(self):
+		if self.selectedAction <len(self.items) -2:
+			self.selectedAction += 1
 	
 	def selectionActive(self, selection):
 		if len(selection) >1: # adjust actions list towards selected focuses' actions intersection
