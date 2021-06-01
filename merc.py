@@ -35,13 +35,13 @@ perkList = Perk.makeList([
 ])
 
 class UnitType:
-	captain = 'Captain'
-	pikeman = 'Infantry'
+	# captain = 'Captain'
+	pikeman = 'Pikeman'
 	cavalry = 'Cavalry'
 	musketeer = 'Musketeer'
-	instructor = 'Instructor'
-	doctor = 'Doctor'
-	spy = 'Spy'
+	# instructor = 'Instructor'
+	# doctor = 'Doctor'
+	# spy = 'Spy'
 	recruit = 'Recruit'
 
 

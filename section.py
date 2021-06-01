@@ -88,7 +88,7 @@ class Section:
 		for f in self.items:
 			f.draw()
 		if self.focused: # draw cursor on item if this section has focus
-			pygame.draw.rect(self.screen, color.white, self.itemFocus.rect.inflate(-2, -2), width = 2)
+			pygame.draw.rect(self.screen, color.white, self.itemFocus.rect.inflate(-4, -4), width = 3)
 			
 	def _relX(self, x):
 		return self.offset.x +x

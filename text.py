@@ -22,7 +22,7 @@ class TextH(Text):
 		super().__init__(x, y, col, centered)
 		self.title = text
 		self.font = pygame.font.SysFont("Arial", 16, bold = True)
-		self.text = self.font.render(text, True, col, color.middleGrey)
+		self.text = self.font.render(text, True, col) #, color.middleGrey)
 		if centered:
 			rect = self.text.get_rect(center = (x, y))
 			self.x = rect.x

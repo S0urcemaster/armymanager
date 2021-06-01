@@ -1,7 +1,7 @@
 
 class Assignment:
 	def __init__(self, title, principal, sectors, payment, fame,
-	             enemyForce, enemyLevel, enemyEquipment):
+	             enemyForce, enemyLevel, enemyEquipment, fogFactor):
 		self.title = title
 		self.principal = principal
 		self.sectors = sectors
@@ -10,6 +10,7 @@ class Assignment:
 		self.enemyForce = enemyForce
 		self.enemyLevel = enemyLevel
 		self.enemyEquipment = enemyEquipment
+		self.fogFactor = fogFactor
 
 # Ofenhaufn
 # Ening
@@ -31,6 +32,7 @@ assignments = [
 		enemyForce = 10,
 		enemyLevel = 0,
 		enemyEquipment = 0,
+		fogFactor = 0,
 	),
 	Assignment(
 		title = 'Bandits around Deting',
@@ -41,6 +43,7 @@ assignments = [
 		enemyForce = 15,
 		enemyLevel = 0,
 		enemyEquipment = 0,
+		fogFactor = 0,
 	),
 	# Assignment(
 	# 	title = '',
@@ -49,5 +52,6 @@ assignments = [
 	# 	estimatedEnemyForce = 10,
 	# 	payment = 1.5,
 	# 	reputation = 10,
+	#  fogFactor = 0,
 	# ),
 ]

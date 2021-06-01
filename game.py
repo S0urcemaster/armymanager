@@ -20,6 +20,7 @@ from sections.camp import CampSection
 from sections.recruitment import RecruitmentSection
 from army import Army
 from assignments import Assignment
+import scenarios
 
 assignment = 0
 troups = 1
@@ -83,7 +84,7 @@ class Game(Process):
 	
 	def start(self):
 		clock = pygame.time.Clock()
-		self.mercs = self.make10Mercs()
+		self.mercs = lib.make10Mercs()
 		self.sections[camp].update(self.mercs)
 		while self.running:
 			# evaluate player action
@@ -169,15 +170,6 @@ class Game(Process):
 			self.header.updateFps(str(dt))
 			self.gameEvents.update(dt) # update game's current time
 
-	def make10Mercs(self):
-		mercs = []
-		for i in range(10):
-			mercs.append(lib.makeRecruit())
-		return mercs
-	
-	def make100Recruits(self):
-		return list(map(lambda x:lib.makeRecruit(), range(100)))
-
 	def exit(self):
 		self.running = False
 		pygame.quit()
@@ -240,12 +232,15 @@ class Game(Process):
 	
 	def quit(self):
 		exit()
-		
 	
 	# test
 
 	def doMake100Recruits(self):
-		self.recruits.extend(self.make100Recruits())
+		self.recruits.extend(lib.make100Recruits())
+	
+	def initPfullingScenario(self):
+		scene = scenarios.PfullingScenario()
+		self.sections[assignment].setAssignment(scene.assignment)
 
 env = gameenv.GameEnv()
 game = Game(env)

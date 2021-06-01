@@ -3,9 +3,11 @@ import numpy as np
 from scipy.stats import norm
 import io
 from datetime import datetime, timedelta
+import math
 
 import merc
 import events
+import army as arm
 
 firstnames = [] # Mercenaries randomly made of
 lastnames = []
@@ -49,8 +51,7 @@ def makeRecruit():
         prob = random.randint(0, 11) # probability
         if i >= prob:
             while True: # no duplicates
-                rand = random.randint(0, len(merc.perkList) -1)
-                perk = merc.perkList[rand]
+                perk = getRandomPerk()
                 found = False
                 for p in rec.perks:
                     if p.name == perk.name:
@@ -59,3 +60,47 @@ def makeRecruit():
                 rec.perks.append(perk)
                 break
     return rec
+
+
+def make10Mercs():
+    mercs = []
+    for i in range(10):
+        mercs.append(makeRecruit())
+    return mercs
+
+
+def make100Recruits():
+    return list(map(lambda x:makeRecruit(), range(100)))
+
+
+def getRandomPerk():
+    rand = random.randint(0, len(merc.perkList) -1)
+    return merc.perkList[rand]
+
+
+def getRandomTroopType():
+    rand = random.randint(0, 2)
+    if rand == 0: return merc.UnitType.pikeman
+    if rand == 1: return merc.UnitType.cavalry
+    if rand == 2: return merc.UnitType.musketeer
+
+
+def getRandomPikemen(count):
+    pm = []
+    for i in count:
+       rec = makeRecruit()
+       rec.xp.typ = merc.UnitType.pikeman
+       pm.append(rec)
+    return pm
+    
+
+def randomArmy(noofSectors, noofTroops):
+    army = arm.Army(noofSectors)
+    mercs = []
+    for t in range(noofTroops):
+        recruit = makeRecruit()
+        recruit.xp.typ = getRandomTroopType()
+        mercs.append(recruit)
+    for i,s in enumerate(army.sectors):
+        s.mercs = mercs[i:math.floor(len(mercs) /len(army.sectors)) *(i +1)]
+    return army

@@ -97,9 +97,9 @@ class AssignmentItem(item.Item):
 		self.fame.setPosition(x, y +140)
 	
 	
-sectors = [
-	'Sector 1', 'Sector 2', 'Sector 3', 'Sector 4', 'Sector 5'
-]
+# sectors = [
+# 	'Sector 1', 'Sector 2', 'Sector 3', 'Sector 4', 'Sector 5'
+# ]
 
 class State:
 	assignment = 0
@@ -154,14 +154,14 @@ class AssignmentSection(section.Section):
 		sf = AssignmentItem(assignments.assignments[1])
 		self.addItem(sf)
 	
-	def setEnemyState(self):
-		self.state = State.enemy
-		del self.items[:]
-		self.addItem(item.HeaderItem('Enemy'))
-		self._setItemFocusIndex(0)
-		for s in sectors:
-			sf = SectorItem(s)
-			self.addItem(sf)
+	# def setEnemyState(self):
+	# 	self.state = State.enemy
+	# 	del self.items[:]
+	# 	self.addItem(item.HeaderItem('Enemy'))
+	# 	self._setItemFocusIndex(0)
+	# 	for s in sectors:
+	# 		sf = SectorItem(s)
+	# 		self.addItem(sf)
 	
 	def space(self):
 		"""Overwrite base behaviour"""
@@ -175,48 +175,19 @@ class AssignmentSection(section.Section):
 				self.selection.add(self.itemFocusIndex)
 	
 	
-	def getFocusInfo(self):
-		if self.state == State.assignment:
-			if (self.itemFocusIndex == 0):
-				heading = "Assignments"
-				lines = [
-					'Choose an assignment to begin',
-					'battle!',
-				]
-			else:
-				heading = self.itemFocus.title.title
-				lines = [
-					self.itemFocus.assignment.principal + ' asks you',
-					'to settle this issue.',
-					'',
-					'Battlefield size: ' + str(self.itemFocus.assignment.sectors),
-					'Estimated enemy numbers: ' + str(self.itemFocus.assignment.enemyForce),
-					'Estimated enemy level: ' + str(self.itemFocus.assignment.enemyLevel),
-					'Estimated enemy equipment: ' + str(self.itemFocus.assignment.enemyEquipment),
-					'',
-					'Payment: ' + str(self.itemFocus.assignment.payment),
-					'Fame   : ' + str(self.itemFocus.assignment.fame),
-				]
-		elif self.state == State.enemy:
-			if (self.itemFocusIndex == 0):
-				heading = "Enemy"
-				lines = [
-					'Enemy soldiers: x'
-				]
-			else:
-				heading = self.itemFocus.title
-				lines = [
-					'Enemy sector soldiers: x'
-				]
-		return item.ItemInfo(heading, lines)
+	def assignmentChanged(self, assignment):
+		del self.items[:] # switch assignment view to enemy view:
+		self.addItem(SectorHeaderItem())
+		for s in range(assignment.sectors):
+			self.addItem(SectorItem('Sector ' +str(s +1)))
+	
+	def setAssignment(self, assignment):
+		self.assignmentChanged(assignment)
 		
 	def act(self, action):
 		info = self.items[self.itemFocusIndex].info
 		if info.actions[action] == selectThisAssignment:
 			self.game.selectThisAssignment(self.itemFocus.assignment) # adjust and activate troups section
-			del self.items[:] # switch assignment view to enemy view:
-			self.addItem(SectorHeaderItem())
-			for s in range(self.itemFocus.assignment.sectors):
-				self.addItem(SectorItem('Sector ' +str(s +1)))
+			self.assignmentChanged(self.itemFocus.assignment)
 		if info.actions[action] == attack:
 			self.game.battle()

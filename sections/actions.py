@@ -33,9 +33,8 @@ class ActionsSection(section.Section):
 		rect.h = self.rect.h -rect.y +30
 		item.ItemInfo.rect = rect
 	
-	def draw(self):
-		# if len(self.items) >1:
-		pygame.draw.rect(self.screen, color.brightGrey, self.items[self.selectedAction + 1].rect)
+	def draw(self):# pygame.draw.rect(self.screen, color.brightGrey, self.items[self.selectedAction + 1].rect)
+		pygame.draw.rect(self.screen, color.white, self.items[self.selectedAction + 1].rect.inflate(-3, -3), width = 2)
 		if self.activeItem == None: # own infos
 			self.items[self.selectedAction + 1].getInfo([]).draw()
 		else: # show active focus info
@@ -50,6 +49,7 @@ class ActionsSection(section.Section):
 			self.addItem(AboutActionItem())
 			self.addItem(QuitActionItem())
 			self.addItem(Recruits100ActionItem())
+			self.addItem(PfullingScenarioActionItem())
 			self.activeItem = None
 		else:
 			for c in item.info.actions:
@@ -57,8 +57,8 @@ class ActionsSection(section.Section):
 				cf = ActionItem(c)
 				self.addItem(cf)
 			self.activeItem = item
-		if self.selectedAction >len(self.items):
-			self.selectedAction = 0
+		if self.selectedAction +2 >len(self.items):
+			self.selectedAction = len(self.items) -2
 		
 	def tab(self):
 		if self.selectedAction <len(self.items) -2:
@@ -89,6 +89,8 @@ class ActionsSection(section.Section):
 			self.game.quit()
 		if action == 4:
 			self.game.doMake100Recruits()
+		if action == 5:
+			self.game.initPfullingScenario()
 
 
 class WelcomeActionItem(ActionItem):
@@ -166,5 +168,16 @@ class Recruits100ActionItem(ActionItem):
 			'Test it!',
 			[
 				'Hit [RETURN] to make'
+			]
+		)
+	
+	
+class PfullingScenarioActionItem(ActionItem):
+	def __init__(self):
+		super().__init__('Init Pfulling Scenario')
+		self.info = item.ItemInfo(
+			'Init Pfulling Scenario',
+			[
+				'Hit [RETURN] to start'
 			]
 		)
