@@ -17,7 +17,12 @@ class SectorItem(item.Item):
 		]
 		self.info = item.ItemInfo(
 			self.sector.title,
-			[], actions
+			[
+				self.sector.title,
+				'Pikeman: ' +str(self.sector.getNoofPikeman()),
+				'Cavalry: xxx',
+				'Musketeers: xxx',
+			], actions
 		)
 	
 	def draw(self):
@@ -34,8 +39,9 @@ sectors = [
 ]
 
 class TroupHeaderItem(item.HeaderItem):
-	def __init__(self):
+	def __init__(self, army):
 		super().__init__('Troups')
+		self.army = army
 		actions = [
 			'Distribute equally',
 			attack,
@@ -45,30 +51,10 @@ class TroupHeaderItem(item.HeaderItem):
 			[
 				'Number of Sectors: xxx',
 				'',
-				'Sector 1:',
-				'Pikeman: xxx',
+				'Pikeman: '+str(self.army.getNoofPikeman()),
 				'Cavalry: xxx',
 				'Musketeers: xxx',
 				'',
-				'Sector 2:',
-				'Pikeman: xxx',
-				'Cavalry: xxx',
-				'Musketeers: xxx',
-				'',
-				'Sector 3:',
-				'Pikeman: xxx',
-				'Cavalry: xxx',
-				'Musketeers: xxx',
-				'',
-				'Sector 4:',
-				'Pikeman: xxx',
-				'Cavalry: xxx',
-				'Musketeers: xxx',
-				'',
-				'Sector 5:',
-				'Pikeman: xxx',
-				'Cavalry: xxx',
-				'Musketeers: xxx',
 			], actions
 		)
 
@@ -77,7 +63,7 @@ class TroupsSection(section.Section):
 	
 	def __init__(self, rect, game):
 		super().__init__(rect, game)
-		self.addItem(TroupHeaderItem())
+		self.addItem(TroupHeaderItem(game.army))
 		self._setItemFocusIndex(0)
 		for s in sectors:
 			sf = SectorItem(army.Sector(s))
