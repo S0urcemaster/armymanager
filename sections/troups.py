@@ -1,9 +1,9 @@
-
 import section
 import item
 import text
 import army
 
+attack = 'Attack!'
 
 class SectorItem(item.Item):
 	def __init__(self, sector: army.Sector):
@@ -37,7 +37,8 @@ class TroupHeaderItem(item.HeaderItem):
 	def __init__(self):
 		super().__init__('Troups')
 		actions = [
-			'Distribute equally'
+			'Distribute equally',
+			attack,
 		]
 		self.info = item.ItemInfo(
 			'Army',
@@ -73,6 +74,7 @@ class TroupHeaderItem(item.HeaderItem):
 
 
 class TroupsSection(section.Section):
+	
 	def __init__(self, rect, game):
 		super().__init__(rect, game)
 		self.addItem(TroupHeaderItem())
@@ -80,3 +82,14 @@ class TroupsSection(section.Section):
 		for s in sectors:
 			sf = SectorItem(army.Sector(s))
 			self.addItem(sf)
+			
+	def update(self, arm:army.Army):
+		del self.items[1:]
+		for a in arm.sectors:
+			sf = SectorItem(a)
+			self.addItem(sf)
+	
+	def act(self, action):
+		info = self.items[self.itemFocusIndex].info
+		if info.actions[action] == attack:
+			self.game.battle()

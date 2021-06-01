@@ -19,9 +19,10 @@ import sections.actions as actions
 from sections.camp import CampSection
 from sections.recruitment import RecruitmentSection
 from army import Army
+from assignments import Assignment
 
 assignment = 0
-frontline = 1
+troups = 1
 camp = 2
 recruitment = 3
 
@@ -51,7 +52,7 @@ class Game(Process):
 		
 		pygame.init()
 		
-		pygame.key.set_repeat(250, 60)
+		# pygame.key.set_repeat(250, 60)
 		size = env.width, env.height
 		
 		self.screen = pygame.display.set_mode(size)
@@ -157,7 +158,7 @@ class Game(Process):
 			
 			pygame.display.flip()
 			dt = clock.tick(30)
-			
+			self.header.updateFps(str(dt))
 			self.gameEvents.update(dt) # update game's current time
 
 	def make10Mercs(self):
@@ -194,6 +195,13 @@ class Game(Process):
 	def doTrain(self, merc:merc.Merc, typ:merc.UnitType):
 		merc.xp.typ = typ
 	
+	def selectThisAssignment(self, assignment:Assignment):
+		self.army = Army(assignment.sectors)
+		self.sections[troups].update(self.army)
+		
+	def battle(self):
+		pass
+		
 	# game menu
 	
 	def quit(self):

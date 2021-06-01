@@ -9,6 +9,24 @@ class SectorItem(item.Item):
 		super().__init__(170)
 		self.title = title
 		self.name = text.TextH(title)
+		actions = [
+			'Action 1',
+			'Action 2',
+			'Action 3',
+		]
+		self.info = item.ItemInfo(
+			self.title,
+			[
+				'Enemy force estimations:',
+				'Total: 10',
+				'Pikeman: 10',
+				'Cavalry: 0',
+				'Musketeers: 0',
+				'Training level: 0',
+				'Equipment level: 0',
+				],
+			actions,
+		)
 	
 	def draw(self):
 		super().draw()
@@ -18,6 +36,9 @@ class SectorItem(item.Item):
 		rect = self.name.text.get_rect(center = (self.rect.w //2, self.rect.h //2))
 		self.name.setPosition(self.rect.x +rect.x, self.rect.y +rect.y -2)
 
+
+selectThisAssignment = 'Select this assignment'
+attack = 'Attack!'
 
 class AssignmentItem(item.Item):
 	def __init__(self, assi:assignments.Assignment):
@@ -32,7 +53,7 @@ class AssignmentItem(item.Item):
 		self.payment = text.TextP('Payment: ' +str(assi.payment))
 		self.fame = text.TextP('Fame: ' +str(assi.fame))
 		actions = [
-			'Select this assignment',
+			selectThisAssignment,
 		]
 		self.info = item.ItemInfo(
 			self.assignment.title,
@@ -94,6 +115,25 @@ class AssignmentHeaderItem(item.HeaderItem):
 			[
 				'Select Assignment and',
 				'hit [Return] to start battle'
+			], actions,
+		)
+
+class SectorHeaderItem(item.HeaderItem):
+	def __init__(self):
+		super().__init__('Enemy')
+		actions = [
+			'Spy out',
+			attack,
+		]
+		self.info = item.ItemInfo('Assignment',
+			[
+				'Enemy force estimations:',
+				'Total: 9999',
+				'Pikeman: 9999',
+				'Cavalry: 999',
+				'Musketeers: 9999',
+				'Training level: 1',
+				'Equipment level: 1',
 			], actions,
 		)
 
@@ -170,3 +210,13 @@ class AssignmentSection(section.Section):
 				]
 		return item.ItemInfo(heading, lines)
 		
+	def act(self, action):
+		info = self.items[self.itemFocusIndex].info
+		if info.actions[action] == selectThisAssignment:
+			self.game.selectThisAssignment(self.itemFocus.assignment) # adjust and activate troups section
+			del self.items[:] # switch assignment view to enemy view:
+			self.addItem(SectorHeaderItem())
+			for s in range(self.itemFocus.assignment.sectors):
+				self.addItem(SectorItem('Sector ' +str(s +1)))
+		if info.actions[action] == attack:
+			self.game.battle()

@@ -6,6 +6,6 @@ class Sector:
 
 class Army:
 	sectors = []
-	def __init__(self, numSectors = 1):
+	def __init__(self, numSectors = 0):
 		for i in range(0, numSectors):
-			self.sectors.append(Sector)
+			self.sectors.append(Sector('Sector ' +str(i +1)))
