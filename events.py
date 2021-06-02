@@ -13,8 +13,8 @@ def combatEventToString(payload):
 	merc: merci.Merc = payload[0][0]
 	enemy: merci.Merc = payload[0][1]
 	bfSector: battlefield.BfSector = payload[1]
-	return f'[{merc.firstname} {merc.lastname} {merc.getPower()}]  ' \
-	       f'[{enemy.firstname} {enemy.lastname} {enemy.getPower()}]  '
+	return f'[{merc.firstname} {merc.lastname} {merc.getPower()} wounds: {merc.wounds}]  ' \
+	       f'[{enemy.firstname} {enemy.lastname} {enemy.getPower()} wounds: {enemy.wounds}]  '
 	       # f''
 
 def logEvent(name, seconds, payload):

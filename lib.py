@@ -40,7 +40,8 @@ def readNames():
         lastnames[i] = lastnames[i].strip("\n")
 
 def oneToTwoSeconds():
-    return random.randint(100, 200) /100
+    # return random.randint(100, 200) /100
+    return random.randint(0, 100) /100
 
 def makeRecruit():
     rec = merc.Merc()

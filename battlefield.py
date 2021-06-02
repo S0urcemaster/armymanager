@@ -3,9 +3,9 @@ import merc as merci
 
 class BfSector:
 	def __init__(self, troops: army.Sector, enemy: army.Sector):
-		self.troops = army.Sector(troops.pikemen[:], troops.cavalryMen[:], troops.musketeers[:])
+		self.troops = army.Sector(troops.title, troops.pikemen[:], troops.cavalryMen[:], troops.musketeers[:])
 		self.busyTroops = army.Sector(troops.title)
-		self.enemy = army.Sector(enemy.pikemen[:], enemy.cavalryMen[:], enemy.musketeers[:])
+		self.enemy = army.Sector(troops.title, enemy.pikemen[:], enemy.cavalryMen[:], enemy.musketeers[:])
 		self.busyEnemy = army.Sector(enemy.title)
 		self.conflictedPikemen = []
 	
@@ -43,7 +43,7 @@ class BfSector:
 		if pair[1].wounds <4:
 			self.returnEnemyFromConflict(pair[1])
 		self.conflictedPikemen.remove(pair)
-		if len(self.conflictedPikemen):
+		if len(self.conflictedPikemen) == 0:
 			self.conflictPikemen()
 
 
@@ -64,4 +64,14 @@ class Battlefield:
 			if len(s.busyTroops.pikemen) >0: return True
 			if len(s.busyEnemy.pikemen) >0: return True
 		
-	
+	def getArmies(self):
+		arm = army.Army(len(self.sectors))
+		enemy = army.Army(len(self.sectors))
+		for sx, s in enumerate(self.sectors):
+			arm.sectors[sx].pikemen = s.troops.pikemen +s.busyTroops.pikemen
+			arm.sectors[sx].cavalryMen = s.troops.cavalryMen
+			arm.sectors[sx].musketeers = s.troops.musketeers
+			enemy.sectors[sx].pikemen = s.enemy.pikemen
+			enemy.sectors[sx].cavalryMen = s.enemy.cavalryMen
+			enemy.sectors[sx].musketeers = s.enemy.musketeers
+		return (arm, enemy)

@@ -25,7 +25,7 @@ from assignments import Assignment
 import scenarios
 import battlefield
 
-assignment = 0
+assignm = 0
 troops = 1
 camp = 2
 recruitment = 3
@@ -166,11 +166,14 @@ class Game(Process):
 					e.renew(1)
 				
 				elif e.name == events.COMBAT_EVENT:
-					result = self.rollFight(e.payload[0][0], e.payload[0][1])
+					result = self.rollFight(e.payload[0], e.payload[1])
 					if result == True:
 						e.renew(lib.oneToTwoSeconds())
 					else:
-						e.payload[1].kia(e.payload[0])
+						arm, enemy = self.battlefield.getArmies()
+						self.sections[troops].update(arm)
+						self.assignment.army = enemy
+						self.sections[assignm].setAssignment(self.assignment)
 						self.gameEvents.remove(e)
 					# self.sections[troops].flash(e.payload[2], result[0])
 					# self.sections[assignment].flash(e.payload[2], result[1])
@@ -223,7 +226,7 @@ class Game(Process):
 		# build enemy troops:
 		army = lib.buildLowArmy(1, 10)
 		assign.army = army
-		self.sections[assignment].setAssignment(assign)
+		self.sections[assignm].setAssignment(assign)
 		
 		
 	def battle(self):
@@ -241,7 +244,9 @@ class Game(Process):
 					self.gameEvents.addEvent(events.Event(events.COMBAT_EVENT, lib.oneToTwoSeconds(), (p, s)))
 		return True
 	
-	def rollFight(self, merc, enem):
+	def rollFight(self, pair, sector):
+		merc = pair[0]
+		enem = pair[1]
 		powMerc = merc.getPower()
 		powEnem = enem.getPower()
 		powMerc *= merc.getAdvantage(enem.xp.typ) *100 # make int
@@ -252,11 +257,15 @@ class Game(Process):
 		merc.wounds += hitEnem
 		enem.wounds += hitMerc
 		
+		kia = False
 		if merc.wounds >=4:
 			merc.wounds = 4
-			return False
+			kia = True
 		if enem.wounds >=4:
 			enem.wounds = 4
+			kia = True
+		if kia:
+			sector.kia(pair)
 			return False
 		return True
 		
@@ -314,7 +323,7 @@ class Game(Process):
 		scene = scenarios.PfullingScenario()
 		self.army = scene.army
 		self.assignment = scene.assignment
-		self.sections[assignment].setAssignment(scene.assignment)
+		self.sections[assignm].setAssignment(scene.assignment)
 		self.sections[troops].update(scene.army)
 
 env = gameenv.GameEnv()
