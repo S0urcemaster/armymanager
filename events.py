@@ -3,6 +3,8 @@ from datetime import datetime, timedelta
 CLOCK_SECONDS = "clock seconds"
 NEW_RECRUITS_EVENT = "new recruits"
 RECRUITED_EVENT = "recruited"
+COMBAT_EVENT = "combat"
+BATTLE_EVENT = "battle"
 
 class Event:
 	current = None
@@ -11,7 +13,7 @@ class Event:
 		self.datetime = self.current +timedelta(seconds = seconds)
 		self.payload = payload
 	
-	def renew(self, delta, payload):
+	def renew(self, delta, payload = None):
 		self.datetime = self.current +timedelta(seconds = delta)
 		self.payload = payload
 
@@ -23,7 +25,7 @@ class Events:
 	def __init__(self):
 		Event.current = self.currentTime
 	
-	def renew(self, event, delta, payload = 0):
+	def renew(self, event, delta, payload = None):
 		event.renew(delta, payload)
 		
 	def remove(self, event):

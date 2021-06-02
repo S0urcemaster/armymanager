@@ -7,6 +7,7 @@ class Sector:
 		self.pikemen = pikemen
 		self.cavalryMen = cavalryMen
 		self.musketeers = musketeers
+		self.total = len(pikemen) +len(cavalryMen) +len(musketeers)
 	
 
 class Army:
@@ -21,3 +22,9 @@ class Army:
 		for s in self.sectors:
 			sum += len(s.pikemen)
 		return sum
+	
+	def getTotalMercs(self):
+		t = 0
+		for s in self.sectors:
+			t += s.total
+		return t

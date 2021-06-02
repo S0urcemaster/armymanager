@@ -127,3 +127,14 @@ def buildLowArmy(sectors, pikemen = 0, cavalryMen = 0, musketeers = 0):
     for i in range(sectors):
         army.sectors.append(arm.Sector('Sector ' +str(i), p))
     return army
+
+def countWounds(army: arm.Army):
+    w = 0
+    for s in army.sectors:
+        for p in s.pikemen:
+            w += p.wounds
+        for p in s.pikemen:
+            w += p.wounds
+        for p in s.pikemen:
+            w += p.wounds
+    return w

@@ -2,6 +2,7 @@ from multiprocessing import Process
 import sys, pygame
 import locale
 from threading import Lock
+import itertools
 
 import lib
 import gameenv
@@ -40,6 +41,7 @@ class Game(Process):
 	recruits = [] # all available recruits
 	mercs = [] # all recruited mercenaries
 	army = Army()
+	assignment = None
 	
 	lock = Lock()
 	
@@ -141,15 +143,27 @@ class Game(Process):
 					
 			# evaluate game events
 			for e in self.gameEvents.getRaisedEvents():
-				if(e.name == events.CLOCK_SECONDS):
+				if e.name == events.CLOCK_SECONDS:
 					self.gameEvents.renew(e, 1, self.gameEvents.currentTime)
 					self.header.updateClock(self.gameEvents.currentTime.strftime("%A, %d. %B %Y - %H:%M:%S"))
 					
-				if(e.name == events.NEW_RECRUITS_EVENT):
+				if e.name == events.NEW_RECRUITS_EVENT:
 					# self.gameEvents.renew(e, 10)
 					self.recruits.append(lib.makeRecruit())
 					self.sections[recruitment].update(self.recruits)
 					self.gameEvents.renew(e, 1)
+				
+				if e.name == events.BATTLE_EVENT:
+					if self.checkSurrender():
+						self.gameEvents.remove(e)
+					else:
+						self.matchup()
+						e.renew(0.1)
+				
+				if e.name == events.COMBAT_EVENT:
+					result = self.rollFight(e.payload.merc, e.payload.enemy)
+					self.sections[troops].flash(e.payload.sector, result[0])
+					self.sections[assignment].flash(e.payload.sector, result[1])
 					
 				# if(e.name == events.RECRUITED_EVENT):
 				# 	self.sections[recruitment].setRecruits(self.recruits)
@@ -200,6 +214,7 @@ class Game(Process):
 	
 	def selectThisAssignment(self, assign:Assignment):
 		self.army = Army(assign.sectors)
+		self.assignment = assign
 		self.sections[troops].update(self.army)
 		# build enemy troops:
 		army = lib.buildLowArmy(1, 10)
@@ -207,7 +222,29 @@ class Game(Process):
 		self.sections[assignment].setAssignment(assign)
 		
 	def battle(self):
+		enemy = self.assignment.army
+		for sx, s in enumerate(self.army.sectors): # for every sector
+			ps = itertools.zip_longest(s.pikemen, enemy.sectors[sx].pikemen)
+			# for px, p in enumerate(s.pikemen):
+	
+	def rollFight(self, merc, enemy):
 		pass
+	
+	def checkSurrender(self):
+		# count wounds
+		troops = lib.countWounds(self.army)
+		enemy = lib.countWounds(self.assignment.army)
+		troopsLen = len(self.assignment.army.getTotalMercs())
+		enemyLen = len(self.assignment.army.getTotalMercs())
+		if troops //2 > troopsLen and enemy //2 <=enemyLen: # enemy won
+			return troops
+		elif enemy //2 > enemyLen and troops //2 <=troopsLen: # troops won
+			return enemy
+		elif troops == troopsLen *4 and enemy < enemyLen *4: # all troops dead
+			return troops
+		elif enemy == enemyLen *4 and troops < troopsLen *4: # all enemy dead
+			return enemy
+		else: return None # all dead?
 		
 	def put10Pikemen(self, sectorIndex):
 		move = []
@@ -244,8 +281,10 @@ class Game(Process):
 	
 	def initPfullingScenario(self):
 		scene = scenarios.PfullingScenario()
+		self.army = scene.army
+		self.assignment = scene.assignment
 		self.sections[assignment].setAssignment(scene.assignment)
-		self.sections[troops].update(scene.troops)
+		self.sections[troops].update(scene.army)
 
 env = gameenv.GameEnv()
 game = Game(env)

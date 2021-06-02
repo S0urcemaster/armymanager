@@ -44,6 +44,12 @@ class UnitType:
 	# spy = 'Spy'
 	recruit = 'Recruit'
 
+class Wounds:
+	none = 0
+	slightyInjured1 = 1
+	slightyInjured2 = 2
+	seriouslyInjured = 3
+	dead = 4
 
 class Experience:
 	
@@ -114,6 +120,8 @@ class Merc:
 		self.__asset = 0 # money in pockets
 		
 		self.__idle = False # is training or otherwise unavailable
+		
+		self.__wounds = Wounds.none
 		
 	@property
 	def firstname(self):
@@ -204,6 +212,13 @@ class Merc:
 	@asset.setter
 	def asset(self, a):
 		self.__asset = a
+	
+	@property
+	def wounds(self):
+		return self.__wounds
+	@wounds.setter
+	def wounds(self, w):
+		self.__wounds = w
 
 	# @property
 	# def (self):
@@ -214,4 +229,27 @@ class Merc:
 	
 	def getAge(self, date: datetime):
 		return int((date - self.__birthday).total_seconds() // (60 *60 *24 *365))
+	
+	def getPower(self):
+		if self.xp.typ == UnitType.pikeman:
+			return self.__strength + self.__dexterity
+		if self.xp.typ == UnitType.cavalry:
+			return self.__strength + self.__intelligence
+		if self.xp.typ == UnitType.musketeer:
+			return self.__dexterity + self.__intelligence
+	
+	def getAdvantage(self, oppType):
+		if self.xp.typ == UnitType.pikeman:
+			if self.xp.typ == UnitType.pikeman: return 1
+			if self.xp.typ == UnitType.cavalry: return 1.5
+			if self.xp.typ == UnitType.musketeer: return 0.5
+		if self.xp.typ == UnitType.cavalry:
+			if self.xp.typ == UnitType.pikeman: return 0.5
+			if self.xp.typ == UnitType.cavalry: return 1
+			if self.xp.typ == UnitType.musketeer: return 1.5
+		if self.xp.typ == UnitType.musketeer:
+			if self.xp.typ == UnitType.pikeman: return 1.5
+			if self.xp.typ == UnitType.cavalry: return 0.5
+			if self.xp.typ == UnitType.musketeer: return 1
+	
 	
