@@ -1,7 +1,7 @@
 
 class Assignment:
 	def __init__(self, title, principal, sectors, payment, fame,
-	             enemyForce, enemyLevel, enemyEquipment, fogFactor):
+	             enemyForce, enemyLevel, enemyEquipment, fogFactor, army = None):
 		self.title = title
 		self.principal = principal
 		self.sectors = sectors
@@ -11,6 +11,7 @@ class Assignment:
 		self.enemyLevel = enemyLevel
 		self.enemyEquipment = enemyEquipment
 		self.fogFactor = fogFactor
+		self.army = army
 
 # Ofenhaufn
 # Ening

@@ -102,13 +102,22 @@ def getRandomPikemen(count):
 
 def randomArmy(noofSectors, noofTroops):
     army = arm.Army(noofSectors)
-    mercs = []
+    pikemen = []
+    cavalryMen = []
+    musketeers = []
     for t in range(noofTroops):
         recruit = makeRecruit()
         recruit.xp.typ = getRandomTroopType()
-        mercs.append(recruit)
+        if recruit.xp.typ == merc.UnitType.pikeman:
+            pikemen.append(recruit)
+        if recruit.xp.typ == merc.UnitType.cavalry:
+            cavalryMen.append(recruit)
+        if recruit.xp.typ == merc.UnitType.musketeer:
+            musketeers.append(recruit)
     for i,s in enumerate(army.sectors):
-        s.mercs = mercs[i:math.floor(len(mercs) /len(army.sectors)) *(i +1)]
+        s.pikemen = pikemen[i:math.floor(len(pikemen) /len(army.sectors)) *(i +1)]
+        s.cavalryMen = cavalryMen[i:math.floor(len(cavalryMen) /len(army.sectors)) *(i +1)]
+        s.musketeers = musketeers[i:math.floor(len(musketeers) /len(army.sectors)) *(i +1)]
     return army
 
 

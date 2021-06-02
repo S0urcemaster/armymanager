@@ -175,7 +175,7 @@ class Game(Process):
 		pygame.quit()
 		sys.exit()
 		
-	# callbacks
+	# --- callbacks ---
 	
 	def doRecruit(self, recruit: merc.Merc):
 		# self.lock.acquire()
@@ -232,12 +232,12 @@ class Game(Process):
 	def removeAll(self, sectorIndex):
 		pass
 		
-	# game menu
+	# --- game menu ---
 	
 	def quit(self):
 		exit()
 	
-	# test
+	# --- test ---
 
 	def doMake100Recruits(self):
 		self.recruits.extend(lib.make100Recs())
@@ -245,6 +245,7 @@ class Game(Process):
 	def initPfullingScenario(self):
 		scene = scenarios.PfullingScenario()
 		self.sections[assignment].setAssignment(scene.assignment)
+		self.sections[troops].update(scene.troops)
 
 env = gameenv.GameEnv()
 game = Game(env)

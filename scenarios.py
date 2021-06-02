@@ -23,5 +23,6 @@ class PfullingScenario(Scenario):
 			enemyLevel = 0,
 			enemyEquipment = 0,
 			fogFactor = 0,
+			army = lib.randomArmy(1, 10),
 		)
-		self.army = lib.randomArmy(1, 10)
+		self.troops = lib.randomArmy(1, 10)
