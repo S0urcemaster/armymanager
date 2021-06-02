@@ -241,15 +241,15 @@ class Merc:
 	def getAdvantage(self, oppType):
 		if self.xp.typ == UnitType.pikeman:
 			if self.xp.typ == UnitType.pikeman: return 1
-			if self.xp.typ == UnitType.cavalry: return 1.5
-			if self.xp.typ == UnitType.musketeer: return 0.5
+			if self.xp.typ == UnitType.cavalry: return 1.25
+			if self.xp.typ == UnitType.musketeer: return 0.75
 		if self.xp.typ == UnitType.cavalry:
-			if self.xp.typ == UnitType.pikeman: return 0.5
+			if self.xp.typ == UnitType.pikeman: return 0.75
 			if self.xp.typ == UnitType.cavalry: return 1
-			if self.xp.typ == UnitType.musketeer: return 1.5
+			if self.xp.typ == UnitType.musketeer: return 1.25
 		if self.xp.typ == UnitType.musketeer:
-			if self.xp.typ == UnitType.pikeman: return 1.5
-			if self.xp.typ == UnitType.cavalry: return 0.5
+			if self.xp.typ == UnitType.pikeman: return 1.25
+			if self.xp.typ == UnitType.cavalry: return 0.75
 			if self.xp.typ == UnitType.musketeer: return 1
 	
 	

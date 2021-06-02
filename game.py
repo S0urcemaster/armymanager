@@ -3,6 +3,7 @@ import sys, pygame
 import locale
 from threading import Lock
 import itertools
+import random
 
 import lib
 import gameenv
@@ -161,9 +162,9 @@ class Game(Process):
 						e.renew(0.1)
 				
 				if e.name == events.COMBAT_EVENT:
-					result = self.rollFight(e.payload.merc, e.payload.enemy)
-					self.sections[troops].flash(e.payload.sector, result[0])
-					self.sections[assignment].flash(e.payload.sector, result[1])
+					result = self.rollFight(e.payload[0], e.payload[1])
+					self.sections[troops].flash(e.payload[2], result[0])
+					self.sections[assignment].flash(e.payload[2], result[1])
 					
 				# if(e.name == events.RECRUITED_EVENT):
 				# 	self.sections[recruitment].setRecruits(self.recruits)
@@ -207,7 +208,6 @@ class Game(Process):
 		"""Called from recruitment when selection is accepted"""
 		print(recruits)
 	
-	
 	def doTrain(self, merc:merc.Merc, typ:merc.UnitType):
 		merc.xp.typ = typ
 		self.sections[camp].update(self.mercs)
@@ -227,8 +227,37 @@ class Game(Process):
 			ps = itertools.zip_longest(s.pikemen, enemy.sectors[sx].pikemen)
 			# for px, p in enumerate(s.pikemen):
 	
-	def rollFight(self, merc, enemy):
-		pass
+	def matchup(self):
+		# find proper opponents and let them fight
+		# ignore empty sectors atm
+		for sx, s in enumerate(self.army.sectors):
+			enemyS = self.assignment.army.sectors[sx]
+			# find pikeman pair
+			a = s.pickHealthiestPikeman()
+			b = enemyS.pickHealthiestPikeman()
+			if a and b:
+				self.gameEvents.addEvent(events.Event(events.COMBAT_EVENT, random.randint(100, 200) /100, (a, b, s)))
+		
+	
+	def rollFight(self, merc, enem):
+		powMerc = merc.getPower()
+		powEnem = enem.getPower()
+		powMerc *= merc.getAdvantage(enem.xp.typ) *100 # make int
+		powEnem *= merc.getAdvantage(merc.xp.typ) *100
+		hitMerc = random.randint(0, powMerc) //powEnem
+		hitEnem = random.randint(0, powEnem) //powMerc
+		
+		merc.wound += hitEnem
+		enem.wound += hitMerc
+		
+		if merc.wound >=4:
+			merc.wound = 4
+			return False
+		if enem.wound >=4:
+			enem.wound = 4
+			return False
+		return True
+		
 	
 	def checkSurrender(self):
 		# count wounds
