@@ -1,10 +1,34 @@
 from datetime import datetime, timedelta
 
+import merc as merci
+import battlefield
+
 CLOCK_SECONDS = "clock seconds"
 NEW_RECRUITS_EVENT = "new recruits"
 RECRUITED_EVENT = "recruited"
 COMBAT_EVENT = "combat"
 BATTLE_EVENT = "battle"
+
+def combatEventToString(payload):
+	merc: merci.Merc = payload[0][0]
+	enemy: merci.Merc = payload[0][1]
+	bfSector: battlefield.BfSector = payload[1]
+	return f'[{merc.firstname} {merc.lastname} {merc.getPower()}]  ' \
+	       f'[{enemy.firstname} {enemy.lastname} {enemy.getPower()}]  '
+	       # f''
+
+def logEvent(name, seconds, payload):
+	if payload.__class__.__name__ == 'tuple':
+		if payload[0].__class__.__name__ == 'tuple':
+			if payload[0][0].__class__.__name__ == 'Merc':
+				print('Event created: ' +combatEventToString(payload))
+			else:
+				print('Event created: ', name, seconds, payload)
+		else:
+			print('Event created: ', name, seconds, payload)
+	else:
+		print('Event created: ', name, seconds, payload)
+
 
 class Event:
 	current = None
@@ -12,10 +36,13 @@ class Event:
 		self.name = name
 		self.datetime = self.current +timedelta(seconds = seconds)
 		self.payload = payload
+		logEvent(name, seconds, payload)
 	
 	def renew(self, delta, payload = None):
+		if payload != None:
+			self.payload = payload
 		self.datetime = self.current +timedelta(seconds = delta)
-		self.payload = payload
+		logEvent(self.name, delta, self.payload)
 
 class Events:
 	

@@ -39,6 +39,8 @@ def readNames():
     for i in range(len(lastnames)):
         lastnames[i] = lastnames[i].strip("\n")
 
+def oneToTwoSeconds():
+    return random.randint(100, 200) /100
 
 def makeRecruit():
     rec = merc.Merc()

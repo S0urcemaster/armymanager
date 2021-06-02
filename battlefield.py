@@ -2,24 +2,24 @@ import army
 import merc as merci
 
 class BfSector:
-	def __init__(self):
-		self.troops: army.Sector
-		self.busyTroops = army.Sector
-		self.enemy: army.Sector
-		self.busyEnemy = army.Sector
-		self.conflicted = []
+	def __init__(self, troops: army.Sector, enemy: army.Sector):
+		self.troops = army.Sector(troops.pikemen[:], troops.cavalryMen[:], troops.musketeers[:])
+		self.busyTroops = army.Sector(troops.title)
+		self.enemy = army.Sector(enemy.pikemen[:], enemy.cavalryMen[:], enemy.musketeers[:])
+		self.busyEnemy = army.Sector(enemy.title)
+		self.conflictedPikemen = []
 	
-	def conflict(self):
+	def conflictPikemen(self):
 		busyT = self.troops.pikemen[0:33]
 		busyE = self.enemy.pikemen[0:33]
-		self.conflicted = list(zip(busyT, busyE))
-		if len(self.conflicted) == 0:
+		self.conflictedPikemen = list(zip(busyT, busyE))
+		if len(self.conflictedPikemen) == 0:
 			return False
-		self.busyTroops.pikemen = self.troops.pikemen[:len(self.conflicted)]
-		self.troops.pikemen = self.troops.pikemen[len(self.conflicted):]
-		self.busyEnemy.pikemen = self.enemy.pikemen[:len(self.conflicted)]
-		self.enemy.pikemen = self.enemy.pikemen[len(self.conflicted):]
-		return self.conflicted
+		self.busyTroops.pikemen = self.troops.pikemen[:len(self.conflictedPikemen)]
+		self.troops.pikemen = self.troops.pikemen[len(self.conflictedPikemen):]
+		self.busyEnemy.pikemen = self.enemy.pikemen[:len(self.conflictedPikemen)]
+		self.enemy.pikemen = self.enemy.pikemen[len(self.conflictedPikemen):]
+		return self.conflictedPikemen
 	
 	def returnTroopFromConflict(self, merc):
 		if merc.xp.typ == merci.UnitType.pikeman:
@@ -27,7 +27,7 @@ class BfSector:
 		if merc.xp.typ == merci.UnitType.cavalry:
 			self.troops.cavalryMen.append(merc)
 		if merc.xp.typ == merci.UnitType.musketeer:
-			self.troops.musketeer.append(merc)
+			self.troops.musketeers.append(merc)
 	
 	def returnEnemyFromConflict(self, merc):
 		if merc.xp.typ == merci.UnitType.pikeman:
@@ -35,14 +35,16 @@ class BfSector:
 		if merc.xp.typ == merci.UnitType.cavalry:
 			self.troops.cavalryMen.append(merc)
 		if merc.xp.typ == merci.UnitType.musketeer:
-			self.troops.musketeer.append(merc)
+			self.troops.musketeers.append(merc)
 	
 	def kia(self, pair):
 		if pair[0].wounds <4:
 			self.returnTroopFromConflict(pair[0])
 		if pair[1].wounds <4:
 			self.returnEnemyFromConflict(pair[1])
-		self.conflicted.remove(pair)
+		self.conflictedPikemen.remove(pair)
+		if len(self.conflictedPikemen):
+			self.conflictPikemen()
 
 
 class Battlefield:
@@ -55,10 +57,11 @@ class Battlefield:
 		self.troops = troops
 		self.enemy = enemy
 		for sx, s in enumerate(troops.sectors):
-			self.sectors[sx] = BfSector()
-			self.sectors[sx].troops = s
-		for sx, s in enumerate(enemy.sectors):
-			self.sectors[sx].troops = s
+			self.sectors.append(BfSector(s, enemy.sectors[sx]))
 	
+	def conflictGoing(self):
+		for s in self.sectors:
+			if len(s.busyTroops.pikemen) >0: return True
+			if len(s.busyEnemy.pikemen) >0: return True
 		
 	

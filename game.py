@@ -23,6 +23,7 @@ from sections.recruitment import RecruitmentSection
 from army import Army
 from assignments import Assignment
 import scenarios
+import battlefield
 
 assignment = 0
 troops = 1
@@ -43,6 +44,7 @@ class Game(Process):
 	mercs = [] # all recruited mercenaries
 	army = Army()
 	assignment = None
+	battlefield: battlefield.Battlefield
 	
 	lock = Lock()
 	
@@ -82,8 +84,8 @@ class Game(Process):
 		self.focusedSection.focus()
 		
 		self.gameEvents = events.Events()
-		self.gameEvents.addEvent(events.Event(events.CLOCK_SECONDS, 1, self.gameEvents.currentTime))
-		self.gameEvents.addEvent(events.Event(events.NEW_RECRUITS_EVENT, 1))
+		# self.gameEvents.addEvent(events.Event(events.CLOCK_SECONDS, 1, self.gameEvents.currentTime))
+		# self.gameEvents.addEvent(events.Event(events.NEW_RECRUITS_EVENT, 1))
 	
 	def start(self):
 		clock = pygame.time.Clock()
@@ -148,31 +150,33 @@ class Game(Process):
 					self.gameEvents.renew(e, 1, self.gameEvents.currentTime)
 					self.header.updateClock(self.gameEvents.currentTime.strftime("%A, %d. %B %Y - %H:%M:%S"))
 					
-				if e.name == events.NEW_RECRUITS_EVENT:
+				elif e.name == events.NEW_RECRUITS_EVENT:
 					# self.gameEvents.renew(e, 10)
 					self.recruits.append(lib.makeRecruit())
 					self.sections[recruitment].update(self.recruits)
 					self.gameEvents.renew(e, 1)
 				
-				if e.name == events.BATTLE_EVENT:
-					if self.checkSurrender():
-						self.gameEvents.remove(e)
-					else:
-						self.matchup()
-						e.renew(0.1)
+				elif e.name == events.BATTLE_EVENT:
+					# if self.checkSurrender():
+					# 	self.gameEvents.remove(e)
+					# else:
+					# 	self.matchup()
+					# 	e.renew(0.1)
+					self.conflict()
+					e.renew(1)
 				
-				if e.name == events.COMBAT_EVENT:
-					result = self.rollFight(e.payload[0], e.payload[1])
-					self.sections[troops].flash(e.payload[2], result[0])
-					self.sections[assignment].flash(e.payload[2], result[1])
+				elif e.name == events.COMBAT_EVENT:
+					result = self.rollFight(e.payload[0][0], e.payload[0][1])
+					if result == True:
+						e.renew(lib.oneToTwoSeconds())
+					else:
+						e.payload[1].kia(e.payload[0])
+						self.gameEvents.remove(e)
+					# self.sections[troops].flash(e.payload[2], result[0])
+					# self.sections[assignment].flash(e.payload[2], result[1])
 					
-				# if(e.name == events.RECRUITED_EVENT):
-				# 	self.sections[recruitment].setRecruits(self.recruits)
-				# 	self.sections[camp].update(self.mercs)
-					# self.gameEvents.remove(e)
-			
+					
 			# draw frame
-			# self.screen.fill(color.middleGrey)
 			self.screen.blit(self.background, pygame.Rect(0, 0, 0, 0))
 			self.header.draw()
 			self.border.draw()
@@ -221,23 +225,21 @@ class Game(Process):
 		assign.army = army
 		self.sections[assignment].setAssignment(assign)
 		
-	def battle(self):
-		enemy = self.assignment.army
-		for sx, s in enumerate(self.army.sectors): # for every sector
-			ps = itertools.zip_longest(s.pikemen, enemy.sectors[sx].pikemen)
-			# for px, p in enumerate(s.pikemen):
-	
-	def matchup(self):
-		# find proper opponents and let them fight
-		# ignore empty sectors atm
-		for sx, s in enumerate(self.army.sectors):
-			enemyS = self.assignment.army.sectors[sx]
-			# find pikeman pair
-			a = s.pickHealthiestPikeman()
-			b = enemyS.pickHealthiestPikeman()
-			if a and b:
-				self.gameEvents.addEvent(events.Event(events.COMBAT_EVENT, random.randint(100, 200) /100, (a, b, s)))
 		
+	def battle(self):
+		self.battlefield = battlefield.Battlefield(self.army, self.assignment.army)
+		self.gameEvents.addEvent(events.Event(events.BATTLE_EVENT, 1))
+		
+		
+	def conflict(self):
+		if self.battlefield.conflictGoing():
+			return False
+		for s in self.battlefield.sectors:
+			pikemen = s.conflictPikemen()
+			if pikemen:
+				for p in pikemen:
+					self.gameEvents.addEvent(events.Event(events.COMBAT_EVENT, lib.oneToTwoSeconds(), (p, s)))
+		return True
 	
 	def rollFight(self, merc, enem):
 		powMerc = merc.getPower()
@@ -247,14 +249,14 @@ class Game(Process):
 		hitMerc = random.randint(0, powMerc) //powEnem
 		hitEnem = random.randint(0, powEnem) //powMerc
 		
-		merc.wound += hitEnem
-		enem.wound += hitMerc
+		merc.wounds += hitEnem
+		enem.wounds += hitMerc
 		
-		if merc.wound >=4:
-			merc.wound = 4
+		if merc.wounds >=4:
+			merc.wounds = 4
 			return False
-		if enem.wound >=4:
-			enem.wound = 4
+		if enem.wounds >=4:
+			enem.wounds = 4
 			return False
 		return True
 		
