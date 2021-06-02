@@ -5,6 +5,7 @@ import text
 import merc
 import color
 import events
+import lib
 
 trainPikeman1 = 'Train Pikeman (1)'
 trainCavalry1 = 'Train Cavalry (1)'
@@ -16,10 +17,6 @@ nextMercenaries = 'Next Mercenaries'
 previousMercenaries = 'Previous Mercenaries'
 
 class MercItem(item.Item):
-	
-	pikemanImg = pygame.image.load('res/pikeman.png')
-	cavalryImg = pygame.image.load('res/cavalry.png')
-	musketeerImg = pygame.image.load('res/musketeer.png')
 	
 	def __init__(self, soldier: merc.Merc):
 		super().__init__(85)
@@ -88,11 +85,11 @@ class MercItem(item.Item):
 		
 		r = pygame.Rect(self.rect.x +200, self.rect.y +30, 50, 50)
 		if self.soldier.xp.typ == merc.UnitType.pikeman:
-			self.screen.blit(self.pikemanImg, r)
+			self.screen.blit(lib.pikemanImg, r)
 		if self.soldier.xp.typ == merc.UnitType.cavalry:
-			self.screen.blit(self.cavalryImg, r)
+			self.screen.blit(lib.cavalryImg, r)
 		if self.soldier.xp.typ == merc.UnitType.musketeer:
-			self.screen.blit(self.musketeerImg, r)
+			self.screen.blit(lib.musketeerImg, r)
 	
 	def setPositions(self):
 		self.name.setPosition(self.rect.x +7, self.rect.y +6)

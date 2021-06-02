@@ -4,6 +4,7 @@ from scipy.stats import norm
 import io
 from datetime import datetime, timedelta
 import math
+import pygame
 
 import merc
 import events
@@ -11,6 +12,11 @@ import army as arm
 
 firstnames = [] # Mercenaries randomly made of
 lastnames = []
+
+pikemanImg = pygame.image.load('res/pikeman.png')
+cavalryImg = pygame.image.load('res/cavalry.png')
+musketeerImg = pygame.image.load('res/musketeer.png')
+
 
 def bellAge() -> []:
     x = [random.randint(1, 100) for i in range(100)]
@@ -62,14 +68,14 @@ def makeRecruit():
     return rec
 
 
-def make10Mercs():
+def make10Recs():
     mercs = []
     for i in range(10):
         mercs.append(makeRecruit())
     return mercs
 
 
-def make100Recruits():
+def make100Recs():
     return list(map(lambda x:makeRecruit(), range(100)))
 
 
@@ -87,7 +93,7 @@ def getRandomTroopType():
 
 def getRandomPikemen(count):
     pm = []
-    for i in count:
+    for i in range(count):
        rec = makeRecruit()
        rec.xp.typ = merc.UnitType.pikeman
        pm.append(rec)
@@ -103,4 +109,12 @@ def randomArmy(noofSectors, noofTroops):
         mercs.append(recruit)
     for i,s in enumerate(army.sectors):
         s.mercs = mercs[i:math.floor(len(mercs) /len(army.sectors)) *(i +1)]
+    return army
+
+
+def buildLowArmy(sectors, pikemen = 0, cavalryMen = 0, musketeers = 0):
+    p = getRandomPikemen(pikemen)
+    army = arm.Army()
+    for i in range(sectors):
+        army.sectors.append(arm.Sector('Sector ' +str(i), p))
     return army

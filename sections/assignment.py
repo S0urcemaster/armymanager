@@ -2,20 +2,20 @@ import section
 import item
 import text
 import assignments
+import sections.troops as troops
+import army
 
 
-class SectorItem(item.Item):
-	def __init__(self, title:str):
-		super().__init__(170)
-		self.title = title
-		self.name = text.TextH(title)
+class SectorItem(troops.SectorItem):
+	def __init__(self, sector: army.Sector):
+		super().__init__(sector)
 		actions = [
 			'Action 1',
 			'Action 2',
 			'Action 3',
 		]
 		self.info = item.ItemInfo(
-			self.title,
+			self.sector.title,
 			[
 				'Enemy force estimations:',
 				'Total: 10',
@@ -30,11 +30,11 @@ class SectorItem(item.Item):
 	
 	def draw(self):
 		super().draw()
-		self.name.draw()
+		# self.name.draw()
 	
 	def setPositions(self):
-		rect = self.name.text.get_rect(center = (self.rect.w //2, self.rect.h //2))
-		self.name.setPosition(self.rect.x +rect.x, self.rect.y +rect.y -2)
+		rect = self.title.text.get_rect(center = (self.rect.w //2, self.rect.h //2))
+		self.title.setPosition(self.rect.x +rect.x, self.rect.y +5)
 
 
 selectThisAssignment = 'Select this assignment'
@@ -178,8 +178,8 @@ class AssignmentSection(section.Section):
 	def assignmentChanged(self, assignment):
 		del self.items[:] # switch assignment view to enemy view:
 		self.addItem(SectorHeaderItem())
-		for s in range(assignment.sectors):
-			self.addItem(SectorItem('Sector ' +str(s +1)))
+		for i in range(assignment.sectors):
+			self.addItem(SectorItem(assignment.army.sectors[i]))
 	
 	def setAssignment(self, assignment):
 		self.assignmentChanged(assignment)
@@ -188,6 +188,5 @@ class AssignmentSection(section.Section):
 		info = self.items[self.itemFocusIndex].info
 		if info.actions[action] == selectThisAssignment:
 			self.game.selectThisAssignment(self.itemFocus.assignment) # adjust and activate troups section
-			self.assignmentChanged(self.itemFocus.assignment)
 		if info.actions[action] == attack:
 			self.game.battle()

@@ -2,18 +2,17 @@ import merc
 
 class Sector:
 	
-	def __init__(self, title):
+	def __init__(self, title, pikemen = [], cavalryMen = [], musketeers = []):
 		self.title = title
-		self.pikemen = []
-		self.cavalryMen = []
-		self.musketeers = []
+		self.pikemen = pikemen
+		self.cavalryMen = cavalryMen
+		self.musketeers = musketeers
 	
 
 class Army:
 	
-	sectors = []
-	
 	def __init__(self, numSectors = 0):
+		self.sectors = []
 		for i in range(0, numSectors):
 			self.sectors.append(Sector('Sector ' +str(i +1)))
 	

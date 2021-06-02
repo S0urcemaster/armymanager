@@ -14,7 +14,7 @@ import item
 import events
 import merc
 from sections.assignment import AssignmentSection
-from sections.troups import TroupsSection
+from sections.troops import TroopsSection
 import sections.actions as actions
 from sections.camp import CampSection
 from sections.recruitment import RecruitmentSection
@@ -23,7 +23,7 @@ from assignments import Assignment
 import scenarios
 
 assignment = 0
-troups = 1
+troops = 1
 camp = 2
 recruitment = 3
 
@@ -69,7 +69,7 @@ class Game(Process):
 		self.header = header.Header(mainLayout.getHeader(), self)
 		self.sections.append(AssignmentSection(mainLayout.getColumn(0), self))
 		self.border = section.Section(mainLayout.getColumn(1), self)
-		self.sections.append(TroupsSection(mainLayout.getColumn(2), self))
+		self.sections.append(TroopsSection(mainLayout.getColumn(2), self))
 		self.actions = actions.ActionsSection(mainLayout.getColumn(3), self)
 		self.sections.append(CampSection(mainLayout.getColumn(4), self))
 		self.sections.append(RecruitmentSection(mainLayout.getColumn(5), self))
@@ -84,7 +84,7 @@ class Game(Process):
 	
 	def start(self):
 		clock = pygame.time.Clock()
-		self.mercs = lib.make10Mercs()
+		self.mercs = lib.make10Recs()
 		self.sections[camp].update(self.mercs)
 		while self.running:
 			# evaluate player action
@@ -198,9 +198,13 @@ class Game(Process):
 		merc.xp.typ = typ
 		self.sections[camp].update(self.mercs)
 	
-	def selectThisAssignment(self, assignment:Assignment):
-		self.army = Army(assignment.sectors)
-		self.sections[troups].update(self.army)
+	def selectThisAssignment(self, assign:Assignment):
+		self.army = Army(assign.sectors)
+		self.sections[troops].update(self.army)
+		# build enemy troops:
+		army = lib.buildLowArmy(1, 10)
+		assign.army = army
+		self.sections[assignment].setAssignment(assign)
 		
 	def battle(self):
 		pass
@@ -214,10 +218,10 @@ class Game(Process):
 		for m in move:
 			self.army.sectors[sectorIndex].pikemen.append(m)
 			self.mercs.remove(m)
-		self.sections[troups].update(self.army)
+		self.sections[troops].update(self.army)
 		self.sections[camp].update(self.mercs)
 		# update info changes:
-		self.actions.activeItemChanged(self.sections[troups].items[self.sections[troups].itemFocusIndex])
+		self.actions.activeItemChanged(self.sections[troops].items[self.sections[troops].itemFocusIndex])
 		
 	def put10CavalryMen(self, sectorIndex):
 		pass
@@ -236,7 +240,7 @@ class Game(Process):
 	# test
 
 	def doMake100Recruits(self):
-		self.recruits.extend(lib.make100Recruits())
+		self.recruits.extend(lib.make100Recs())
 	
 	def initPfullingScenario(self):
 		scene = scenarios.PfullingScenario()
