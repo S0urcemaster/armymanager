@@ -22,7 +22,7 @@ class MercItem(item.Item):
 		super().__init__(85)
 		self.soldier = soldier
 		self.rect = None
-		self.name = text.TextH(f"{soldier.firstname} {soldier.lastname} - {soldier.getAge(events.Event.current)}")
+		self.name = text.TextH(f"{soldier.firstname} {soldier.lastname} - {soldier.getAge(events.Event.pointInTime)}")
 		self.pay = text.TextH(str(soldier.pay), col = color.silver)
 		self.perks = []
 		for p in soldier.perks:
@@ -52,7 +52,7 @@ class MercItem(item.Item):
 		self.info = item.ItemInfo(
 			self.soldier.firstname + ' ' + self.soldier.lastname,
 			[
-				'Age: ' +str(self.soldier.getAge(events.Event.current)),
+				'Age: ' +str(self.soldier.getAge(events.Event.pointInTime)),
 				'Training: ' +self.soldier.xp.typ,
 				'Experience: ' +str(self.soldier.xp.xp),
 				'Pay: ' +str(self.soldier.pay),

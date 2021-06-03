@@ -2,6 +2,7 @@ import army
 import merc as merci
 
 class BfSector:
+	
 	def __init__(self, troops: army.Sector, enemy: army.Sector):
 		self.troops = army.Sector(troops.title, troops.pikemen[:], troops.cavalryMen[:], troops.musketeers[:])
 		self.busyTroops = army.Sector(troops.title)
@@ -10,6 +11,7 @@ class BfSector:
 		self.conflictedPikemen = []
 		self.conflictedCavalryMen = []
 		self.conflictedMusketeers = []
+	
 	
 	def conflicPikemen(self):
 		busyT = self.troops.pikemen[0:34] # initial amount
@@ -23,6 +25,7 @@ class BfSector:
 		self.enemy.pikemen = self.enemy.pikemen[len(self.conflictedPikemen):]
 		return self.conflictedPikemen
 	
+	
 	def conflictCavalryMen(self):
 		busyT = self.troops.cavalryMen[0:34]
 		busyE = self.enemy.cavalryMen[0:34]
@@ -34,6 +37,7 @@ class BfSector:
 		self.busyEnemy.cavalryMen = self.enemy.cavalryMen[:len(self.conflictedCavalryMen)]
 		self.enemy.cavalryMen = self.enemy.cavalryMen[len(self.conflictedCavalryMen):]
 		return self.conflictedCavalryMen
+	
 	
 	def conflictMusketeers(self):
 		busyT = self.troops.musketeers[0:34]
@@ -47,6 +51,7 @@ class BfSector:
 		self.enemy.musketeers = self.enemy.musketeers[len(self.conflictedMusketeers):]
 		return self.conflictedMusketeers
 	
+	
 	def returnTroopFromConflict(self, merc):
 		if merc.xp.typ == merci.UnitType.pikeman:
 			self.troops.pikemen.append(merc)
@@ -57,6 +62,7 @@ class BfSector:
 		elif merc.xp.typ == merci.UnitType.musketeer:
 			self.troops.musketeers.append(merc)
 			self.busyTroops.musketeers.remove(merc)
+	
 	
 	def returnEnemyFromConflict(self, merc):
 		if merc.xp.typ == merci.UnitType.pikeman:
@@ -69,6 +75,7 @@ class BfSector:
 			self.enemy.musketeers.append(merc)
 			self.busyEnemy.musketeers.remove(merc)
 	
+	
 	def returnTroopFromBusy(self, merc):
 		if merc.xp.typ == merci.UnitType.pikeman:
 			self.busyTroops.pikemen.remove(merc)
@@ -79,6 +86,7 @@ class BfSector:
 		elif merc.xp.typ == merci.UnitType.musketeer:
 			self.busyTroops.musketeers.remove(merc)
 			self.troops.musketeers.append(merc)
+	
 	
 	def returnEnemyFromBusy(self, merc):
 		if merc.xp.typ == merci.UnitType.pikeman:
@@ -91,6 +99,7 @@ class BfSector:
 			self.busyEnemy.musketeers.remove(merc)
 			self.enemy.musketeers.append(merc)
 	
+	
 	def removeEnemyFromBusy(self, merc):
 		"""got killed"""
 		if merc.xp.typ == merci.UnitType.pikeman:
@@ -99,6 +108,7 @@ class BfSector:
 			self.busyEnemy.cavalryMen.remove(merc)
 		elif merc.xp.typ == merci.UnitType.musketeer:
 			self.busyEnemy.musketeers.remove(merc)
+	
 	
 	def removeTroopFromBusy(self, merc):
 		"""got killed"""
@@ -109,16 +119,15 @@ class BfSector:
 		elif merc.xp.typ == merci.UnitType.musketeer:
 			self.busyTroops.musketeers.remove(merc)
 	
+	
 	def removePairFromConflict(self, pair):
-		# try:
-			if pair[0].xp.typ == merci.UnitType.pikeman and pair[1].xp.typ == merci.UnitType.pikeman:
-				self.conflictedPikemen.remove(pair)
-			elif pair[0].xp.typ == merci.UnitType.cavalry and pair[1].xp.typ == merci.UnitType.cavalry:
-				self.conflictedCavalryMen.remove(pair)
-			elif pair[0].xp.typ == merci.UnitType.musketeer and pair[1].xp.typ == merci.UnitType.musketeer:
-				self.conflictedMusketeers.remove(pair)
-		# except:
-		# 	pass
+		if pair[0].xp.typ == merci.UnitType.pikeman and pair[1].xp.typ == merci.UnitType.pikeman:
+			self.conflictedPikemen.remove(pair)
+		elif pair[0].xp.typ == merci.UnitType.cavalry and pair[1].xp.typ == merci.UnitType.cavalry:
+			self.conflictedCavalryMen.remove(pair)
+		elif pair[0].xp.typ == merci.UnitType.musketeer and pair[1].xp.typ == merci.UnitType.musketeer:
+			self.conflictedMusketeers.remove(pair)
+	
 	
 	def replaceTroop(self, pair):
 		"""find new match"""
@@ -134,7 +143,6 @@ class BfSector:
 				print(f'Troop replaced [{newPair[0].firstname} {newPair[0].lastname} {newPair[0].wounds} {newPair[0].xp.typ}]')
 				return newPair
 			else:
-				# self.returnEnemyFromBusy(enemy) # survived
 				self.removePairFromConflict(pair)
 		elif enemy.xp.typ == merci.UnitType.cavalry:
 			if len(self.troops.cavalryMen) >0: # favorite match
@@ -146,7 +154,6 @@ class BfSector:
 				print(f'Troop replaced [{newPair[0].firstname} {newPair[0].lastname} {newPair[0].wounds} {newPair[0].xp.typ}]')
 				return newPair
 			else:
-				# self.returnEnemyFromBusy(enemy) # survived
 				self.removePairFromConflict(pair)
 		elif enemy.xp.typ == merci.UnitType.musketeer:
 			if len(self.troops.musketeers) >0: # favorite match
@@ -158,9 +165,9 @@ class BfSector:
 				print(f'Troop replaced [{newPair[0].firstname} {newPair[0].lastname} {newPair[0].wounds} {newPair[0].xp.typ}]')
 				return newPair
 			else:
-				# self.returnEnemyFromBusy(enemy) # survived
 				self.removePairFromConflict(pair)
 		return False
+	
 	
 	def replaceEnemy(self, pair):
 		"""find new match"""
@@ -180,7 +187,6 @@ class BfSector:
 			# elif len(self.enemy.musketeers) >0: # disadvantage
 			# 	pass
 			else:
-				# self.returnTroopFromBusy(troop) # survived
 				self.removePairFromConflict(pair)
 		elif troop.xp.typ == merci.UnitType.cavalry:
 			if len(self.enemy.cavalryMen) >0:
@@ -192,7 +198,6 @@ class BfSector:
 				print(f'Enemy replaced [{newPair[1].firstname} {newPair[1].lastname} {newPair[1].wounds} {newPair[1].xp.typ}]')
 				return newPair
 			else:
-				# self.returnTroopFromBusy(troop) # survived
 				self.removePairFromConflict(pair)
 		elif troop.xp.typ == merci.UnitType.musketeer:
 			if len(self.enemy.musketeers) >0:
@@ -204,9 +209,9 @@ class BfSector:
 				print(f'Enemy replaced [{newPair[1].firstname} {newPair[1].lastname} {newPair[1].wounds} {newPair[1].xp.typ}]')
 				return newPair
 			else:
-				# self.returnTroopFromBusy(troop) # survived
 				self.removePairFromConflict(pair)
 		return False
+	
 	
 	def kia(self, pair):
 		"""returns updated pair if there are reinforcements, false if not"""

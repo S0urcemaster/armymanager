@@ -4,67 +4,14 @@ import color
 import item
 import text
 
-class ScrollBar:
-	screen = None
-	
-	def __init__(self, rect: pygame.Rect):
-		self.rect = rect
-		self.rect.y = 921
-		self.rect.h = 39
-		self.max = 1
-		self.listIndex = 0
-		self.sb = self.rect.inflate(-2, -2)
-		self.update(self.listIndex, 10)
-		
-	def draw(self):
-		pygame.draw.rect(self.screen, color.black, self.rect, width = 1)
-		pygame.draw.rect(self.screen, color.blue, self.sb)
-		
-	def update(self, ix, max = None):
-		self.listIndex = ix
-		if max != None: self.max = max
-		if max == 0:
-			self.sb.width = self.rect.width
-		else:
-			self.sb.width = self.rect.width // (self.max / 10) # fixed list size
-		self.sb.x = self.rect.x + self.sb.width * ix
-	
-	def next(self):
-		if (self.listIndex +1) *10 < self.max:
-			self.listIndex += 1
-			self.update(self.listIndex)
-		
-	def previous(self):
-		if self.listIndex >0:
-			self.listIndex -= 1
-			self.update(self.listIndex)
-
-
-class SectionStats:
-	screen = None
-	
-	def __init__(self, value, rect):
-		self.rect = rect
-		self.rect.y = 921
-		self.rect.h = 39
-		self.update(value)
-	
-	def draw(self):
-		self.titleText.draw()
-		pygame.draw.rect(self.screen, color.black, self.rect, width = 1)
-	
-	def update(self, value):
-		self.titleText = text.TextH(str(value))
-		rect = self.titleText.text.get_rect(center = (self.rect.w //2, self.rect.h //2))
-		self.titleText.setPosition(self.rect.x +rect.x, self.rect.y +rect.y -2)
-
 
 class Section:
 	
 	screen = None # static, set once in game
+	
 	Point = namedtuple('Point', 'x y')
 	
-	def __init__(self, rect: pygame.rect, game):
+	def __init__(self, rect: pygame.Rect, game):
 		self.rect = rect
 		self.game = game
 		self.offset = self.Point(rect[0], rect[1])
@@ -147,12 +94,59 @@ class Section:
 	def _setItemFocusIndex(self, x):
 		self.itemFocusIndex = x
 		self.itemFocus = self.items[x]
+
+
+class ScrollBar:
+	screen = None
 	
-	# def update(self):
-	# 	"""Update items"""
-	# 	pass
+	def __init__(self, rect: pygame.Rect):
+		self.rect = rect
+		self.rect.y = 921
+		self.rect.h = 39
+		self.max = 1
+		self.listIndex = 0
+		self.sb = self.rect.inflate(-2, -2)
+		self.update(self.listIndex, 10)
 	
-	# def action(self, id):
-	# 	"""Pass action to selected items"""
-	# 	for i in self.selectedItems:
-	# 		i.action(id)
+	def draw(self):
+		pygame.draw.rect(self.screen, color.black, self.rect, width = 1)
+		pygame.draw.rect(self.screen, color.blue, self.sb)
+	
+	def update(self, ix, max = None):
+		self.listIndex = ix
+		if max != None: self.max = max
+		if max == 0:
+			self.sb.width = self.rect.width
+		else:
+			self.sb.width = self.rect.width // (self.max / 10) # fixed list size
+		self.sb.x = self.rect.x + self.sb.width * ix
+	
+	def next(self):
+		if (self.listIndex +1) *10 < self.max:
+			self.listIndex += 1
+			self.update(self.listIndex)
+	
+	def previous(self):
+		if self.listIndex >0:
+			self.listIndex -= 1
+			self.update(self.listIndex)
+
+
+class SectionStats:
+	screen = None
+	
+	def __init__(self, value, rect):
+		self.rect = rect
+		self.rect.y = 921
+		self.rect.h = 39
+		self.update(value)
+	
+	def draw(self):
+		self.titleText.draw()
+		pygame.draw.rect(self.screen, color.black, self.rect, width = 1)
+	
+	def update(self, value):
+		self.titleText = text.TextH(str(value))
+		rect = self.titleText.text.get_rect(center = (self.rect.w //2, self.rect.h //2))
+		self.titleText.setPosition(self.rect.x +rect.x, self.rect.y +rect.y -2)
+

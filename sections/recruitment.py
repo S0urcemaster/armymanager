@@ -41,7 +41,7 @@ class RecruitItem(camp.MercItem):
 		self.info = item.ItemInfo(
 			self.soldier.firstname + ' ' + self.soldier.lastname,
 			[
-				'Age: ' +str(self.soldier.getAge(events.Event.current)),
+				'Age: ' +str(self.soldier.getAge(events.Event.pointInTime)),
 				'Training: ' +self.soldier.xp.typ,
 				'Experience: ' +str(self.soldier.xp.xp),
 				'Pay: ' +str(self.soldier.pay),

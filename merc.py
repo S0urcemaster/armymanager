@@ -21,6 +21,7 @@ dex = 'dexterity'
 ntl = 'intelligence'
 con = 'confidence'
 cha = 'charisma'
+
 perkList = Perk.makeList([
 	('Arthrosis', [str, con], [-0.25, -0.15], False),
 	('Blessed', [str, dex, ntl, con, cha], [0.1, 0.1, 0.1, 0.1, 0.1], False),

@@ -39,9 +39,11 @@ def readNames():
     for i in range(len(lastnames)):
         lastnames[i] = lastnames[i].strip("\n")
 
+
 def oneToTwoSeconds():
     # return random.randint(100, 200) /100
     return random.randint(0, 100) /100
+
 
 def makeRecruit():
     rec = merc.Merc()
@@ -54,7 +56,7 @@ def makeRecruit():
     rec.intelligence = random.randint(1, 255)
     rec.charisma = random.randint(1, 255)
     rec.confidence = random.randint(1, 255)
-    rec.birthday = events.Event.current - timedelta(days =365 * bellAge() + random.randint(1, 365))
+    rec.birthday = events.Event.pointInTime - timedelta(days =365 * bellAge() + random.randint(1, 365))
     # Perks:
     for i in range(3): # max 3 perks
         prob = random.randint(0, 11) # probability
@@ -130,6 +132,7 @@ def buildLowArmy(sectors, pikemen = 0, cavalryMen = 0, musketeers = 0):
     for i in range(sectors):
         army.sectors.append(arm.Sector('Sector ' +str(i), p))
     return army
+
 
 def countWounds(army: arm.Army):
     w = 0

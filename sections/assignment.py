@@ -1,3 +1,4 @@
+import pygame
 import section
 import item
 import text
@@ -29,12 +30,18 @@ class SectorItem(troops.SectorItem):
 		)
 	
 	def draw(self):
+		if self.flashFrames >0:
+			pygame.draw.rect(self.screen, self.flashColor, self.rect.inflate(-2, -2))
+			self.flashFrames -= 1
 		super().draw()
-		# self.name.draw()
 	
 	def setPositions(self):
 		rect = self.title.text.get_rect(center = (self.rect.w //2, self.rect.h //2))
 		self.title.setPosition(self.rect.x +rect.x, self.rect.y +5)
+	
+	def flash(self, frames, color):
+		self.flashFrames = frames
+		self.flashColor = color
 
 
 selectThisAssignment = 'Select this assignment'
@@ -153,16 +160,7 @@ class AssignmentSection(section.Section):
 		self.addItem(sf)
 		sf = AssignmentItem(assignments.assignments[1])
 		self.addItem(sf)
-	
-	# def setEnemyState(self):
-	# 	self.state = State.enemy
-	# 	del self.items[:]
-	# 	self.addItem(item.HeaderItem('Enemy'))
-	# 	self._setItemFocusIndex(0)
-	# 	for s in sectors:
-	# 		sf = SectorItem(s)
-	# 		self.addItem(sf)
-	
+		
 	def space(self):
 		"""Overwrite base behaviour"""
 		if self.state == State.enemy:
@@ -173,7 +171,6 @@ class AssignmentSection(section.Section):
 			else:
 				self.selection = set()
 				self.selection.add(self.itemFocusIndex)
-	
 	
 	def assignmentChanged(self, assignment):
 		del self.items[:] # switch assignment view to enemy view:

@@ -13,11 +13,17 @@ put10CavalryMen = 'Put 10 Cavalry'
 put10Musketeers = 'Put 10 Musketeer'
 removeAll = 'Remove All'
 
+
 class SectorItem(item.Item):
+	
 	def __init__(self, sector: army.Sector):
 		super().__init__(170)
+		
 		self.sector = sector
 		self.title = text.TextH(sector.title)
+		self.flashFrames = 0
+		self.flashColor = None
+		
 		actions = [
 			put10Pikemen,
 			put10CavalryMen,
@@ -37,6 +43,9 @@ class SectorItem(item.Item):
 	def draw(self):
 		super().draw()
 		r = pygame.Rect(self.rect.x +5, self.rect.y +5, 50, 50)
+		if self.flashFrames >0:
+			pygame.draw.rect(self.screen, self.flashColor, self.rect.inflate(-2, -2))
+			self.flashFrames -= 1
 		self.screen.blit(lib.pikemanImg, pygame.Rect(self.rect.x +19, self.rect.y +5, 50, 50))
 		self.screen.blit(lib.cavalryImg, pygame.Rect(self.rect.x +10, self.rect.y +55, 50, 50))
 		self.screen.blit(lib.musketeerImg, pygame.Rect(self.rect.x +13, self.rect.y +115, 50, 50))
@@ -49,10 +58,9 @@ class SectorItem(item.Item):
 		rect = self.title.text.get_rect(center = (self.rect.w //2, self.rect.h //2))
 		self.title.setPosition(self.rect.x +rect.x, self.rect.y +5)
 		
-	# def update(self, pikemen, cavalryMen, musketeers):
-	# 	self.noofPikemen = pikemen
-	# 	self.noofCavalryMen = cavalryMen
-	# 	self.noofMusketeers = musketeers
+	def flash(self, frames, color):
+		self.flashFrames = frames
+		self.flashColor = color
 
 
 class TroupHeaderItem(item.HeaderItem):

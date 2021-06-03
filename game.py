@@ -1,8 +1,5 @@
-from multiprocessing import Process
 import sys, pygame
 import locale
-from threading import Lock
-import itertools
 import random
 
 import lib
@@ -23,14 +20,16 @@ from army import Army
 from assignments import Assignment
 import scenarios
 import battlefield
-
-assignm = 0
-troops = 1
-camp = 2
-recruitment = 3
+import color
 
 
-class Game(Process):
+ASSIGNMENT = 0
+TROOPS = 1
+CAMP = 2
+RECRUITMENT = 3
+
+
+class Game():
 	# static fields
 	env: gameenv.GameEnv
 	running: True
@@ -39,16 +38,18 @@ class Game(Process):
 	focusedSection = None # cursor is in this column
 	focusedSectionIndex = None
 	
-	recruits = [] # all available recruits
-	mercs = [] # all recruited mercenaries
+	recruits = []
+	"""All available recruits"""
+	mercs = []
+	"""All recruited mercenaries"""
 	army = Army()
+	"""Player's army"""
 	assignment = None
+	"""Current assignment"""
 	battlefield: battlefield.Battlefield
-	
-	lock = Lock()
+	"""Where the action takes place"""
 	
 	def __init__(self, env: gameenv.GameEnv):
-		super().__init__()
 		locale.setlocale(locale.LC_TIME, "de_DE")
 		self.env = env
 		self.running = True
@@ -60,9 +61,9 @@ class Game(Process):
 		pygame.init()
 		
 		# pygame.key.set_repeat(250, 60)
-		size = env.width, env.height
 		
-		self.screen = pygame.display.set_mode(size)
+		self.screen = pygame.display.set_mode((env.width, env.height))
+		
 		text.Text.screen = self.screen
 		section.Section.screen = self.screen
 		item.Item.screen = self.screen
@@ -70,6 +71,7 @@ class Game(Process):
 		section.ScrollBar.screen = self.screen
 		
 		mainLayout = layout.Layout(self.env.width, self.env.height)
+		
 		self.header = header.Header(mainLayout.getHeader(), self)
 		self.sections.append(AssignmentSection(mainLayout.getColumn(0), self))
 		self.border = section.Section(mainLayout.getColumn(1), self)
@@ -78,34 +80,44 @@ class Game(Process):
 		self.sections.append(CampSection(mainLayout.getColumn(4), self))
 		self.sections.append(RecruitmentSection(mainLayout.getColumn(5), self))
 		
-		self.focusedSection = self.sections[recruitment]
-		self.focusedSectionIndex = recruitment
+		self.focusedSection:section.Section = self.sections[RECRUITMENT]
+		"""The section that has focus"""
+		self.focusedSectionIndex = RECRUITMENT
+		"""Index of the focused section"""
 		self.focusedSection.focus()
 		
 		self.gameEvents = events.Events()
-		# self.gameEvents.addEvent(events.Event(events.CLOCK_SECONDS, 1, self.gameEvents.currentTime))
-		# self.gameEvents.addEvent(events.Event(events.NEW_RECRUITS_EVENT, 1))
+		
+		self.gameEvents.addEvent(events.Event(events.CLOCK_SECONDS, 1, self.gameEvents.gameTime))
+		self.gameEvents.addEvent(events.Event(events.NEW_RECRUITS_EVENT, 1))
+	
 	
 	def start(self):
+		
 		clock = pygame.time.Clock()
+		
 		self.mercs = lib.make10Recs()
-		self.sections[camp].update(self.mercs)
+		self.sections[CAMP].update(self.mercs)
+		
 		while self.running:
+			
 			# evaluate player action
 			for event in pygame.event.get():
+				
 				if event.type == pygame.QUIT:
-					self.running = False
-					exit()
+					self.exit()
+					
 				if event.type == pygame.KEYDOWN:
-					if event.key == pygame.K_g: # UP
+					
+					if event.key == pygame.K_g: # UP - row up
 						focus = self.focusedSection.keyUp()
 						self.actions.activeItemChanged(focus)
 						
-					elif event.key == pygame.K_r: # DOWN
+					elif event.key == pygame.K_r: # DOWN - row down
 						focus = self.focusedSection.keyDown()
 						self.actions.activeItemChanged(focus)
 						
-					elif event.key == pygame.K_n: # LEFT
+					elif event.key == pygame.K_n: # LEFT - column left
 						if self.focusedSectionIndex >0:
 							self.focusedSectionIndex -= 1
 							self.focusedSection = self.sections[self.focusedSectionIndex]
@@ -113,7 +125,7 @@ class Game(Process):
 							focus = self.focusedSection.focus()
 							self.actions.activeItemChanged(focus)
 							
-					elif event.key == pygame.K_t: # RIGHT
+					elif event.key == pygame.K_t: # RIGHT - column right
 						if self.focusedSectionIndex <len(self.sections) -1:
 							self.focusedSectionIndex += 1
 							self.focusedSection = self.sections[self.focusedSectionIndex]
@@ -121,52 +133,47 @@ class Game(Process):
 							focus = self.focusedSection.focus()
 							self.actions.activeItemChanged(focus)
 							
-					elif event.key == pygame.K_SPACE: # SPACE
+					elif event.key == pygame.K_SPACE: # SPACE - select item(s)
 						selection = self.focusedSection.space()
 						if len(selection) >0:
 							self.actions.selectionActive(selection)
 							
-					elif event.key == pygame.K_TAB or event.key == pygame.K_s: # TAB
+					elif event.key == pygame.K_TAB or event.key == pygame.K_s: # TAB - move actions
 						self.actions.tab()
 						
-					elif event.key == pygame.K_l:
+					elif event.key == pygame.K_l: # also move actions
 						self.actions.up()
 					elif event.key == pygame.K_a:
 						self.actions.down()
 						
-					elif event.key == pygame.K_RETURN or event.key == pygame.K_h: # RETURN
+					elif event.key == pygame.K_RETURN or event.key == pygame.K_h: # RETURN - activate action
 						if self.actions.activeItem == None:
 							self.actions.act(self.actions.selectedAction)
 						else:
 							self.focusedSection.act(self.actions.selectedAction)
 						
-					elif event.key == pygame.K_ESCAPE: # ESCAPE
+					elif event.key == pygame.K_ESCAPE: # ESCAPE - show menu
 						self.actions.activeItemChanged(None)
 					
+					
 			# evaluate game events
+			
 			for e in self.gameEvents.getRaisedEvents():
 				if e.name == events.CLOCK_SECONDS:
-					self.gameEvents.renew(e, 1, self.gameEvents.currentTime)
-					self.header.updateClock(self.gameEvents.currentTime.strftime("%A, %d. %B %Y - %H:%M:%S"))
+					self.header.updateClock(self.gameEvents.gameTime.strftime("%A, %d. %B %Y - %H:%M:%S"))
 					
 				elif e.name == events.NEW_RECRUITS_EVENT:
-					# self.gameEvents.renew(e, 10)
 					self.recruits.append(lib.makeRecruit())
-					self.sections[recruitment].update(self.recruits)
-					# self.gameEvents.renew(e, 1)
+					self.sections[RECRUITMENT].update(self.recruits)
+					e.renew(random.randint(1, 20) /10)
 				
 				elif e.name == events.BATTLE_EVENT:
-					# if self.checkSurrender():
-					# 	self.gameEvents.remove(e)
-					# else:
-					# 	self.matchup()
-					# 	e.renew(0.1)
-					# self.conflict()
-					# e.renew(1)
 					pass
 				
 				elif e.name == events.COMBAT_EVENT:
-					result = self.rollFight(e.payload[0], e.payload[1])
+					pair = e.payload[0]
+					sector = e.payload[1]
+					result = self.rollFight(pair, sector)
 					if result == True: # fight still going
 						e.renew(lib.oneToTwoSeconds())
 						pass
@@ -175,15 +182,16 @@ class Game(Process):
 						self.gameEvents.addEvent(events.Event(events.COMBAT_EVENT, lib.oneToTwoSeconds(), (result, e.payload[1])))
 					else: # fight settled
 						arm, enemy = self.battlefield.getArmies()
-						self.sections[troops].update(arm)
+						self.sections[TROOPS].update(arm)
 						self.assignment.army = enemy
-						self.sections[assignm].setAssignment(self.assignment)
+						self.sections[ASSIGNMENT].setAssignment(self.assignment)
 						self.gameEvents.remove(e)
 					# self.sections[troops].flash(e.payload[2], result[0])
 					# self.sections[assignment].flash(e.payload[2], result[1])
 					
 					
 			# draw frame
+			
 			self.screen.blit(self.background, pygame.Rect(0, 0, 0, 0))
 			self.header.draw()
 			self.border.draw()
@@ -192,51 +200,54 @@ class Game(Process):
 				s.draw()
 			
 			pygame.display.flip()
-			dt = clock.tick(30)
-			self.header.updateFps(str(dt))
-			self.gameEvents.update(dt) # update game's current time
+			
+			frameTime = clock.tick(30)
+			
+			self.header.updateFps(str(frameTime))
+			self.gameEvents.update(frameTime) # update game's current time
+
 
 	def exit(self):
 		self.running = False
 		pygame.quit()
 		sys.exit()
 		
+		
 	# --- callbacks ---
 	
 	def doRecruit(self, recruit: merc.Merc):
-		# self.lock.acquire()
-		# try:
 		self.recruits.remove(recruit) # throws 'not in list'
 		self.mercs.append(recruit)
 		self.gameEvents.addEvent(events.Event(events.RECRUITED_EVENT, 0.001))
-		self.sections[recruitment].update(self.recruits)
-		self.sections[camp].update(self.mercs)
-		# except:
-		# 	pass
-		# self.lock.release()
+		self.sections[RECRUITMENT].update(self.recruits)
+		self.sections[CAMP].update(self.mercs)
+	
 	
 	def doRecruitSelected(self, recruits):
 		"""Called from recruitment when selection is accepted"""
 		print(recruits)
 	
+	
 	def doTrain(self, merc:merc.Merc, typ:merc.UnitType):
 		merc.xp.typ = typ
-		self.sections[camp].update(self.mercs)
+		self.sections[CAMP].update(self.mercs)
+	
 	
 	def selectThisAssignment(self, assign:Assignment):
 		self.army = Army(assign.sectors)
 		self.assignment = assign
-		self.sections[troops].update(self.army)
+		self.sections[TROOPS].update(self.army)
 		# build enemy troops:
 		army = lib.buildLowArmy(1, 10)
 		assign.army = army
-		self.sections[assignm].setAssignment(assign)
+		self.sections[ASSIGNMENT].setAssignment(assign)
 		
 		
 	def battle(self):
 		self.battlefield = battlefield.Battlefield(self.army, self.assignment.army)
 		# self.gameEvents.addEvent(events.Event(events.BATTLE_EVENT, 1))
 		self.conflict()
+		
 		
 	def conflict(self):
 		for s in self.battlefield.sectors:
@@ -268,6 +279,34 @@ class Game(Process):
 		
 		merc.wounds += hitEnem
 		enem.wounds += hitMerc
+		
+		mercColor = color.white
+		mercTime = 1
+		if merc.wounds >0:
+			mercColor = color.yellow
+			mercTime = 2
+			if merc.wounds >1:
+				mercColor = color.orange
+				mercTime = 4
+				if merc.wounds >2:
+					mercColor = color.red
+					mercTime = 8
+					if merc.wounds >3:
+						mercColor = color.black
+						mercTime = 16
+		enemyColor = color.white
+		if enem.wounds >0:
+			enemyColor = color.yellow
+			if enem.wounds >1:
+				enemyColor = color.orange
+				if enem.wounds >2:
+					enemyColor = color.red
+					if enem.wounds >3:
+						enemyColor = color.black
+				
+		self.sections[TROOPS].items[1].flash(mercTime, mercColor)
+		self.sections[ASSIGNMENT].items[1].flash(5, enemyColor)
+		
 		
 		kia = False
 		if merc.wounds >=4:
@@ -309,10 +348,10 @@ class Game(Process):
 		for m in move:
 			self.army.sectors[sectorIndex].pikemen.append(m)
 			self.mercs.remove(m)
-		self.sections[troops].update(self.army)
-		self.sections[camp].update(self.mercs)
+		self.sections[TROOPS].update(self.army)
+		self.sections[CAMP].update(self.mercs)
 		# update info changes:
-		self.actions.activeItemChanged(self.sections[troops].items[self.sections[troops].itemFocusIndex])
+		self.actions.activeItemChanged(self.sections[TROOPS].items[self.sections[TROOPS].itemFocusIndex])
 		
 	def put10CavalryMen(self, sectorIndex):
 		pass
@@ -337,8 +376,9 @@ class Game(Process):
 		scene = scenarios.PfullingScenario()
 		self.army = scene.army
 		self.assignment = scene.assignment
-		self.sections[assignm].setAssignment(scene.assignment)
-		self.sections[troops].update(scene.army)
+		self.sections[ASSIGNMENT].setAssignment(scene.assignment)
+		self.sections[TROOPS].update(scene.army)
+
 
 env = gameenv.GameEnv()
 game = Game(env)
