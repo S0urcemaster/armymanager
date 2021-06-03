@@ -58,20 +58,30 @@ def makeRecruit():
     rec.confidence = random.randint(1, 255)
     rec.birthday = events.Event.pointInTime - timedelta(days =365 * bellAge() + random.randint(1, 365))
     # Perks:
-    for i in range(3): # max 3 perks
-        prob = random.randint(0, 11) # probability
-        if i >= prob:
-            while True: # no duplicates
-                perk = getRandomPerk()
-                found = False
-                for p in rec.perks:
-                    if p.name == perk.name:
-                        found = True
-                if found: continue
-                rec.perks.append(perk)
-                break
+    perks = merc.perkList[:]
+    if roll(30):
+        rec.perks.append(perks.pop(random.randint(0, len(perks)-1)))
+    if roll(20):
+        rec.perks.append(perks.pop(random.randint(0, len(perks)-1)))
+    if roll(10):
+        rec.perks.append(perks.pop(random.randint(0, len(perks)-1)))
+    
+    # for i in range(3): # max 3 perks
+    #     prob = random.randint(0, 11) # probability
+    #     if i >= prob:
+    #         while True: # no duplicates
+    #             perk = getRandomPerk()
+    #             found = False
+    #             for p in rec.perks:
+    #                 if p.name == perk.name:
+    #                     found = True
+    #             if found: continue
+    #             rec.perks.append(perk)
+    #             break
     return rec
 
+def roll(prob):
+    return prob in range(random.randint(1, 100), 100)
 
 def make10Recs():
     mercs = []

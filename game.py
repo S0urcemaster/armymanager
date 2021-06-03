@@ -277,35 +277,13 @@ class Game():
 		hitMerc = random.randint(0, powMerc) //powEnem
 		hitEnem = random.randint(0, powEnem) //powMerc
 		
-		merc.wounds += hitEnem
-		enem.wounds += hitMerc
+		merc.wounds += hitEnem #+random.randint(0, 1)
+		enem.wounds += hitMerc #+random.randint(0, 1)
 		
-		mercColor = color.white
-		mercTime = 1
-		if merc.wounds >0:
-			mercColor = color.yellow
-			mercTime = 2
-			if merc.wounds >1:
-				mercColor = color.orange
-				mercTime = 4
-				if merc.wounds >2:
-					mercColor = color.red
-					mercTime = 8
-					if merc.wounds >3:
-						mercColor = color.black
-						mercTime = 16
-		enemyColor = color.white
-		if enem.wounds >0:
-			enemyColor = color.yellow
-			if enem.wounds >1:
-				enemyColor = color.orange
-				if enem.wounds >2:
-					enemyColor = color.red
-					if enem.wounds >3:
-						enemyColor = color.black
-				
-		self.sections[TROOPS].items[1].flash(mercTime, mercColor)
-		self.sections[ASSIGNMENT].items[1].flash(5, enemyColor)
+		res = self.getFlashColor(merc, enem)
+		
+		self.sections[TROOPS].items[1].flash(res[0], res[1])
+		self.sections[ASSIGNMENT].items[1].flash(res[2], res[3])
 		
 		
 		kia = False
@@ -321,7 +299,40 @@ class Game():
 				return newPair
 			return False
 		return True
+	
+	
+	def getFlashColor(self, merc, enem):
+		mercTime = 0
+		mercColor = color.white
+		if merc.wounds >0:
+			mercColor = color.gold
+			mercTime = 2
+			if merc.wounds >1:
+				mercColor = color.orange
+				mercTime = 4
+				if merc.wounds >2:
+					mercColor = color.red
+					mercTime = 8
+					if merc.wounds >3:
+						mercColor = color.black
+						mercTime = 16
+		enemyColor = color.white
+		enemTime = 0
+		if enem.wounds >0:
+			enemyColor = color.gold
+			enemTime = 2
+			if enem.wounds >1:
+				enemyColor = color.orange
+				enemTime = 4
+				if enem.wounds >2:
+					enemyColor = color.red
+					enemTime = 8
+					if enem.wounds >3:
+						enemyColor = color.black
+						enemTime = 16
+		return (mercTime, mercColor, enemTime, enemyColor)
 		
+	
 	
 	def checkSurrender(self):
 		# count wounds
@@ -374,6 +385,13 @@ class Game():
 	
 	def initPfullingScenario(self):
 		scene = scenarios.PfullingScenario()
+		self.army = scene.army
+		self.assignment = scene.assignment
+		self.sections[ASSIGNMENT].setAssignment(scene.assignment)
+		self.sections[TROOPS].update(scene.army)
+	
+	def initOfenhaufnScenario(self):
+		scene = scenarios.OfenhaufnScenario()
 		self.army = scene.army
 		self.assignment = scene.assignment
 		self.sections[ASSIGNMENT].setAssignment(scene.assignment)

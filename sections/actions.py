@@ -50,6 +50,7 @@ class ActionsSection(section.Section):
 			self.addItem(QuitActionItem())
 			self.addItem(Recruits100ActionItem())
 			self.addItem(PfullingScenarioActionItem())
+			self.addItem(OfenhaufnScenarioActionItem())
 			self.activeItem = None
 		else:
 			for c in item.info.actions:
@@ -91,6 +92,8 @@ class ActionsSection(section.Section):
 			self.game.doMake100Recruits()
 		if action == 5:
 			self.game.initPfullingScenario()
+		if action == 6:
+			self.game.initOfenhaufnScenario()
 
 
 class WelcomeActionItem(ActionItem):
@@ -177,6 +180,17 @@ class PfullingScenarioActionItem(ActionItem):
 		super().__init__('Init Pfulling Scenario')
 		self.info = item.ItemInfo(
 			'Init Pfulling Scenario',
+			[
+				'Hit [RETURN] to start'
+			]
+		)
+	
+	
+class OfenhaufnScenarioActionItem(ActionItem):
+	def __init__(self):
+		super().__init__('Init Ofenhaufn Scenario')
+		self.info = item.ItemInfo(
+			'Init Ofenhaufn Scenario',
 			[
 				'Hit [RETURN] to start'
 			]
