@@ -57,7 +57,7 @@ class SectorItem(item.Item):
 
 class TroupHeaderItem(item.HeaderItem):
 	def __init__(self, army):
-		super().__init__('Troups')
+		super().__init__('Troops')
 		self.army = army
 		actions = [
 			'Distribute equally',

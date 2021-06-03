@@ -187,6 +187,6 @@ class AssignmentSection(section.Section):
 	def act(self, action):
 		info = self.items[self.itemFocusIndex].info
 		if info.actions[action] == selectThisAssignment:
-			self.game.selectThisAssignment(self.itemFocus.assignment) # adjust and activate troups section
+			self.game.selectThisAssignment(self.itemFocus.assignment) # adjust and activate troops section
 		if info.actions[action] == attack:
 			self.game.battle()

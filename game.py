@@ -7,7 +7,6 @@ import random
 
 import lib
 import gameenv
-import color
 import text
 import layout
 import section
@@ -154,7 +153,7 @@ class Game(Process):
 					# self.gameEvents.renew(e, 10)
 					self.recruits.append(lib.makeRecruit())
 					self.sections[recruitment].update(self.recruits)
-					self.gameEvents.renew(e, 1)
+					# self.gameEvents.renew(e, 1)
 				
 				elif e.name == events.BATTLE_EVENT:
 					# if self.checkSurrender():
@@ -162,14 +161,19 @@ class Game(Process):
 					# else:
 					# 	self.matchup()
 					# 	e.renew(0.1)
-					self.conflict()
-					e.renew(1)
+					# self.conflict()
+					# e.renew(1)
+					pass
 				
 				elif e.name == events.COMBAT_EVENT:
 					result = self.rollFight(e.payload[0], e.payload[1])
-					if result == True:
+					if result == True: # fight still going
 						e.renew(lib.oneToTwoSeconds())
-					else:
+						pass
+					elif result.__class__.__name__ == 'tuple': # new pair
+						self.gameEvents.remove(e)
+						self.gameEvents.addEvent(events.Event(events.COMBAT_EVENT, lib.oneToTwoSeconds(), (result, e.payload[1])))
+					else: # fight settled
 						arm, enemy = self.battlefield.getArmies()
 						self.sections[troops].update(arm)
 						self.assignment.army = enemy
@@ -231,18 +235,24 @@ class Game(Process):
 		
 	def battle(self):
 		self.battlefield = battlefield.Battlefield(self.army, self.assignment.army)
-		self.gameEvents.addEvent(events.Event(events.BATTLE_EVENT, 1))
-		
+		# self.gameEvents.addEvent(events.Event(events.BATTLE_EVENT, 1))
+		self.conflict()
 		
 	def conflict(self):
-		if self.battlefield.conflictGoing():
-			return False
 		for s in self.battlefield.sectors:
-			pikemen = s.conflictPikemen()
+			pikemen = s.conflicPikemen()
 			if pikemen:
 				for p in pikemen:
 					self.gameEvents.addEvent(events.Event(events.COMBAT_EVENT, lib.oneToTwoSeconds(), (p, s)))
-		return True
+			cavalryMen = s.conflictCavalryMen()
+			if cavalryMen:
+				for c in cavalryMen:
+					self.gameEvents.addEvent(events.Event(events.COMBAT_EVENT, lib.oneToTwoSeconds(), (c, s)))
+			musketeers = s.conflictMusketeers()
+			if musketeers:
+				for m in musketeers:
+					self.gameEvents.addEvent(events.Event(events.COMBAT_EVENT, lib.oneToTwoSeconds(), (m, s)))
+			
 	
 	def rollFight(self, pair, sector):
 		merc = pair[0]
@@ -251,6 +261,8 @@ class Game(Process):
 		powEnem = enem.getPower()
 		powMerc *= merc.getAdvantage(enem.xp.typ) *100 # make int
 		powEnem *= merc.getAdvantage(merc.xp.typ) *100
+		powMerc *= int((1/ (merc.wounds +2)) *10)
+		powEnem *= int((1/ (merc.wounds +2)) *10)
 		hitMerc = random.randint(0, powMerc) //powEnem
 		hitEnem = random.randint(0, powEnem) //powMerc
 		
@@ -265,7 +277,9 @@ class Game(Process):
 			enem.wounds = 4
 			kia = True
 		if kia:
-			sector.kia(pair)
+			newPair = sector.kia(pair)
+			if newPair:
+				return newPair
 			return False
 		return True
 		

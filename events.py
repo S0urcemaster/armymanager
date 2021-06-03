@@ -17,17 +17,17 @@ def combatEventToString(payload):
 	       f'[{enemy.firstname} {enemy.lastname} {enemy.getPower()} wounds: {enemy.wounds}]  '
 	       # f''
 
-def logEvent(name, seconds, payload):
+def logEvent(name, seconds, payload, text):
 	if payload.__class__.__name__ == 'tuple':
 		if payload[0].__class__.__name__ == 'tuple':
 			if payload[0][0].__class__.__name__ == 'Merc':
-				print('Event created: ' +combatEventToString(payload))
+				print(f'Event {text}: ' +combatEventToString(payload))
 			else:
-				print('Event created: ', name, seconds, payload)
+				print(f'Event {text}: ', name, seconds, payload)
 		else:
-			print('Event created: ', name, seconds, payload)
+			print(f'Event {text}: ', name, seconds, payload)
 	else:
-		print('Event created: ', name, seconds, payload)
+		print(f'Event {text}: ', name, seconds, payload)
 
 
 class Event:
@@ -36,13 +36,13 @@ class Event:
 		self.name = name
 		self.datetime = self.current +timedelta(seconds = seconds)
 		self.payload = payload
-		logEvent(name, seconds, payload)
+		logEvent(name, seconds, payload, 'created')
 	
 	def renew(self, delta, payload = None):
 		if payload != None:
 			self.payload = payload
 		self.datetime = self.current +timedelta(seconds = delta)
-		logEvent(self.name, delta, self.payload)
+		logEvent(self.name, delta, self.payload, 'renewed')
 
 class Events:
 	
