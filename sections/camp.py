@@ -95,7 +95,7 @@ class MercItem(item.Item):
 		self.name.setPosition(self.rect.x +7, self.rect.y +6)
 		self.pay.setPosition(self.rect.x +self.rect.w -30, self.rect.y +6)
 		for i, p in enumerate(self.perks):
-			p.setPosition(self.rect.x +self.rect.w -70, self.rect.y +25 +i *20)
+			p.setPosition(self.rect.x +self.rect.w -80, self.rect.y +25 +i *20)
 	
 	def action(self, id):
 		if self.info.actions[id] == trainPikeman1:

@@ -109,15 +109,15 @@ class Game():
 					
 				if event.type == pygame.KEYDOWN:
 					
-					if event.key == pygame.K_g: # UP - row up
+					if event.key == pygame.K_g or event.key == pygame.K_UP: # UP - row up
 						focus = self.focusedSection.keyUp()
 						self.actions.activeItemChanged(focus)
 						
-					elif event.key == pygame.K_r: # DOWN - row down
+					elif event.key == pygame.K_r or event.key == pygame.K_DOWN: # DOWN - row down
 						focus = self.focusedSection.keyDown()
 						self.actions.activeItemChanged(focus)
 						
-					elif event.key == pygame.K_n: # LEFT - column left
+					elif event.key == pygame.K_n or event.key == pygame.K_LEFT: # LEFT - column left
 						if self.focusedSectionIndex >0:
 							self.focusedSectionIndex -= 1
 							self.focusedSection = self.sections[self.focusedSectionIndex]
@@ -125,7 +125,7 @@ class Game():
 							focus = self.focusedSection.focus()
 							self.actions.activeItemChanged(focus)
 							
-					elif event.key == pygame.K_t: # RIGHT - column right
+					elif event.key == pygame.K_t or event.key == pygame.K_RIGHT: # RIGHT - column right
 						if self.focusedSectionIndex <len(self.sections) -1:
 							self.focusedSectionIndex += 1
 							self.focusedSection = self.sections[self.focusedSectionIndex]
@@ -268,8 +268,8 @@ class Game():
 	def rollFight(self, pair, sector):
 		merc = pair[0]
 		enem = pair[1]
-		powMerc = merc.getPower()
-		powEnem = enem.getPower()
+		powMerc = merc.getPower() -merc.wounds *10
+		powEnem = enem.getPower() -enem.wounds *10
 		powMerc *= merc.getAdvantage(enem.xp.typ) *100 # make int
 		powEnem *= merc.getAdvantage(merc.xp.typ) *100
 		powMerc *= int((1/ (merc.wounds +2)) *10)
