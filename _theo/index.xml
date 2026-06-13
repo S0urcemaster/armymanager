@@ -9,67 +9,67 @@
     <autor>Digi Craft</autor>
     <autor>Sebastian Teister</autor>
 
-    <formular name="Zweck und Problem">
-      <frage>Welches Problem löst dieses Projekt — und für wen genau?
+    <profil name="Zweck und Problem">
+      <spektrum frage="Welches Problem löst dieses Projekt — und für wen genau?">
         <antwort>Es dient der Unterhaltung fuer Computerspieler</antwort>
-      </frage>
-      <frage>Was passiert, wenn das Projekt nicht gebaut wird?
+      </spektrum>
+      <spektrum frage="Was passiert, wenn das Projekt nicht gebaut wird?">
         <antwort>Ein vielleicht innovatives Spielkonzept erblickt nicht das Licht der Welt</antwort>
-      </frage>
-      <frage>Was ist Erfolg — in einem Satz?
+      </spektrum>
+      <spektrum frage="Was ist Erfolg — in einem Satz?">
         <antwort>Der Spieler ist suechtig nach dem Spiel als Effekt einer fesselnden Spielmechanik</antwort>
-      </frage>
-    </formular>
+      </spektrum>
+    </profil>
 
-    <formular name="Umfang und Grenzen">
-      <frage>Was ist explizit nicht Teil des Projekts?
+    <profil name="Umfang und Grenzen">
+      <spektrum frage="Was ist explizit nicht Teil des Projekts?">
         <antwort>Es ist kein Geschicklichkeitsspiel</antwort>
-      </frage>
-      <frage>Was ist das Minimum, das wirklich lieferbar sein muss?
-        <antwort>Es gibt eine Gameloop : die nach Einflussnahme des Spielers interne Zahlen 
+      </spektrum>
+      <spektrum frage="Was ist das Minimum, das wirklich lieferbar sein muss?">
+        <antwort>Es gibt eine Gameloop : die nach Einflussnahme des Spielers interne Zahlen
           und deren Darstellungen bewegt / deren Minia/Maxima zum Spielsieg oder -Verlust fuehren</antwort>
-      </frage>
-      <frage>Welche Abhängigkeiten gibt es zu anderen Systemen oder Teams?
+      </spektrum>
+      <spektrum frage="Welche Abhängigkeiten gibt es zu anderen Systemen oder Teams?">
         <antwort>Es gilt der Canon in /code/agenttheory/_theo/index.xml</antwort>
-      </frage>
-    </formular>
+      </spektrum>
+    </profil>
 
-    <formular name="Nutzer und Kontext">
-      <frage>Wer nutzt das System — direkt und indirekt?
+    <profil name="Nutzer und Kontext">
+      <spektrum frage="Wer nutzt das System — direkt und indirekt?">
         <antwort>Der Profit des Spielers ist Spielspass und eine lange Spielzeit</antwort>
-      </frage>
-      <frage>In welchem Kontext wird das System benutzt?
+      </spektrum>
+      <spektrum frage="In welchem Kontext wird das System benutzt?">
         <antwort>Privat / zur Unterhaltung</antwort>
-      </frage>
-      <frage>Was sind die häufigsten Aktionen der Nutzer?
+      </spektrum>
+      <spektrum frage="Was sind die häufigsten Aktionen der Nutzer?">
         <antwort>Den Spielstand verfolgen und moeglichst effektiv Einfluss auf den Verlauf nehmen</antwort>
-      </frage>
-    </formular>
+      </spektrum>
+    </profil>
 
-    <formular name="Rahmenbedingungen">
-      <frage>Welche technischen Einschränkungen oder Vorgaben gelten?
+    <profil name="Rahmenbedingungen">
+      <spektrum frage="Welche technischen Einschränkungen oder Vorgaben gelten?">
         <antwort>Node Typescript Webapp</antwort>
-      </frage>
-      <frage>Was sind Zeit- und Ressourcengrenzen?
-        <antwort>Kein Zeitdruck . Wenn es nicht gut wird : 
+      </spektrum>
+      <spektrum frage="Was sind Zeit- und Ressourcengrenzen?">
+        <antwort>Kein Zeitdruck . Wenn es nicht gut wird :
           braucht es nicht leben um jemanden zu ernaehren</antwort>
-      </frage>
-      <frage>Welche regulatorischen oder sicherheitlichen Anforderungen gibt es?
+      </spektrum>
+      <spektrum frage="Welche regulatorischen oder sicherheitlichen Anforderungen gibt es?">
         <antwort>Wenig . Es gibt einen localStorage des Users fuer den
           wiederherstellbaren Spielstate . Dieser ist unpersoenlich /ein Gamertag</antwort>
-      </frage>
-    </formular>
+      </spektrum>
+    </profil>
 
-    <formular name="Risiken und Offenes">
-      <frage>Was könnte dieses Projekt zum Scheitern bringen?
+    <profil name="Risiken und Offenes">
+      <spektrum frage="Was könnte dieses Projekt zum Scheitern bringen?">
         <antwort>Das Spiel macht keinen Spass</antwort>
-      </frage>
-      <frage>Was wissen wir noch nicht — und wann brauchen wir es?
+      </spektrum>
+      <spektrum frage="Was wissen wir noch nicht — und wann brauchen wir es?">
         <antwort></antwort>
-      </frage>
-      <frage>Wer entscheidet, wenn Prioritäten kollidieren?
+      </spektrum>
+      <spektrum frage="Wer entscheidet, wenn Prioritäten kollidieren?">
         <antwort></antwort>
-      </frage>
-    </formular>
+      </spektrum>
+    </profil>
 
 </theory>
