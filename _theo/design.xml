@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <design name="armymanager">
 
-  <profil name="Kern und Fantasie">
+  <facette name="Kern und Fantasie">
     <spektrum frage="Was tut und fuehlt der Spieler? (Core Loop in einem Satz)">
       <antwort></antwort>
     </spektrum>
     <spektrum frage="Was ist die zentrale Spannung, die Entscheidungen schwer macht?">
       <antwort></antwort>
     </spektrum>
-  </profil>
+  </facette>
 
-  <profil name="Zustand">
+  <facette name="Zustand">
     <spektrum frage="Welche internen Zahlen gibt es? (z.B. Truppen, Moral, Nachschub, Budget, Zeit)">
       <antwort></antwort>
     </spektrum>
@@ -20,32 +20,44 @@
     <spektrum frage="Anfangswerte?">
       <antwort></antwort>
     </spektrum>
-  </profil>
+  </facette>
 
-  <profil name="Hebel des Spielers">
+  <facette name="Hebel des Spielers">
     <spektrum frage="Welche Aktionen kann der Spieler pro Zug/Tick ausfuehren?">
       <antwort></antwort>
     </spektrum>
     <spektrum frage="Was kostet jede Aktion, was bewirkt sie?">
       <antwort></antwort>
     </spektrum>
-  </profil>
+  </facette>
 
-  <profil name="Dynamik (der Tick)">
+  <facette name="Dynamik (der Tick)">
     <spektrum frage="Was veraendert sich pro Loop OHNE Spielereingriff? (Verbrauch, Verfall, Feind)">
       <antwort></antwort>
     </spektrum>
     <spektrum frage="Was genau erzeugt den Druck / die Knappheit?">
       <antwort></antwort>
     </spektrum>
-  </profil>
+  </facette>
 
-  <profil name="Balance">
-    <spektrum frage="Welche Zahlen konkurrieren miteinander?">
+  <facette name="Balance" frage="Welcher Trade-off verhindert, dass man einfach alles maximiert?">
+    <spektrum frage="Welche Zahlen teilen sich dieselbe knappe Quelle?">
       <antwort></antwort>
     </spektrum>
-    <spektrum frage="Welcher Trade-off verhindert, dass man einfach alles maximiert?">
+    <spektrum frage="Welche Zahl lässt sich nur erhöhen, indem eine andere sinkt?">
       <antwort></antwort>
     </spektrum>
-  </profil>
+    <spektrum frage="Welche Zahl will der Spieler hoch halten, welche niedrig — und wo widersprechen sich diese Ziele?">
+      <antwort></antwort>
+    </spektrum>
+    <spektrum frage="Worum konkurrieren die Aktionen pro Tick — was bleibt zwangsläufig liegen?">
+      <antwort></antwort>
+    </spektrum>
+    <spektrum frage="Ab welchem Zustand wird eine Konkurrenz akut und verschiebt die Priorität?">
+      <antwort></antwort>
+    </spektrum>
+    <spektrum frage="Gibt es eine Zahl, die man gefahrlos vernachlässigen kann — oder eine Strategie, die immer gewinnt?">
+      <antwort></antwort>
+    </spektrum>
+  </facette>
 </design>

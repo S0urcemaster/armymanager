@@ -22,14 +22,13 @@
 
     <spektrum frage="Was passiert, wenn das Projekt nicht gebaut wird?">
       <antwort>Ein vielleicht innovatives Spielkonzept erblickt nicht das Licht der Welt</antwort>
+      <spektrum frage="Was passiert : wenn das Projekt nicht fertig gebaut wird">
+        <antwort>Es koennen immer noch gewisse Erkenntnisse fuer die Zukunft gewonnen werden</antwort>
+      </spektrum>
     </spektrum>
 
     <spektrum frage="Wann ist das Projekt ein Erfolg in einem Satz ?">
       <antwort>Der Spieler ist suechtig nach dem Spiel als Effekt einer fesselnden Spielmechanik</antwort>
-    </spektrum>
-
-    <spektrum frage="">
-
     </spektrum>
 
   </facette>
@@ -37,7 +36,13 @@
   <facette name="Umfang und Grenzen">
 
     <spektrum frage="Was ist explizit nicht Teil des Projekts?">
-      <antwort>Es ist kein Geschicklichkeitsspiel</antwort>
+      <spektrum frage="Was ist spielrisch nicht teil des Projekts">
+        <antwort>Es ist kein Geschicklichkeitsspiel</antwort>
+      </spektrum>
+      <spektrum frage="Was ist technisch nicht Teil des Projekts">
+        <antwort>Es gibt keinen Multiplayer</antwort>
+        <antwort>Es gibt keinen Benutzeraccount</antwort>
+      </spektrum>
     </spektrum>
 
     <spektrum frage="Was ist das Minimum, das wirklich lieferbar sein muss?">
