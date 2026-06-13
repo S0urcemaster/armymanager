@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<design name="armymanager">
+
+  <profil name="Kern und Fantasie">
+    <spektrum frage="Was tut und fuehlt der Spieler? (Core Loop in einem Satz)">
+      <antwort></antwort>
+    </spektrum>
+    <spektrum frage="Was ist die zentrale Spannung, die Entscheidungen schwer macht?">
+      <antwort></antwort>
+    </spektrum>
+  </profil>
+
+  <profil name="Zustand">
+    <spektrum frage="Welche internen Zahlen gibt es? (z.B. Truppen, Moral, Nachschub, Budget, Zeit)">
+      <antwort></antwort>
+    </spektrum>
+    <spektrum frage="Welche Zahlen sind sieg-/verlustrelevant, und bei welchem Minimum/Maximum?">
+      <antwort></antwort>
+    </spektrum>
+    <spektrum frage="Anfangswerte?">
+      <antwort></antwort>
+    </spektrum>
+  </profil>
+
+  <profil name="Hebel des Spielers">
+    <spektrum frage="Welche Aktionen kann der Spieler pro Zug/Tick ausfuehren?">
+      <antwort></antwort>
+    </spektrum>
+    <spektrum frage="Was kostet jede Aktion, was bewirkt sie?">
+      <antwort></antwort>
+    </spektrum>
+  </profil>
+
+  <profil name="Dynamik (der Tick)">
+    <spektrum frage="Was veraendert sich pro Loop OHNE Spielereingriff? (Verbrauch, Verfall, Feind)">
+      <antwort></antwort>
+    </spektrum>
+    <spektrum frage="Was genau erzeugt den Druck / die Knappheit?">
+      <antwort></antwort>
+    </spektrum>
+  </profil>
+
+  <profil name="Balance">
+    <spektrum frage="Welche Zahlen konkurrieren miteinander?">
+      <antwort></antwort>
+    </spektrum>
+    <spektrum frage="Welcher Trade-off verhindert, dass man einfach alles maximiert?">
+      <antwort></antwort>
+    </spektrum>
+  </profil>
+</design>

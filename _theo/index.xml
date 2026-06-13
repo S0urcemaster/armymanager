@@ -1,75 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <theory name="armymanager">
 
-    <!-- Die innerste Schachtel : Darin steht : wie es geformt sein soll -->
-    <ref name="_canon/index.xml" />
+  <!-- Die innerste Schachtel : Darin steht : wie es geformt sein soll -->
+  <ref name="_canon/index.xml"/>
 
-    <titel>Army Manager</titel>
-    <autor>Digi Craft</autor>
-    <autor>Sebastian Teister</autor>
+  <titel>Army Manager</titel>
+  <autor>Digi Craft</autor>
+  <autor>Sebastian Teister</autor>
 
-    <profil name="Zweck und Problem">
-      <spektrum frage="Welches Problem löst dieses Projekt — und für wen genau?">
-        <antwort>Es dient der Unterhaltung fuer Computerspieler</antwort>
-      </spektrum>
-      <spektrum frage="Was passiert, wenn das Projekt nicht gebaut wird?">
-        <antwort>Ein vielleicht innovatives Spielkonzept erblickt nicht das Licht der Welt</antwort>
-      </spektrum>
-      <spektrum frage="Was ist Erfolg — in einem Satz?">
-        <antwort>Der Spieler ist suechtig nach dem Spiel als Effekt einer fesselnden Spielmechanik</antwort>
-      </spektrum>
-    </profil>
+  <facette name="Zweck und Problem">
 
-    <profil name="Umfang und Grenzen">
-      <spektrum frage="Was ist explizit nicht Teil des Projekts?">
-        <antwort>Es ist kein Geschicklichkeitsspiel</antwort>
-      </spektrum>
-      <spektrum frage="Was ist das Minimum, das wirklich lieferbar sein muss?">
-        <antwort>Es gibt eine Gameloop : die nach Einflussnahme des Spielers interne Zahlen
-          und deren Darstellungen bewegt / deren Minia/Maxima zum Spielsieg oder -Verlust fuehren</antwort>
-      </spektrum>
-      <spektrum frage="Welche Abhängigkeiten gibt es zu anderen Systemen oder Teams?">
-        <antwort>Es gilt der Canon in /code/agenttheory/_theo/index.xml</antwort>
-      </spektrum>
-    </profil>
+    <spektrum frage="Welches Problem löst dieses Projekt — und für wen genau?">
+      <antwort>Es dient der Unterhaltung fuer Computerspieler</antwort>
+      <antwort>Es dient dem Lernen und der Erfahrung : Welche Dimension nimmt so ein Projekt an ?</antwort>
+      <antwort>Es dient der Eigenwerbung : Ich praesentiere Zwischenergebnisse auf meinem Textkanal</antwort>
+      <antwort>Es dient der Verbreitung meiner Ideen in die Welt</antwort>
+      <antwort>Ich halte meine Gehirnzellen frisch</antwort>
+      <antwort>Ich bleibe mit KI auf dem Laufenden und kann mitreden</antwort>
+      <antwort>Ich arbeite beispielhaft an und mit meiner Agent Theory weiter und vergroessere so mein Repertoire</antwort>
+    </spektrum>
 
-    <profil name="Nutzer und Kontext">
-      <spektrum frage="Wer nutzt das System — direkt und indirekt?">
-        <antwort>Der Profit des Spielers ist Spielspass und eine lange Spielzeit</antwort>
-      </spektrum>
-      <spektrum frage="In welchem Kontext wird das System benutzt?">
-        <antwort>Privat / zur Unterhaltung</antwort>
-      </spektrum>
-      <spektrum frage="Was sind die häufigsten Aktionen der Nutzer?">
-        <antwort>Den Spielstand verfolgen und moeglichst effektiv Einfluss auf den Verlauf nehmen</antwort>
-      </spektrum>
-    </profil>
+    <spektrum frage="Was passiert, wenn das Projekt nicht gebaut wird?">
+      <antwort>Ein vielleicht innovatives Spielkonzept erblickt nicht das Licht der Welt</antwort>
+    </spektrum>
 
-    <profil name="Rahmenbedingungen">
-      <spektrum frage="Welche technischen Einschränkungen oder Vorgaben gelten?">
-        <antwort>Node Typescript Webapp</antwort>
-      </spektrum>
-      <spektrum frage="Was sind Zeit- und Ressourcengrenzen?">
-        <antwort>Kein Zeitdruck . Wenn es nicht gut wird :
-          braucht es nicht leben um jemanden zu ernaehren</antwort>
-      </spektrum>
-      <spektrum frage="Welche regulatorischen oder sicherheitlichen Anforderungen gibt es?">
-        <antwort>Wenig . Es gibt einen localStorage des Users fuer den
-          wiederherstellbaren Spielstate . Dieser ist unpersoenlich /ein Gamertag</antwort>
-      </spektrum>
-    </profil>
+    <spektrum frage="Wann ist das Projekt ein Erfolg in einem Satz ?">
+      <antwort>Der Spieler ist suechtig nach dem Spiel als Effekt einer fesselnden Spielmechanik</antwort>
+    </spektrum>
 
-    <profil name="Risiken und Offenes">
-      <spektrum frage="Was könnte dieses Projekt zum Scheitern bringen?">
-        <antwort>Das Spiel macht keinen Spass</antwort>
-      </spektrum>
-      <spektrum frage="Was wissen wir noch nicht — und wann brauchen wir es?">
-        <antwort></antwort>
-      </spektrum>
-      <spektrum frage="Wer entscheidet, wenn Prioritäten kollidieren?">
-        <antwort></antwort>
-      </spektrum>
-    </profil>
+    <spektrum frage="">
+
+    </spektrum>
+
+  </facette>
+
+  <facette name="Umfang und Grenzen">
+
+    <spektrum frage="Was ist explizit nicht Teil des Projekts?">
+      <antwort>Es ist kein Geschicklichkeitsspiel</antwort>
+    </spektrum>
+
+    <spektrum frage="Was ist das Minimum, das wirklich lieferbar sein muss?">
+      <antwort>Es gibt eine Gameloop : die nach Einflussnahme des Spielers interne Zahlen
+        und deren Darstellungen bewegt / deren Minima/Maxima zum Spielsieg oder -Verlust fuehren</antwort>
+    </spektrum>
+
+    <spektrum frage="Welche Abhängigkeiten gibt es zu anderen Systemen oder Teams?">
+      <antwort>Es gilt der Canon in /code/agenttheory/_theo/index.xml</antwort>
+    </spektrum>
+
+  </facette>
+
+  <facette name="Nutzer und Kontext">
+
+    <spektrum frage="Wer nutzt das System — direkt und indirekt?">
+      <antwort>Der Profit des Spielers ist Spielspass und eine lange Spielzeit</antwort>
+    </spektrum>
+
+    <spektrum frage="In welchem Kontext wird das System benutzt?">
+      <antwort>Privat / zur Unterhaltung</antwort>
+    </spektrum>
+
+    <spektrum frage="Was sind die häufigsten Aktionen der Nutzer?">
+      <antwort>Den Spielstand verfolgen und moeglichst effektiv Einfluss auf den Verlauf nehmen</antwort>
+    </spektrum>
+
+  </facette>
+
+  <facette name="Rahmenbedingungen">
+
+    <spektrum frage="Welche technischen Einschränkungen oder Vorgaben gelten?">
+      <antwort>Node TypeScript Webapp</antwort>
+    </spektrum>
+
+    <spektrum frage="Was sind Zeit- und Ressourcengrenzen?">
+      <antwort>Kein Zeitdruck . Wenn es nicht gut wird :
+        braucht es nicht leben um jemanden zu ernaehren</antwort>
+    </spektrum>
+
+    <spektrum frage="Welche regulatorischen oder sicherheitlichen Anforderungen gibt es?">
+      <antwort>Wenig . Es gibt einen localStorage des Users fuer den
+        wiederherstellbaren Spielstate . Dieser ist unpersoenlich / ein Gamertag</antwort>
+    </spektrum>
+
+  </facette>
+
+  <facette name="Risiken und Offenes">
+
+    <spektrum frage="Was könnte dieses Projekt zum Scheitern bringen?">
+      <antwort>Das Spiel macht keinen Spass</antwort>
+    </spektrum>
+
+    <spektrum frage="Was wissen wir noch nicht — und wann brauchen wir es?">
+      <antwort>Ob das Spielkonzept Spass macht : sollte man zu einem mittleren Entwicklungsstand
+        ermittelt haben . Am besten durch automatische Simulationen</antwort>
+    </spektrum>
+
+    <spektrum frage="Wer entscheidet, wenn Prioritäten kollidieren?">
+    </spektrum>
+
+  </facette>
+
+  <!-- Das konkrete Spieldesign -->
+  <ref name="design.xml" />
 
 </theory>
