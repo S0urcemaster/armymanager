@@ -10,7 +10,39 @@
 
   <aspekt name="Zweck und Problem">
 
-    <aspekt frage="Welches Problem löst dieses Projekt — und für wen genau?">
+    <aspekt frage="Welches Problem löst dieses Projekt — und für wen genau ?">
+      <antwort>Als Computerspiel loest es das Problem der Langeweile und bietet Zerstreuung und Unterhaltung vom 
+        Alltag - Eigentlich wirft ein Computerspiel ein Problem erst auf / um dann ein Angebot fuer eine 
+         vergnuegliche Loesung zu machen</antwort>
+      <aspekt frage="Welches Problem wirft dieses Projekt / Computerspiel auf ?">
+        <antwort>Der Army Manager stellt den Spieler vor das Problem : sich aus komplexen Wahlmoeglichkeiten 
+          einen Weg zum Spielerfolg zu erarbeiten</antwort>
+          <aspekt frage="Was ist der Spielerfolg ?">
+            <antwort>Spielerfolg ist ein (relativ) hoher Punktestand beim Spielertod /-Versagen</antwort>
+            <aspekt frage="Wie kann ein hoher Punktestand erreicht werden ?">
+              <antwort>Durch die vom Spiel vorgesehene optimale Spielweise</antwort>
+              <aspekt frage="Was ist die vom Spiel vorgesehene optimale Spielweise ?">
+                <antwort>Das Spiel gliedert sich in Abschnitte /Level . In jedem Level werden bestimmte Werte
+                  als vorteilhaft markiert / Thresholdes . Bewegt sich der Spieler innerhalb dieser Optima :
+                  erhaelt er die meisten Punkte . Liegt er leicht daneben : gibt es leichte Abzuege - 
+                  wie beim Dartspiel
+                </antwort>
+                <aspekt frage="Was sind Spiellevel ?">
+                  <antwort>Mit dem Spiellevel steigt zunaechst die Komplexitaet der Auswahlmoeglichkeiten
+                    und dann die Schwierigkeit : mit ihnen zu gewinnen</antwort>
+                  <ref name="level.xml">Hier geht,s zu den Leveldefinitonen</ref>
+                </aspekt>
+              </aspekt>
+            </aspekt>
+          </aspekt>
+          <aspekt frage="Was sind die komplexen Wahlmoeglichkeiten ?">
+            <antwort>Der Spieler kann aus einer Vielzahl von (sozusagen) Shopelementen waehlen /
+              dazu zaehle ich mal auch die Soldaten / die eigentlich angeworben werden - aber
+              auch Ruestung / Vertraege / Vorteile / Karten / Wissen (was sich noch finden wird beim weiteren Schreiben)
+            </antwort>
+            <ref name="items.xml">Hier geht,s zum Spielinventar</ref>
+          </aspekt>
+      </aspekt>
       <antwort>Es dient der Unterhaltung fuer Computerspieler</antwort>
       <antwort>Es dient dem Lernen und der Erfahrung : Welche Dimension nimmt so ein Projekt an ?</antwort>
       <antwort>Es dient der Eigenwerbung : Ich praesentiere Zwischenergebnisse auf meinem Textkanal</antwort>
