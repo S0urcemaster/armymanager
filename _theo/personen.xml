@@ -1,9 +1,115 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <personen>
-  <person name="Spieler"
+  
+  <attribute>
+    <gesundheit>Aktuelle Lebenskraft einer Person . Ist die Gesundheit 
+      auf 0 : ist die Person tot</gesundheit>
+    <fitness>Der Trainingszustand + Zu viele Kaempfe und zu wenig Training 
+      beeinflussen die Fitness negativ</fitness>
+    <kraft>Die Koerperkraft der Person + Wird von Fitness beeinflusst</kraft>
+    <balance>Das Koerpergefuehl der Person + Wird von Fitness beeinflusst</balance>
+    <intelligenz>Die geistigen Faehigkeiten + Wird von Fitness beeinflusst</intelligenz>
+    <wissen>Wert fuer Allgemeinbildung + Erhoeht er sich : schaltet er in Stufen neue Wissensentraege frei</wissen>
+    <glaube>Wertefestigkeit der gewaehlten Glaubensrichtung</glaube>
+    <autonomie>Das Gegenteil der Abhaengigkeit von anderen</autonomie>
+    <verbrauch>Aufwand des Lebensstils</verbrauch>
+    <moral>Der Vorwaertswille</moral>
+    <ruhm>Was man von der Person haelt</ruhm>
+
+    <mythos>Eine bestimmte Glaubensrichtung</mythos>
+    <geld>Der Boerseninhalt der Person</geld>
+  </attribute>
+
+  <talente>
+    Gesegnet : Alle Werte +1
+    Vergessen : Alle Werte -1
+
+    Robust : Gesundheit +1
+    Sensibel : Gesundheit -1
+
+    Getrieben : Fitness +1
+    Gelangweilt : Fitness -1
+
+    Gewalt : Kraft +1
+    Zweig : Kraft -1
+
+    Taenzer : Balance +1
+    Stein : Balance -1
+
+    Hellseher : Intelligenz +1
+    Nachzuegler : Intelligenz -1
+
+    Leuchtfeuer : Wissen +5
+    Nebelwandler : Wissen -5
+
+    Juenger : Glaube +1
+    Skeptiker : Glaube -1
+
+    Gepruegelter : Autonomie +5
+    Verwoehnter : Autonomie -3
+
+    Spassvogel : Verbrauch +5
+    Asket : Verbrauch -3
+
+    Optimist : Moral +1
+    Pessimist : Moral -1
+
+    Mittelpunkt : Ruhm +3
+    Schatten : Ruhm -5
+  </talente>
+
+  <praegungen>
+
+  </praegungen>
+
+  <mythen>
+    Jede Person kann einen Mythos waehlen / 
+    aehnlich einer Religion - nur dynamischer
+    <mythos name="Animismus">
+      
+    </mythos>
+    <mythos name="Totemismus">
+
+    </mythos>
+    <mythos name="Ahnenkult">
+
+    </mythos>
+    <mythos name="Schamanismus">
+
+    </mythos>
+    <mythos name="Grosse Mutter /Fruchtbarkeitskult">
+
+    </mythos>
+    <mythos name="Himmelskult">
+
+    </mythos>
+    <mythos name="Mondkult">
+
+    </mythos>
+    <mythos name="Jagdkult">
+
+    </mythos>
+    <mythos name="Opferkult">
+
+    </mythos>
+    <mythos name="Knochenkult">
+
+    </mythos>
+    <mythos name="Kanibalismus">
+
+    </mythos>
+    <mythos name="Mythos des Auserwaehlten">
+
+    </mythos>
+  </mythen>
+
+  <person name="Brainstorm Spieler"
   >
+    <talente>
+      Talentiert : Alle Werte +1
+    </talente>
+
     <praegung>
-      Wunderkind : Alle Werte +1
       Ueberlebender : Ruhm +1
       Enttaeuschter : Glaube -1
       Rachsuechtiger : Intelligenz -1
@@ -16,6 +122,12 @@
       Steinbearbeitung
       Holzbearbeitung
       Flechten
+      Orientierung
+      Zaehlen und Zyklen
+      Pflanzenkunde
+      Tierkunde
+      Jagd
+      Planung
     </wissen>
 
     <dinge>
@@ -24,22 +136,26 @@
 
   </person>
 
-  <person name="Soldat"
+  <person name="Brainstorm Soldat"
       gesundheit="0"
-      kraft="0"
-      balance="0"
-      intelligenz="0"
-      wissen="0"
+      kraft="1"
+      balance="1"
+      intelligenz="1"
+      wissen="1"
       glaube="0"
-      Unbestechlichkeit="0"
       autonomie="0"
+      verbrauch="1"
+      fitness="0"
+      moral="1"
       ruhm="0"
       geld="0"
   >
 
     <talente>
       Lernfaehig : Intelligenz +1
-      Linkshaender : 
+      Linkshaender : Ruhm -1
+      Schoenling : Ruhm +1
+      Riese : Kraft +1
     </talente>
 
     <praegung>
@@ -53,10 +169,11 @@
       Erstgeborener : Glaube +1
       Goldliebhaber : Geld +1
       Hirte : Wissen +1
-      Taenzer : Balance +1
+      Taenzer : Ruhm +1
       Traeger : Kraft +1
-      Fuehrer : Intelligenz +1
-      Jaeger : Autonomie +1
+      Fuehrer : Autonomie +1
+      Jaeger : Balance +1
+      Berufener : Unbestechlichkeit +1
     </praegung>
 
     <behinderungen>
