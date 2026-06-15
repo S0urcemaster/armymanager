@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dinge>
 
+  <mythen>
+    <!-- Jede Person kann einen Mythos waehlen / aehnlich einer Religion - nur dynamischer -->
+    <ref name="mythen.xml" />
+  </mythen>
+
+  <wissen>
+    <!-- Wissen / Technologie -->
+    <ref name="wissen.xml" />
+  </wissen>
+
   <waffen>
 
   </waffen>

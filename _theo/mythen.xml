@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mythen>
+  <!-- Jede Person kann einen Mythos waehlen / aehnlich einer Religion - nur dynamischer -->
+  <mythos name="Animismus">
+    Jagd +1
+  </mythos>
+
+  <mythos name="Totemismus">
+    Holzbearbeitung +1
+  </mythos>
+
+  <mythos name="Ahnenkult">
+    Ruhm +1
+  </mythos>
+
+  <mythos name="Schamanismus">
+    Traenke +1
+  </mythos>
+
+  <mythos name="Grosse Mutter /Fruchtbarkeitskult">
+    Rekruten +1
+  </mythos>
+
+  <mythos name="Mondkult">
+    Mondkunde +1
+  </mythos>
+
+  <mythos name="Jagdkult">
+    Fitness +1
+  </mythos>
+
+  <mythos name="Opferkult">
+    Glaube +1
+  </mythos>
+
+  <mythos name="Knochenkult">
+    Knochenbearbeitung +1
+  </mythos>
+
+  <mythos name="Kanibalismus">
+    Kraft +1
+  </mythos>
+
+  <mythos name="Mythos des Auserwaehlten">
+    Moral +1
+  </mythos>
+
+</mythen>

@@ -11,7 +11,6 @@
     <intelligenz>Die geistigen Faehigkeiten + Wird von Fitness beeinflusst</intelligenz>
     <wissen>Wert fuer Allgemeinbildung + Erhoeht er sich : schaltet er in Stufen neue Wissensentraege frei</wissen>
     <glaube>Wertefestigkeit der gewaehlten Glaubensrichtung</glaube>
-    <autonomie>Das Gegenteil der Abhaengigkeit von anderen</autonomie>
     <verbrauch>Aufwand des Lebensstils</verbrauch>
     <moral>Der Vorwaertswille</moral>
     <ruhm>Was man von der Person haelt</ruhm>
@@ -45,9 +44,6 @@
     Juenger : Glaube +1
     Skeptiker : Glaube -1
 
-    Gepruegelter : Autonomie +5
-    Verwoehnter : Autonomie -3
-
     Spassvogel : Verbrauch +5
     Asket : Verbrauch -3
 
@@ -62,46 +58,6 @@
 
   </praegungen>
 
-  <mythen>
-    Jede Person kann einen Mythos waehlen / 
-    aehnlich einer Religion - nur dynamischer
-    <mythos name="Animismus">
-      
-    </mythos>
-    <mythos name="Totemismus">
-
-    </mythos>
-    <mythos name="Ahnenkult">
-
-    </mythos>
-    <mythos name="Schamanismus">
-
-    </mythos>
-    <mythos name="Grosse Mutter /Fruchtbarkeitskult">
-
-    </mythos>
-    <mythos name="Himmelskult">
-
-    </mythos>
-    <mythos name="Mondkult">
-
-    </mythos>
-    <mythos name="Jagdkult">
-
-    </mythos>
-    <mythos name="Opferkult">
-
-    </mythos>
-    <mythos name="Knochenkult">
-
-    </mythos>
-    <mythos name="Kanibalismus">
-
-    </mythos>
-    <mythos name="Mythos des Auserwaehlten">
-
-    </mythos>
-  </mythen>
 
   <person name="Brainstorm Spieler"
   >

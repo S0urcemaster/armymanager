@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wissen>
+
+  <Jagd>Versorgung +1</Jagd>
+
+  <Tierkunde>Versorgung +1</Tierkunde>
+
+  <Sammeln>Versorgung +1</Sammeln>
+
+  <Holzbearbeitung>
+    Keulen-Qualitaet +1
+    Speer-Qualitaet +1
+    Bogen-Qualitaet +1
+    Pfeil-Qualitaet +1
+    Atlatl-Qualitaet +1
+  </Holzbearbeitung>
+
+  <Knochenbearbeitung>
+    Knochenmesser-Qualitaet +1
+    Knochenspeer-Qualitaet +1
+    Knochenpfeilqualitaet
+    Atlatl-Qualitaet +1
+  </Knochenbearbeitung>
+
+  <Steinbearbeitung>
+    Faustkeil-Qualitaet +1
+    Steinmesser-Qualitaet +1
+    Steinspeer-Qualitaet +1
+    Steinpfeil-Qualitaet +1
+    Schleuder-Qualitaet +1
+    Bola-Qualitaet +1
+  </Steinbearbeitung>
+
+  <Seilherstellung>
+    Bogen-Qualitaet +1
+    Schleuder-Qualitaet +1
+    Bola-Qualitaet +1
+  </Seilherstellung>
+
+  <Mondkunde>Verbrauch -1</Mondkunde>
+
+  
+
+</wissen>
