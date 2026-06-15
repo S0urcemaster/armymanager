@@ -1,14 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <szenario name="Welt von Army Manager">
-  <szenario name="Vorgeschichte">
+  <szenario name="Vorgeschichte1">
     <geschichte>
       Das Uebliche : Deine Familie wird umgebracht und du raechst dich a la "Braveheart" /
       faengst in den Dreck geworfen ganz unten an : dir eine Armee aufzubauen / um die
       Krux deiner Lande zu beseitigen
     </geschichte>
     <auspraegung>
-      Man beginnt allein oder mit ein paar Mann und einem Samariter : der einem eine erste
+      Man beginnt allein oder mit ein paar Mann und einem Samariter / der einem eine erste
       Ausruestung fuer einen ersten Auftrag spendiert : Banditen im Wald
+    </auspraegung>
+  </szenario>
+  <szenario name="Vorgeschichte2">
+    <geschichte>
+      Es ist die Zeit vor den Schmelzoefen : Den Wald erntet man von der Seite - und das
+      einzig wertvolle darin sind Menschen / Sklaven + Sie werden geerntet und an den
+      grossen Bauwerken zwischen die Steine eingearbeitet wie Moertel + Doch einer entkam -
+      und das Schicksal wollte es : dass ein Leben nicht endet : bevor der Stab weitergereicht wird
+    </geschichte>
+    <auspraegung>
+      Wenn die Spieler-Hauptfigur besiegt wird : uebernimmt ein anderer Sklave seine Aufgabe
     </auspraegung>
   </szenario>
   <szenario name="Ausruestung">

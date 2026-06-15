@@ -1,4 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <personen>
-  <person name=""></person>
+  <person name="Spieler"
+  >
+    <praegung>
+      Wunderkind : Alle Werte +1
+      Ueberlebender : Ruhm +1
+      Enttaeuschter : Glaube -1
+      Rachsuechtiger : Intelligenz -1
+      Jaeger : Autonomie +1
+    </praegung>
+
+    <wissen>
+      Seilherstellung
+      Fellbearbeitung
+      Steinbearbeitung
+      Holzbearbeitung
+      Flechten
+    </wissen>
+
+    <dinge>
+      Karte der naeheren Umgebung
+    </dinge>
+
+  </person>
+
+  <person name="Soldat"
+      gesundheit="0"
+      kraft="0"
+      balance="0"
+      intelligenz="0"
+      wissen="0"
+      glaube="0"
+      Unbestechlichkeit="0"
+      autonomie="0"
+      ruhm="0"
+      geld="0"
+  >
+
+    <talente>
+      Lernfaehig : Intelligenz +1
+      Linkshaender : 
+    </talente>
+
+    <praegung>
+      Waisenkind : Gesundheit -1
+      Betrogener : Unbestechlichkeit -1
+      Enttaeuschter : Glaube -1
+      Beraubter : Geld -1
+      Erschlagener : Wissen -1
+      Betaeubter : Balance -1
+      Gefuehrter : Autonomie -1
+      Erstgeborener : Glaube +1
+      Goldliebhaber : Geld +1
+      Hirte : Wissen +1
+      Taenzer : Balance +1
+      Traeger : Kraft +1
+      Fuehrer : Intelligenz +1
+      Jaeger : Autonomie +1
+    </praegung>
+
+    <behinderungen>
+      <einaeugig>Balance -1</einaeugig>
+    </behinderungen>
+
+    <fertigkeiten>
+      <jagd>Autonomie +1</jagd>
+    </fertigkeiten>
+
+  </person>
+
 </personen>
