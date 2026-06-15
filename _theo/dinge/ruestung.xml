@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruestung>
+
+  <brust name="Stueck Fell"
+      stapelbar="ja"
+      gewicht="5"
+      ruestung="2"
+      waerme="2"
+      respekt="1"
+      haltbarkeit="0"
+  >
+    <beschreibung>Tierfell ohne Bearbeitung</beschreibung>
+    <bild>url/bild.jpg</bild>
+  </brust>
+
+  <brust name="Nesselhemd"
+      stapelbar="ja"
+      gewicht="2"
+      ruestung="1"
+      waerme="1"
+      respekt="3"
+      haltbarkeit="0"
+  >
+    <beschreibung>Ein einfachstes Hemd aus Brennesselfasern</beschreibung>
+    <bild>url/bild.jpg</bild>
+  </brust>
+  
+</ruestung>

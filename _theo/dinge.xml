@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dinge>
+
   <waffen>
 
   </waffen>
+
   <ruestung>
-    
+    <ref name="dinge/ruestung.xml" />
   </ruestung>
+
   <vertraege>
 
   </vertraege>
+
   <vorteile>
 
   </vorteile>
+
   <karten>
 
   </karten>
+
   <wissen>
-    
+
   </wissen>
+
 </dinge>
