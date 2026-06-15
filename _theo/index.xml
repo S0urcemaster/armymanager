@@ -8,7 +8,7 @@
   <autor>Digi Craft</autor>
   <autor>Sebastian Teister</autor>
 
-  <aspekt name="Zweck und Problem">
+  <aspekt frage="Welchen Zweck und Problem loest dsa Projekt ?">
 
     <aspekt frage="Welches Problem löst dieses Projekt — und für wen genau ?">
       <antwort>Als Computerspiel loest es das Problem der Langeweile und bietet Zerstreuung und Unterhaltung vom 
@@ -30,7 +30,7 @@
                 <aspekt frage="Was sind Spiellevel ?">
                   <antwort>Mit dem Spiellevel steigt zunaechst die Komplexitaet der Auswahlmoeglichkeiten
                     und dann die Schwierigkeit : mit ihnen zu gewinnen</antwort>
-                  <ref name="level.xml">Hier geht,s zu den Leveldefinitonen</ref>
+                  <ref name="stufen.xml">Hier geht,s zu den Leveldefinitonen</ref>
                 </aspekt>
               </aspekt>
             </aspekt>
@@ -40,7 +40,7 @@
               dazu zaehle ich mal auch die Soldaten / die eigentlich angeworben werden - aber
               auch Ruestung / Vertraege / Vorteile / Karten / Wissen (was sich noch finden wird beim weiteren Schreiben)
             </antwort>
-            <ref name="items.xml">Hier geht,s zum Spielinventar</ref>
+            <ref name="dinge.xml">Hier geht,s zum Spielinventar</ref>
           </aspekt>
       </aspekt>
       <antwort>Es dient der Unterhaltung fuer Computerspieler</antwort>
@@ -65,7 +65,7 @@
 
   </aspekt>
 
-  <aspekt name="Umfang und Grenzen">
+  <aspekt frage="Was ist der Umfang und die Grenzen des Projekts ?">
 
     <aspekt frage="Was ist explizit nicht Teil des Projekts?">
       <aspekt frage="Was ist spielerisch nicht Teil des Projekts">
@@ -89,7 +89,7 @@
 
   </aspekt>
 
-  <aspekt name="Nutzer und Kontext">
+  <aspekt frage="Was ist der Nutzer und der Kontext ?">
 
     <aspekt frage="Wer nutzt das System — direkt und indirekt?">
       <antwort>Der Profit des Spielers ist Spielspass und eine lange Spielzeit</antwort>
@@ -105,7 +105,7 @@
 
   </aspekt>
 
-  <aspekt name="Rahmenbedingungen">
+  <aspekt frage="Was sind die Rahmenbedingungen ?">
 
     <aspekt frage="Welche technischen Einschränkungen oder Vorgaben gelten?">
       <antwort>Node TypeScript Webapp</antwort>
@@ -123,7 +123,7 @@
 
   </aspekt>
 
-  <aspekt name="Risiken und Offenes">
+  <aspekt name="Was sind die Risiken und was ist noch offen ?">
 
     <aspekt frage="Was könnte dieses Projekt zum Scheitern bringen?">
       <antwort>Das Spiel macht keinen Spass</antwort>
