@@ -61,6 +61,9 @@
 
     <aspekt frage="Wann ist das Projekt ein Erfolg in einem Satz ?">
       <antwort>Der Spieler ist suechtig nach dem Spiel als Effekt einer fesselnden Spielmechanik</antwort>
+      <aspekt frage="Was ist die fesselnde Spielmechanik">
+        <ref name="design.xml">Das Spieldesign</ref>
+      </aspekt>
     </aspekt>
 
   </aspekt>

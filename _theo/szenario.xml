@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<szenario name="Welt von Army Manager">
+  <szenario name="Vorgeschichte">
+    <geschichte>
+      Das Uebliche : Deine Familie wird umgebracht und du raechst dich a la "Braveheart" /
+      faengst in den Dreck geworfen ganz unten an : dir eine Armee aufzubauen / um die
+      Krux deiner Lande zu beseitigen
+    </geschichte>
+    <auspraegung>
+      Man beginnt allein oder mit ein paar Mann und einem Samariter : der einem eine erste
+      Ausruestung fuer einen ersten Auftrag spendiert : Banditen im Wald
+    </auspraegung>
+  </szenario>
+  <szenario name="Ausruestung">
+    Vor einem Kampf kann man seine Maenner nochmal durchchecken und aufputschen
+  </szenario>
+  <szenario name="Kampf">
+    Es laeuft eine automatische Simulation (man kann sich zurucklehnen)
+  </szenario>
+  <szenario name="Kampf Sieg">
+    Eine statistische Uebersicht
+  </szenario>
+  <szenario name="Kampf Niederlage">
+    Eine statistische Uebersicht mit Gewinnergebnis fuer die naechste Runde (Rogue-Like)
+  </szenario>
+  <szenario name="Pluenderung">
+    The winner takes it all
+  </szenario>
+  <szenario name="Kommandozelt">
+    Dashboard
+  </szenario>
+  <szenario name="Weltkarte">
+    Hier dirigiert man seine Truppenbewegungen
+  </szenario>
+  <szenario name="Rekrutierung">
+    Hier gewinnt man Gefolgsleute
+  </szenario>
+  <szenario name="Inventar mit Shop">
+    Hier verbessert man die Ueberlebenschancen seiner Armee durch allerlei Zeug / 
+    wie Ruestung, Traenke oder Mythen
+  </szenario>
+  <szenario name="Schicksal">
+    Hier dreht sich das Rad der unvorhersagbaren Konsequenzen fuer den naechsten Zug
+  </szenario>
+  <szenario name="Spiel Sieg">
+    Der Nemesis wird bezwungen - mit einem verbesserungswuerdigen Highscore / den man locker
+    in einer neuen Runde schlagen kann + Und es gibt auch noch so viel zu entdecken
+  </szenario>
+  <szenario name="Spiel Niederlage">
+    Wird ein Kampf verloren : ist der Spieler besiegt
+    Er kann nun seine Erfahrung und sein erworbenes Wissen in eine neue Runde mitnehmen (Rogue-Like)
+  </szenario>
+</szenario>

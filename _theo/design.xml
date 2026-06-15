@@ -1,63 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <design name="armymanager">
 
-  <facette name="Kern und Fantasie">
-    <spektrum frage="Was tut und fuehlt der Spieler? (Core Loop in einem Satz)">
-      <antwort></antwort>
-    </spektrum>
-    <spektrum frage="Was ist die zentrale Spannung, die Entscheidungen schwer macht?">
-      <antwort></antwort>
-    </spektrum>
-  </facette>
 
-  <facette name="Zustand">
-    <spektrum frage="Welche internen Zahlen gibt es? (z.B. Truppen, Moral, Nachschub, Budget, Zeit)">
-      <antwort></antwort>
-    </spektrum>
-    <spektrum frage="Welche Zahlen sind sieg-/verlustrelevant, und bei welchem Minimum/Maximum?">
-      <antwort></antwort>
-    </spektrum>
-    <spektrum frage="Anfangswerte?">
-      <antwort></antwort>
-    </spektrum>
-  </facette>
+  <aspekt frage="Was ist der Kern und die Fantasie des Spiels">
+    
+    <ref name="szenario.xml">Hier werden die Situationen abgebildet / in denen sich 
+      der Spieler im Laufe des Spielverlaufs befinden kann und wie sich das im Spiel auspraegt</ref>
 
-  <facette name="Hebel des Spielers">
-    <spektrum frage="Welche Aktionen kann der Spieler pro Zug/Tick ausfuehren?">
+    <aspekt frage="Was tut und fuehlt der Spieler? (Core Loop in einem Satz)">
       <antwort></antwort>
-    </spektrum>
-    <spektrum frage="Was kostet jede Aktion, was bewirkt sie?">
+    </aspekt>
+    <aspekt frage="Was ist die zentrale Spannung, die Entscheidungen schwer macht?">
       <antwort></antwort>
-    </spektrum>
-  </facette>
+    </aspekt>
+  </aspekt>
 
-  <facette name="Dynamik (der Tick)">
-    <spektrum frage="Was veraendert sich pro Loop OHNE Spielereingriff? (Verbrauch, Verfall, Feind)">
+  <aspekt name="Zustand">
+    <aspekt frage="Welche internen Zahlen gibt es? (z.B. Truppen, Moral, Nachschub, Budget, Zeit)">
       <antwort></antwort>
-    </spektrum>
-    <spektrum frage="Was genau erzeugt den Druck / die Knappheit?">
+    </aspekt>
+    <aspekt frage="Welche Zahlen sind sieg-/verlustrelevant, und bei welchem Minimum/Maximum?">
       <antwort></antwort>
-    </spektrum>
-  </facette>
+    </aspekt>
+    <aspekt frage="Anfangswerte?">
+      <antwort></antwort>
+    </aspekt>
+  </aspekt>
 
-  <facette name="Balance" frage="Welcher Trade-off verhindert, dass man einfach alles maximiert?">
-    <spektrum frage="Welche Zahlen teilen sich dieselbe knappe Quelle?">
+  <aspekt name="Hebel des Spielers">
+    <aspekt frage="Welche Aktionen kann der Spieler pro Zug/Tick ausfuehren?">
       <antwort></antwort>
-    </spektrum>
-    <spektrum frage="Welche Zahl lässt sich nur erhöhen, indem eine andere sinkt?">
+    </aspekt>
+    <aspekt frage="Was kostet jede Aktion, was bewirkt sie?">
       <antwort></antwort>
-    </spektrum>
-    <spektrum frage="Welche Zahl will der Spieler hoch halten, welche niedrig — und wo widersprechen sich diese Ziele?">
+    </aspekt>
+  </aspekt>
+
+  <aspekt name="Dynamik (der Tick)">
+    <aspekt frage="Was veraendert sich pro Loop OHNE Spielereingriff? (Verbrauch, Verfall, Feind)">
       <antwort></antwort>
-    </spektrum>
-    <spektrum frage="Worum konkurrieren die Aktionen pro Tick — was bleibt zwangsläufig liegen?">
+    </aspekt>
+    <aspekt frage="Was genau erzeugt den Druck / die Knappheit?">
       <antwort></antwort>
-    </spektrum>
-    <spektrum frage="Ab welchem Zustand wird eine Konkurrenz akut und verschiebt die Priorität?">
+    </aspekt>
+  </aspekt>
+
+  <aspekt name="Balance" frage="Welcher Trade-off verhindert, dass man einfach alles maximiert?">
+    <aspekt frage="Welche Zahlen teilen sich dieselbe knappe Quelle?">
       <antwort></antwort>
-    </spektrum>
-    <spektrum frage="Gibt es eine Zahl, die man gefahrlos vernachlässigen kann — oder eine Strategie, die immer gewinnt?">
+    </aspekt>
+    <aspekt frage="Welche Zahl lässt sich nur erhöhen, indem eine andere sinkt?">
       <antwort></antwort>
-    </spektrum>
-  </facette>
+    </aspekt>
+    <aspekt frage="Welche Zahl will der Spieler hoch halten, welche niedrig — und wo widersprechen sich diese Ziele?">
+      <antwort></antwort>
+    </aspekt>
+    <aspekt frage="Worum konkurrieren die Aktionen pro Tick — was bleibt zwangsläufig liegen?">
+      <antwort></antwort>
+    </aspekt>
+    <aspekt frage="Ab welchem Zustand wird eine Konkurrenz akut und verschiebt die Priorität?">
+      <antwort></antwort>
+    </aspekt>
+    <aspekt frage="Gibt es eine Zahl, die man gefahrlos vernachlässigen kann — oder eine Strategie, die immer gewinnt?">
+      <antwort></antwort>
+    </aspekt>
+  </aspekt>
 </design>
